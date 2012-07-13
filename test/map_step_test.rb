@@ -9,7 +9,6 @@ class MapStepTest < Test::Unit::TestCase
     # Do nothing
   end
 
-  # Fake test
   def test_step_simple
     map1_string = <<EOS
 #####
@@ -28,7 +27,44 @@ EOS
     assert_equal(' ', map1.get_at(1, 1))
     assert_equal(' ', map2.get_at(1, 1))
     assert_equal('*', map2.get_at(1, 1))
+  end
 
+  def test_step_simple_slide
+    map1_string = <<EOS
+#####
+#*.\\#
+#  R#
+#####
+EOS
+
+    map2_string = <<EOS
+#####
+# .\\#
+#* R#
+#####
+EOS
+
+    map1 = Map.new(map1_string)
+    map2_stepped = map1.step('W')
+    map2 = Map.new(map2_string)
+
+    assert(map2.map_equals(map2_stepped))
+  end
+
+  def test_step_death
+    map1_string = <<EOS
+#*#
+# #
+#R#
+EOS
+
+    map1 = Map.new(map1_string)
+    map2 = map1.step('W')
+    map3 = map2.step('W')
+
+    assert(not map1.robot_dead)
+    assert(not map1.robot_dead)
+    assert(map3.robot_dead)
   end
 
 end

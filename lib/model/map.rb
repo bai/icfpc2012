@@ -1,7 +1,7 @@
 class Map
   ROBOT_SYMBOL = 'R'
 
-  attr_reader :width, :height, :score
+  attr_reader :width, :height, :score, :robot_dead
 
   def initialize(input)
     @input = []
@@ -12,6 +12,7 @@ class Map
     @width  = @input.max_by(&:length).size
     @height = @input.length
     @score  = 0
+    @robot_dead = false
   end
 
   # Map item at the given coordinates
@@ -37,10 +38,14 @@ class Map
     robot_position[1]
   end
 
+  def robot_dead
+    false
+  end
+
   def to_s
     @input.map(&:join).join('\n')
   end
-
+  
   private
 
   def robot_position
