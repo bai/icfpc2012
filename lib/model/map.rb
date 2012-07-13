@@ -83,12 +83,11 @@ class Map
   def move(new_robot_position)
     if new_robot_position[0] >= width || new_robot_position[0] < 0 ||
       new_robot_position[1] >= height || new_robot_position[1] < 0
-      #raise "LOL".inspect
       return self
     end
 
     target_cell = get_at(*new_robot_position)
-    if target_cell.scan(/ .\\/)
+    if target_cell.match(/[ .\\]/)
       new_map = self.dup
       new_map.instance_variable_set('@robot_position', new_robot_position)
       new_map.instance_variable_set('@score', @score-1)
@@ -97,7 +96,6 @@ class Map
       x = new_robot_position[0]
       y = new_robot_position[1]
       new_input[y][x] = 'R'
-      #raise new_input.map(&:join).join("\n").inspect
       new_map.instance_variable_set('@input', new_input)
       return new_map
     end
