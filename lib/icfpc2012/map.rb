@@ -8,16 +8,15 @@ module Icfpc2012
     EARTH       = '.'
     EMPTY       = ' '
 
-    attr_reader :width, :height, :score, :remaining_lambdas, :collected_lambdas
+    attr_writer   :width, :height
+    attr_accessor :input, :score, :remaining_lambdas, :collected_lambdas
 
     def initialize(input)
-      @input = input.split(/\r?\n/).map { |l| l.strip.split(//) }.reverse
+      self.input = input.split(/\r?\n/).map { |l| l.strip.split(//) }.reverse
 
-      @width  = @input.max_by(&:size).size
-      @height = @input.size
-      @score  = 0
-      @collected_lambdas = 0
-      @remaining_lambdas = input.count(LAMBDA)
+      self.score             = 0
+      self.collected_lambdas = 0
+      self.remaining_lambdas = input.count(LAMBDA)
     end
 
     # Map item at the given coordinates
@@ -25,7 +24,7 @@ module Icfpc2012
       if x >= width || x < 0 || y >= height || y < 0
         '%'
       else
-        @input[y][x]
+        input[y][x]
       end
     end
 
@@ -68,7 +67,19 @@ module Icfpc2012
     end
 
     def to_s
-      @input.reverse.map(&:join).join("\n")
+      input.reverse.map(&:join).join("\n")
+    end
+
+    def width
+      @width ||= input.max_by(&:size).size
+    end
+
+    def height
+      @height ||= input.size
+    end
+
+    def robot_position=(value)
+      @width, @height = *value
     end
 
     private
@@ -82,29 +93,29 @@ module Icfpc2012
     end
 
     def move(new_robot_position)
-
       x = new_robot_position[0]
       y = new_robot_position[1]
 
       new_map = self.dup
-      new_map.instance_variable_set('@score', @score-1)
-      new_input = @input.collect {|l| l.dup}
+      new_map.score = score - 1
+      new_input = input.map(&:dup)
 
       target_cell = get_at(x, y)
+
       if target_cell.match(/[ \.\\]/)
-        new_map.instance_variable_set('@robot_position', new_robot_position)
+        new_map.robot_position = new_robot_position
         new_input[robot_y][robot_x] = EMPTY
         new_input[y][x] = ROBOT
 
         if target_cell == LAMBDA
-          new_map.instance_variable_set('@remaining_lambdas', @remaining_lambdas - 1)
-          new_map.instance_variable_set('@collected_lambdas', @collected_lambdas + 1)
+          new_map.remaining_lambdas = remaining_lambdas - 1
+          new_map.collected_lambdas = collected_lambdas + 1
         end
       end
 
       new_input = update_map(new_input)
 
-      new_map.instance_variable_set('@input', new_input)
+      new_map.input = new_input
       new_map
     end
 
@@ -151,7 +162,7 @@ module Icfpc2012
     end
 
     def locate(element)
-      @input.each_with_index do |subarray, i|
+      input.each_with_index do |subarray, i|
         j = subarray.index(element)
         return j, i if j
       end
