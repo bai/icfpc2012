@@ -37,6 +37,10 @@ class Map
     robot_position[1]
   end
 
+  def to_s
+    @input.map(&:join).join('\n')
+  end
+
   private
 
   def robot_position
