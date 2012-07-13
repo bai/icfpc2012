@@ -11,12 +11,10 @@ module Icfpc2012
     attr_reader :width, :height, :score, :robot_dead, :remaining_lambdas, :collected_lambdas
 
     def initialize(input)
-      @input = []
-      input.each_line { |l| @input << l.chomp.split(//) }
-      @input.reverse!
+      @input = input.split(/\r?\n/).map { |l| l.strip.split(//) }.reverse
 
-      @width  = @input.max_by(&:length).size
-      @height = @input.length
+      @width  = @input.max_by(&:size).size
+      @height = @input.size
       @score  = 0
       @robot_dead = false
       @collected_lambdas = 0
