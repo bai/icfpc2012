@@ -1,7 +1,5 @@
 module Icfpc2012
   class Map
-    ROBOT_SYMBOL = 'R'
-
     attr_reader :width, :height, :score, :robot_dead, :remaining_lambdas, :collected_lambdas
 
     def initialize(input)
