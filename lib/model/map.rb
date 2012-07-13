@@ -11,7 +11,6 @@ class Map
     input.each_line do |l|
       @input << l.chomp.split(//)
     end
-    @input.reverse!
 
     @width  = @input.max_by(&:length).size
     @height = @input.length
@@ -23,10 +22,6 @@ class Map
 
   # Map item at the given coordinates
   def get_at(x, y)
-    if x >= width || x < 0 || y >= height || y < 0
-      return '='
-    end
-
     @input[y][x]
   end
 
@@ -74,7 +69,7 @@ class Map
   end
 
   def to_s
-    @input.reverse.map(&:join).join("\n")
+    @input.map(&:join).join("\n")
   end
 
   private
@@ -88,30 +83,36 @@ class Map
   end
 
   def move(new_robot_position)
-    new_map = self.dup
-    new_map.instance_variable_set('@score', @score-1)
-    new_input = @input.dup
+    if new_robot_position[0] >= width || new_robot_position[0] < 0 ||
+      new_robot_position[1] >= height || new_robot_position[1] < 0
+      return self
+    end
 
     target_cell = get_at(*new_robot_position)
     if target_cell.match(/[ \.\\]/)
 
+      new_map = self.dup
       new_map.instance_variable_set('@robot_position', new_robot_position)
+      new_map.instance_variable_set('@score', @score-1)
+      new_input = @input.dup
       new_input[robot_y][robot_x] = ' '
       x = new_robot_position[0]
       y = new_robot_position[1]
       new_input[y][x] = 'R'
+
+      new_input = update_map(new_input)
+
+      new_map.instance_variable_set('@input', new_input)
 
       if target_cell == '\\'
         new_map.instance_variable_set('@remaining_lambdas', @remaining_lambdas - 1)
         new_map.instance_variable_set('@collected_lambdas', @collected_lambdas + 1)
       end
 
+      return new_map
     end
 
-    new_input = update_map(new_input)
-
-    new_map.instance_variable_set('@input', new_input)
-    new_map
+    self
   end
 
   # Returns an updated input array
@@ -121,32 +122,32 @@ class Map
     (0..width-1).map do |x|
       (0..height-1).map do |y|
         if (old_input[y][x] == '*') &&
-            (old_input[y][x-1] == ' ')
+            (old_input[y-1][x] == ' ')
           new_input[y][x] = ' '
           new_input[y-1][x] = '*'
         end
 
         if (old_input[y][x] == '*') &&
-            (old_input[y][x-1] == '*') &&
-            (old_input[y+1][x] == ' ') &&
-            (old_input[y+1][x-1] == ' ')
+            (old_input[y-1][x] == '*') &&
+            (old_input[y][x+1] == ' ') &&
+            (old_input[y-1][x+1] == ' ')
           new_input[y][x] = ' '
           new_input[y-1][x+1] = '*'
         end
 
         if (old_input[y][x] == '*') &&
-            (old_input[y][x-1] == '*') &&
-            ((old_input[y+1][x] != ' ') || (old_input[y+1][x-1] != ' ')) &&
-            (old_input[y-1][x] == ' ') &&
+            (old_input[y-1][x] == '*') &&
+            ((old_input[y][x+1] != ' ') || (old_input[y-1][x+1] != ' ')) &&
+            (old_input[y][x-1] == ' ') &&
             (old_input[y-1][x-1] == ' ')
           new_input[y][x] = ' '
           new_input[y-1][x-1] = '*'
         end
 
         if (old_input[y][x] == '*') &&
-            (old_input[y][x-1] == '\\') &&
-            (old_input[y+1][x] == ' ') &&
-            (old_input[y+1][x-1] == ' ')
+            (old_input[y-1][x] == '\\') &&
+            (old_input[y][x+1] == ' ') &&
+            (old_input[y-1][x+1] == ' ')
           new_input[y][x] = ' '
           new_input[y-1][x+1] = '*'
         end
