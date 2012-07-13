@@ -3,8 +3,15 @@
 # cat maps/contest1.map.txt | ./miner.rb
 
 CHARS = [ 'R', '#', '*', '\\', 'L', '.', ' ' ]
-MAP   = ARGF.read
 
+class Map
+  def initialize(input)
+    @input = input
+  end
 
+  def map
+    input = @input.split("\n").map { |l| l.split(//) }
+  end
+end
 
-puts 'DDDLLLLLLURRRRRRRRRRRRDDDDDDDLLLLLLLLLLLDDDRRRRRRRRRRRD'
+puts Map.new(ARGF.read).map.inspect
