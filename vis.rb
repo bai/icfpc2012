@@ -5,14 +5,13 @@ path = '';
 
 def read_map
 	map = Map.new(File.read('./maps/contest1.map.txt'))
-	puts map.inspect
+	puts map.to_s
 	map
-
 end
 
 def print_map
-	gets.chomp
-	map.inspect
+	# gets.chomp
+	puts map.to_s
 end
 
 def read_step
@@ -24,9 +23,9 @@ end
 
 read_map
 while true
-	step = read_step
-	if step == "A"
-		break;
-	end
 	print_map
+	# step = read_step
+	if step == "A"
+		break; 
+	end
 end
