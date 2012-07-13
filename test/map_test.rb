@@ -34,6 +34,9 @@ EOS
     assert_equal(2, map2.robot_x)
     assert_equal(1, map2.robot_y)
 
+    assert_equal(1, map2.remaining_lambdas)
+    assert_equal(0, map2.collected_lambdas)
+
     assert_equal('#', map2.get_at(0, 0))
     assert_equal('\\', map2.get_at(3, 1))
     assert_equal('R', map2.get_at(2, 1))

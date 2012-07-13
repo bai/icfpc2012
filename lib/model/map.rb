@@ -4,7 +4,7 @@ require "bundler/setup"
 class Map
   ROBOT_SYMBOL = 'R'
 
-  attr_reader :width, :height, :score, :robot_dead
+  attr_reader :width, :height, :score, :robot_dead, :remaining_lambdas, :collected_lambdas
 
   def initialize(input)
     @input = []
@@ -16,6 +16,8 @@ class Map
     @height = @input.length
     @score  = 0
     @robot_dead = false
+    @collected_lambdas = 0
+    @remaining_lambdas = input.count('\\')
   end
 
   # Map item at the given coordinates
@@ -88,6 +90,7 @@ class Map
 
     target_cell = get_at(*new_robot_position)
     if target_cell.match(/[ .\\]/)
+
       new_map = self.dup
       new_map.instance_variable_set('@robot_position', new_robot_position)
       new_map.instance_variable_set('@score', @score-1)
@@ -96,11 +99,67 @@ class Map
       x = new_robot_position[0]
       y = new_robot_position[1]
       new_input[y][x] = 'R'
+
+      new_input = update_map(new_input)
+
       new_map.instance_variable_set('@input', new_input)
+
+      if target_cell == '\\'
+        new_map.instance_variable_set('@remaining_lambdas', @remaining_lambdas - 1)
+        new_map.instance_variable_set('@collected_lambdas', @collected_lambdas + 1)
+      end
+
       return new_map
     end
 
     self
+  end
+
+  # Returns an updated input array
+  def update_map(old_input)
+    new_input = old_input.dup
+
+    0.upto(width) do |x|
+      height.downto(0) do |y|
+        if (get_at(x, y) == 'R') &&
+            (get_at(x, y-1) == ' ')
+          new_input[y][x] = ' '
+          new_input[y-1][x] = '*'
+        end
+
+        if (get_at(x, y) == 'R') &&
+            (get_at(x, y-1) == 'R') &&
+            (get_at(x+1, y) == ' ') &&
+            (get_at(x+1, y-1) == ' ')
+          new_input[y][x] = ' '
+          new_input[y-1][x+1] = '*'
+        end
+
+        if (get_at(x, y) == 'R') &&
+            (get_at(x, y-1) == 'R') &&
+            ((get_at(x+1, y) != ' ') || (get_at(x+1, y-1) != ' ')) &&
+            (get_at(x-1, y) == ' ') &&
+            (get_at(x-1, y-1) == ' ')
+          new_input[y][x] = ' '
+          new_input[y-1][x-1] = '*'
+        end
+
+        if (get_at(x, y) == 'R') &&
+            (get_at(x, y-1) == '\\') &&
+            (get_at(x+1, y) == ' ') &&
+            (get_at(x+1, y-1) == ' ')
+          new_input[y][x] = ' '
+          new_input[y-1][x+1] = '*'
+        end
+
+        #if get_at(x, y) == 'L'
+        #  new_input[y][x] = 'O'
+        #end
+
+      end
+    end
+
+    new_input
   end
 
   def locate2d(arr, test)
