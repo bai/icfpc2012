@@ -1,4 +1,5 @@
 require_relative './lib/model/map.rb'
+require 'io/console'
 
 def read_map
 	Map.new(File.read('./maps/contest1.map.txt'))
@@ -10,9 +11,13 @@ def print_map map
 	end 
 end
 
+$stdin.raw!
+
 def read_step
-	step = gets
-	step[0].capitalize
+	step = $stdin.getc
+	step = step[0].capitalize
+	puts step
+	step
 end
 
 map = read_map
