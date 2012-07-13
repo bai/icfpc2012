@@ -10,7 +10,24 @@ begin
   require "Win32API"
 
   def read_char
-    Win32API.new("crtdll", "_getch", [], "L").Call.chr
+  	# little hack to capture arrow keys
+    c = Win32API.new("crtdll", "_getch", [], "L").Call.chr
+    if c == "\xE0"
+    	c = Win32API.new("crtdll", "_getch", [], "L").Call.chr
+    	case c
+    	when "H"
+    	  return "U"
+    	when "P"
+    	  return "D"
+    	when "K"
+    	  return "L"
+    	when "M"
+    	  return "R"
+    	else
+    	  c
+    	end
+    end
+    c
   end
 rescue LoadError
   def read_char
@@ -22,6 +39,7 @@ rescue LoadError
 end
 
 def is_valid_input(i)
+	return true
 	i == 'U' || i == 'D' || i == 'L' || i == 'R' ? true : false
 end
 
@@ -40,7 +58,7 @@ begin
     
     begin
       step = read_char.capitalize
-      raise Interrupt if step.chr == "A"
+      raise Interrupt if step.chr == "A" || step.chr == "\e"
     end until is_valid_input(step)
     puts step
 
