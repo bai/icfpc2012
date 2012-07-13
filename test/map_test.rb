@@ -11,8 +11,8 @@ class MapTest < Test::Unit::TestCase
 
   # Fake test
   def test_construct_simple
-    map1 = Map.new("#")
-    assert_equal(1, map1.width)
+    map1 = Map.new("##")
+    assert_equal(2, map1.width)
     assert_equal(1, map1.height)
     assert_equal(0, map1.score)
     assert_equal('#', map1.get_at(0, 0))
