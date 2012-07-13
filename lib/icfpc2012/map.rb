@@ -107,6 +107,11 @@ module Icfpc2012
           new_map.remaining_lambdas = remaining_lambdas - 1
           new_map.collected_lambdas = collected_lambdas + 1
         end
+      elsif target_cell == ROCK &&
+          new_input[y][2 * x - robot_x] == EMPTY
+        new_input[robot_y][robot_x] = EMPTY
+        new_input[y][x] = ROBOT
+        new_input[y][2 * x - robot_x] = ROCK
       end
 
       new_input = update_map(new_input)
