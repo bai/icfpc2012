@@ -1,5 +1,4 @@
 class Map
-
   attr_reader :width, :height, :score
 
   def initialize(input)
@@ -26,5 +25,4 @@ class Map
   def step(move)
     self
   end
-
 end
