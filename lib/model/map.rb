@@ -42,7 +42,7 @@ class Map
     when 'D'
       move([robot_x, robot_y+1])
     else
-        #TODO
+      move([robot_x, robot_y])
     end
   end
 
