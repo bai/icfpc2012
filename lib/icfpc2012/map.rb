@@ -42,11 +42,11 @@ module Icfpc2012
     # Returns a new instance of the map after the given step
     def step(move)
       case move
-      when 'W' then move([robot_x, robot_y])
-      when 'R' then move([robot_x+1, robot_y])
-      when 'L' then move([robot_x-1, robot_y])
-      when 'D' then move([robot_x, robot_y-1])
-      when 'U' then move([robot_x, robot_y+1])
+      when 'W' then move([ robot_x, robot_y ])
+      when 'R' then move([ robot_x+1, robot_y ])
+      when 'L' then move([ robot_x-1, robot_y ])
+      when 'D' then move([ robot_x, robot_y-1 ])
+      when 'U' then move([ robot_x, robot_y+1 ])
       when 'A' then exit
       else          raise move.inspect
       end
@@ -156,19 +156,19 @@ module Icfpc2012
     end
 
     def locate2d(arr, test)
-      r = []
-      arr.each_index do |i|
-        row, j0 = arr[i], 0
-        while row.include? test
-          if j = (row.index test)
-            r << [j0 + j, i]
-            j  += 1
-            j0 += j
-            row = row.drop j
+      [].tap do |r|
+        arr.each_index do |i|
+          row, j0 = arr[i], 0
+          while row.include? test
+            if j = (row.index test)
+              r << [j0 + j, i]
+              j  += 1
+              j0 += j
+              row = row.drop j
+            end
           end
         end
-      end
-      r.flatten
+      end.flatten
     end
   end
 end
