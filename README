@@ -5,3 +5,7 @@
 ## Testing
 
     rake test
+
+## Running visualizer
+
+    ./bin/vmap

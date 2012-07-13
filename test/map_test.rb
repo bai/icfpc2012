@@ -2,7 +2,7 @@ require File.expand_path('../test_helper', __FILE__)
 
 class MapTest < Test::Unit::TestCase
   def test_construct_simple
-    map1 = Map.new("##")
+    map1 = Icfpc2012::Map.new("##")
     assert_equal(2, map1.width)
     assert_equal(1, map1.height)
     assert_equal(0, map1.score)
@@ -17,7 +17,7 @@ class MapTest < Test::Unit::TestCase
 #-L##
 EOS
 
-    map2 = Map.new(map2_string)
+    map2 = Icfpc2012::Map.new(map2_string)
 
     assert_equal(5, map2.width)
     assert_equal(4, map2.height)

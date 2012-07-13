@@ -8,7 +8,7 @@ class MapStepTest < Test::Unit::TestCase
 # R #
 #####
 EOS
-    map1 = Map.new(map1_string)
+    map1 = Icfpc2012::Map.new(map1_string)
 
     map2 = map1.step('W')
 
@@ -36,9 +36,9 @@ EOS
 #####
 EOS
 
-    map1 = Map.new(map1_string)
+    map1 = Icfpc2012::Map.new(map1_string)
     map2_stepped = map1.step('W')
-    map2 = Map.new(map2_string)
+    map2 = Icfpc2012::Map.new(map2_string)
 
     assert map2 == map2_stepped
   end
@@ -50,7 +50,7 @@ EOS
 #R#
 EOS
 
-    map1 = Map.new(map1_string)
+    map1 = Icfpc2012::Map.new(map1_string)
     map2 = map1.step('W')
     map3 = map2.step('W')
 
@@ -66,7 +66,7 @@ EOS
 #...#
 #####
 EOS
-    map1 = Map.new(map1_string)
+    map1 = Icfpc2012::Map.new(map1_string)
 
     map2 = map1.step('L')
 
@@ -77,7 +77,7 @@ EOS
 #####
 EOS
 
-    assert map2 == Map.new(map2_string), "We should step and dig earth here\n" + map2.to_s
+    assert map2 == Icfpc2012::Map.new(map2_string), "We should step and dig earth here\n" + map2.to_s
 
     map3 = map2.step('L')
     assert map3 == map2, 'We shouldn"t be able to step thru walls'
