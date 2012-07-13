@@ -1,8 +1,10 @@
 #!/usr/bin/env ruby
 
-# ARGF.read
+# cat maps/contest1.map.txt | ./miner.rb
 
-CHARS = [ 'R', '#', '*', '\', 'L', '.', ' ' ]
+CHARS = [ 'R', '#', '*', '\\', 'L', '.', ' ' ]
+MAP   = ARGF.read
+
+
 
 puts 'DDDLLLLLLURRRRRRRRRRRRDDDDDDDLLLLLLLLLLLDDDRRRRRRRRRRRD'
-
