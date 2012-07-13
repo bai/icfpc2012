@@ -4,19 +4,19 @@ class Map
   def initialize(input)
     @input = []
     input.each_line do |l|
-      @input << l.split(//)
+      @input << l.chomp.split(//)
     end
 
-    @input = input.split("  \n").map { |l| l.split(//) }
-    @width = @input.max_by(&:length).size
+
+    @width  = @input.max_by(&:length).size
     @height = @input.length
-    @score = 0
+    @score  = 0
   end
 
   # Map item at the given coordinates
   # TODO: implement
   def get_at(x, y)
-    ' '
+    @input[y][x]
   end
 
   # If the map, including Robot coordinates, is the same as given
