@@ -1,6 +1,3 @@
-require "rubygems"
-require "bundler/setup"
-
 class Map
   ROBOT_SYMBOL = 'R'
 
