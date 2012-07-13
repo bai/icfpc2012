@@ -1,17 +1,15 @@
 require_relative './lib/model/map.rb'
 
-map = nil;
 path = '';
 
 def read_map
-	map = Map.new(File.read('./maps/contest1.map.txt'))
-	puts map.to_s
-	map
+	Map.new(File.read('./maps/contest1.map.txt'))
 end
 
-def print_map
-	# gets.chomp
-	puts map.to_s
+def print_map map
+	map.to_s.split('\n').each do |line|
+		puts line
+	end 
 end
 
 def read_step
@@ -21,10 +19,10 @@ def read_step
 	step
 end
 
-read_map
+map = read_map
 while true
-	print_map
-	# step = read_step
+	print_map map
+	step = read_step
 	if step == "A"
 		break; 
 	end
