@@ -21,7 +21,7 @@ class MapTest < Test::Unit::TestCase
 
     map2_string = <<EOS
 #####
-#R \#
+#R \\#
 # * #
 #####
 EOS
@@ -32,6 +32,6 @@ EOS
     assert_equal(1, map2.robot_x)
     assert_equal(1, map2.robot_y)
     assert_equal('#', map2.get_at(0, 0))
-    assert_equal('\\', map2.get_at(4, 1))
+    assert_equal('\\', map2.get_at(3, 1))
   end
 end
