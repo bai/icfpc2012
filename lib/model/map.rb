@@ -42,14 +42,26 @@ class Map
     false
   end
 
+  def lift_x
+    lift_position[0]
+  end
+
+  def lift_y
+    lift_position[1]
+  end
+
   def to_s
     @input.map(&:join).join('\n')
   end
-  
+
   private
 
   def robot_position
     @robot_position ||= locate2d(@input, 'R').flatten
+  end
+
+  def lift_position
+    @lift_position ||= locate2d(@input, 'L').flatten
   end
 
   def locate2d(arr, test)
