@@ -33,6 +33,10 @@ class Map
     locate2d(@input, 'R')
   end
 
+  def to_s
+    @input.map(&:join)
+  end
+
   private
 
   def locate2d(arr, test)

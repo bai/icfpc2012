@@ -4,7 +4,7 @@ map = nil;
 path = '';
 
 def read_map
-	map = Map.new('./maps/contest1.map.txt')
+	map = Map.new(File.read('./maps/contest1.map.txt'))
 	puts map.inspect
 	map
 
