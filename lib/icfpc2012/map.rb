@@ -8,7 +8,7 @@ module Icfpc2012
     EARTH       = '.'
     EMPTY       = ' '
 
-    attr_reader :width, :height, :score, :robot_dead, :remaining_lambdas, :collected_lambdas
+    attr_reader :width, :height, :score, :remaining_lambdas, :collected_lambdas
 
     def initialize(input)
       @input = input.split(/\r?\n/).map { |l| l.strip.split(//) }.reverse
@@ -16,7 +16,6 @@ module Icfpc2012
       @width  = @input.max_by(&:size).size
       @height = @input.size
       @score  = 0
-      @robot_dead = false
       @collected_lambdas = 0
       @remaining_lambdas = input.count(LAMBDA)
     end
