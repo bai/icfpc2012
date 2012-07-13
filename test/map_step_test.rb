@@ -85,7 +85,10 @@ EOS
 #####
 EOS
 
-    assert(map2.map_equals(Map.new(map2_string)), 'not eq')
+    assert(map2.map_equals(Map.new(map2_string)), "We should step and dig earth here\n" + map2.to_s)
+
+    map3 = map2.step('R')
+    assert(map3.map_equals(map2), 'We shouldn"t be able to step thru walls')
 
   end
 

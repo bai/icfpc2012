@@ -30,7 +30,20 @@ class Map
 
   # Returns a new instance of the map after the given step
   def step(move)
-    self
+    case move
+    when 'W'
+      self
+    when 'R'
+      move([robot_x+1, robot_y])
+    when 'L'
+      move([robot_x-1, robot_y])
+    when 'U'
+      move([robot_x, robot_y-1])
+    when 'D'
+      move([robot_x, robot_y+1])
+    else
+        #TODO
+    end
   end
 
   def robot_x
@@ -54,7 +67,7 @@ class Map
   end
 
   def to_s
-    @input.map(&:join).join('\n')
+    @input.map(&:join).join("\n")
   end
 
   private
@@ -65,6 +78,32 @@ class Map
 
   def lift_position
     @lift_position ||= locate2d(@input, 'L').flatten
+  end
+
+  def move(new_robot_position)
+    if new_robot_position[0] >= width || new_robot_position[0] < 0 ||
+      new_robot_position[1] >= height || new_robot_position[1] < 0
+      #raise "LOL".inspect
+      return self
+    end
+
+    target_cell = get_at(*new_robot_position)
+    if target_cell.scan(/ .\\/)
+      new_map = self.dup
+      new_map.instance_variable_set('@robot_position', new_robot_position)
+      new_map.instance_variable_set('@score', @score-1)
+      new_input = @input.dup
+      new_input[robot_x][robot_y] = ' '
+      x = new_robot_position[0]
+      y = new_robot_position[1]
+      new_input[y][x] = 'R'
+      #raise new_input.map(&:join).join("\n").inspect
+      #raise new_input.inspect
+      new_map.instance_variable_set('@input', new_input)
+      return new_map
+    end
+
+    self
   end
 
   def locate2d(arr, test)
