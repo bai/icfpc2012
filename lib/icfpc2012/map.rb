@@ -78,18 +78,14 @@ module Icfpc2012
       @height ||= input.size
     end
 
-    def robot_position=(value)
-      @width, @height = *value
-    end
-
     private
 
     def robot_position
-      @robot_position ||= locate(ROBOT)
+      locate(ROBOT)
     end
 
     def lift_position
-      @lift_position ||= locate(CLOSED_LIFT)
+      locate(CLOSED_LIFT)
     end
 
     def move(new_robot_position)
@@ -100,10 +96,13 @@ module Icfpc2012
       new_map.score = score - 1
       new_input = input.map(&:dup)
 
+
       target_cell = get_at(x, y)
 
+      puts new_robot_position
+
+      robot_x, robot_y = robot_position
       if target_cell.match(/[ \.\\]/)
-        new_map.robot_position = new_robot_position
         new_input[robot_y][robot_x] = EMPTY
         new_input[y][x] = ROBOT
 

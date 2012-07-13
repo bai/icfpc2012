@@ -10,7 +10,7 @@ begin
   require "Win32API"
 
   def read_char
-    Win32API.new("crtdll", "_getch", [], "L").Call
+    Win32API.new("crtdll", "_getch", [], "L").Call.chr
   end
 rescue LoadError
   def read_char
