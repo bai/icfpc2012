@@ -30,9 +30,9 @@ class Map
     @input[y][x]
   end
 
-  # If the map, including Robot coordinates, is the same as given
-  def map_equals(other_map)
-    self.to_s == other_map.to_s
+  # Checks whether two maps are identical (including Robot coordinates)
+  def ==(another_map)
+    self.to_s == another_map.to_s
   end
 
   # Returns a new instance of the map after the given step
@@ -97,7 +97,7 @@ class Map
     new_map = self.dup
     new_map.instance_variable_set('@score', @score-1)
     new_input = @input.collect {|l| l.dup}
-    
+
     target_cell = get_at(x, y)
     if target_cell.match(/[ \.\\]/)
       new_map.instance_variable_set('@robot_position', new_robot_position)

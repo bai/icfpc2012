@@ -1,15 +1,6 @@
 require_relative "./test_helper"
 
 class MapTest < Test::Unit::TestCase
-  def setup
-    # Do nothing
-  end
-
-  def teardown
-    # Do nothing
-  end
-
-  # Fake test
   def test_construct_simple
     map1 = Map.new("##")
     assert_equal(2, map1.width)
@@ -44,6 +35,6 @@ EOS
     assert_equal(2, map2.lift_x)
     assert_equal(0, map2.lift_y)
 
-    assert !map1.map_equals(map2), 'Maps should be equal'
+    assert !(map1 == map2), 'Maps should be equal'
   end
 end
