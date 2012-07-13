@@ -21,7 +21,7 @@ class MapTest < Test::Unit::TestCase
 
     map2_string = <<EOS
 #####
-#R \\#
+# R\\#
 # * #
 ##L##
 EOS
@@ -31,14 +31,15 @@ EOS
     assert_equal(5, map2.width)
     assert_equal(4, map2.height)
 
-    assert_equal(1, map2.robot_x)
+    assert_equal(2, map2.robot_x)
     assert_equal(1, map2.robot_y)
 
     assert_equal('#', map2.get_at(0, 0))
     assert_equal('\\', map2.get_at(3, 1))
+    assert_equal('R', map2.get_at(2, 1))
 
-    assert_equal(3, map2.lift_x)
-    assert_equal(2, map2.lift_y)
+    assert_equal(2, map2.lift_x)
+    assert_equal(3, map2.lift_y)
 
     assert !map1.map_equals(map2), 'Maps should be equal'
   end

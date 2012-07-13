@@ -93,12 +93,11 @@ class Map
       new_map.instance_variable_set('@robot_position', new_robot_position)
       new_map.instance_variable_set('@score', @score-1)
       new_input = @input.dup
-      new_input[robot_x][robot_y] = ' '
+      new_input[robot_y][robot_x] = ' '
       x = new_robot_position[0]
       y = new_robot_position[1]
       new_input[y][x] = 'R'
       #raise new_input.map(&:join).join("\n").inspect
-      #raise new_input.inspect
       new_map.instance_variable_set('@input', new_input)
       return new_map
     end
@@ -112,7 +111,7 @@ class Map
       row, j0 = arr[i], 0
       while row.include? test
         if j = (row.index test)
-          r << [i, j0 + j]
+          r << [j0 + j, i]
           j  += 1
           j0 += j
           row = row.drop j

@@ -67,27 +67,27 @@ EOS
     assert(map3.robot_dead)
   end
 
-  def test_step_right
+  def test_step_left
     map1_string = <<EOS
 #####
-#*R.#
+#*.R#
 #...#
 #####
 EOS
     map1 = Map.new(map1_string)
 
-    map2 = map1.step('R')
+    map2 = map1.step('L')
 
     map2_string = <<EOS
 #####
-#* R#
+#*R #
 #...#
 #####
 EOS
 
     assert(map2.map_equals(Map.new(map2_string)), "We should step and dig earth here\n" + map2.to_s)
 
-    map3 = map2.step('R')
+    map3 = map2.step('L')
     assert(map3.map_equals(map2), 'We shouldn"t be able to step thru walls')
 
   end
