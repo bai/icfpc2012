@@ -11,6 +11,7 @@ class Map
     input.each_line do |l|
       @input << l.chomp.split(//)
     end
+    @input.reverse!
 
     @width  = @input.max_by(&:length).size
     @height = @input.length
@@ -34,17 +35,19 @@ class Map
   def step(move)
     case move
     when 'W'
-      self
+      move([robot_x, robot_y])
     when 'R'
       move([robot_x+1, robot_y])
     when 'L'
       move([robot_x-1, robot_y])
-    when 'U'
-      move([robot_x, robot_y-1])
     when 'D'
+      move([robot_x, robot_y-1])
+    when 'U'
       move([robot_x, robot_y+1])
+    when 'A'
+      exit()
     else
-      self
+      raise move.inspect
     end
   end
 
@@ -69,7 +72,7 @@ class Map
   end
 
   def to_s
-    @input.map(&:join).join("\n")
+    @input.reverse.map(&:join).join("\n")
   end
 
   private
@@ -108,11 +111,12 @@ class Map
         new_map.instance_variable_set('@remaining_lambdas', @remaining_lambdas - 1)
         new_map.instance_variable_set('@collected_lambdas', @collected_lambdas + 1)
       end
-
-      return new_map
     end
 
-    self
+    #new_input = update_map(new_input)
+
+    new_map.instance_variable_set('@input', new_input)
+    new_map
   end
 
   # Returns an updated input array

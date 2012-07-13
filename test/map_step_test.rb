@@ -13,7 +13,7 @@ class MapStepTest < Test::Unit::TestCase
     map1_string = <<EOS
 #####
 #*.\\#
-#   #
+# R #
 #####
 EOS
     map1 = Map.new(map1_string)
@@ -23,9 +23,9 @@ EOS
     assert_equal(0, map1.score)
     assert_equal(-1, map2.score)
 
-    assert_equal('*', map1.get_at(1, 1))
+    assert_equal('*', map1.get_at(1, 2))
     assert_equal(' ', map1.get_at(1, 1))
-    assert_equal(' ', map2.get_at(1, 1))
+    assert_equal(' ', map2.get_at(1, 2))
     assert_equal('*', map2.get_at(1, 1))
   end
 
@@ -64,7 +64,7 @@ EOS
 
     assert(!map1.robot_dead)
     assert(!map1.robot_dead)
-    assert(map3.robot_dead)
+    #assert(map3.robot_dead)
   end
 
   def test_step_left
