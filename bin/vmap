@@ -6,12 +6,14 @@ require 'io/console'
 
 require 'icfpc2012'
 
+$stdout.flush
+
 def read_map
   Icfpc2012::Map.new(File.read('./maps/contest1.map.txt'))
 end
 
-def print_map map
-  map.to_s.split('\n').each do |line|
+def print_map(map)
+  map.to_s.each_line do |line|
     puts line
   end
 end
@@ -19,22 +21,17 @@ end
 $stdin.raw!
 
 def read_step
-  step = $stdin.getc
-  step = step[0].capitalize
-  puts step
-  step
+  $stdin.getc.chr.capitalize.tap { |s| puts s }
 end
 
 begin
   map = read_map
   while true
     puts ''
-    print_map map
+    print_map(map)
     step = read_step
-    map = map.step step
-    if step[0] == "A"
-      break;
-    end
+    map = map.step(step)
+    raise Interrupt if step.chr == "A"
   end
 rescue Interrupt
   pute 'Quitting...'
