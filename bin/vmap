@@ -25,13 +25,23 @@ def read_step
   step
 end
 
-map = read_map
-while true
-  puts ''
-  print_map map
-  step = read_step
-  map = map.step step
-  if step[0] == "A"
-    break;
+begin
+  map = read_map
+  while true
+    puts ''
+    print_map map
+    step = read_step
+    map = map.step step
+    if step[0] == "A"
+      break;
+    end
   end
+rescue Interrupt
+  pute 'Quitting...'
+  exit 1
+end
+
+# Output message to $stderr, prefixed with the program name
+def pute(message="")
+  $stderr.puts "#{$0}: #{message}"
 end
