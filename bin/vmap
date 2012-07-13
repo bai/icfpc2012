@@ -21,6 +21,10 @@ rescue LoadError
   end
 end
 
+def is_valid_input(i)
+	i == 'U' || i == 'D' || i == 'L' || i == 'R' ? true : false
+end
+
 def read_map
   Icfpc2012::Map.new(File.read('./maps/contest1.map.txt'))
 end
@@ -33,9 +37,15 @@ begin
   map = read_map
   loop do
     print_map(map)
-    step = read_char.capitalize
+    
+    begin
+      step = read_char.capitalize
+      raise Interrupt if step.chr == "A"
+    end until is_valid_input(step)
+    puts step
+
     map = map.step(step)
-    raise Interrupt if step.chr == "A"
+    
   end
 rescue Interrupt
   puts 'Quitting...'

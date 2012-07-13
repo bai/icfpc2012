@@ -96,10 +96,7 @@ module Icfpc2012
       new_map.score = score - 1
       new_input = input.map(&:dup)
 
-
       target_cell = get_at(x, y)
-
-      puts new_robot_position
 
       robot_x, robot_y = robot_position
       if target_cell.match(/[ \.\\]/)
