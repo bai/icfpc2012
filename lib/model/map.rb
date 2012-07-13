@@ -93,7 +93,7 @@ class Map
     new_input = @input.dup
 
     target_cell = get_at(*new_robot_position)
-    if target_cell.match(/[ .\\]/)
+    if target_cell.match(/[ \.\\]/)
 
       new_map.instance_variable_set('@robot_position', new_robot_position)
       new_input[robot_y][robot_x] = ' '
@@ -120,33 +120,33 @@ class Map
 
     (0..width-1).map do |x|
       (0..height-1).map do |y|
-        if (get_at(x, y) == 'R') &&
-            (get_at(x, y-1) == ' ')
+        if (old_input[y][x] == '*') &&
+            (old_input[y][x-1] == ' ')
           new_input[y][x] = ' '
           new_input[y-1][x] = '*'
         end
 
-        if (get_at(x, y) == 'R') &&
-            (get_at(x, y-1) == 'R') &&
-            (get_at(x+1, y) == ' ') &&
-            (get_at(x+1, y-1) == ' ')
+        if (old_input[y][x] == '*') &&
+            (old_input[y][x-1] == '*') &&
+            (old_input[y+1][x] == ' ') &&
+            (old_input[y+1][x-1] == ' ')
           new_input[y][x] = ' '
           new_input[y-1][x+1] = '*'
         end
 
-        if (get_at(x, y) == 'R') &&
-            (get_at(x, y-1) == 'R') &&
-            ((get_at(x+1, y) != ' ') || (get_at(x+1, y-1) != ' ')) &&
-            (get_at(x-1, y) == ' ') &&
-            (get_at(x-1, y-1) == ' ')
+        if (old_input[y][x] == '*') &&
+            (old_input[y][x-1] == '*') &&
+            ((old_input[y+1][x] != ' ') || (old_input[y+1][x-1] != ' ')) &&
+            (old_input[y-1][x] == ' ') &&
+            (old_input[y-1][x-1] == ' ')
           new_input[y][x] = ' '
           new_input[y-1][x-1] = '*'
         end
 
-        if (get_at(x, y) == 'R') &&
-            (get_at(x, y-1) == '\\') &&
-            (get_at(x+1, y) == ' ') &&
-            (get_at(x+1, y-1) == ' ')
+        if (old_input[y][x] == '*') &&
+            (old_input[y][x-1] == '\\') &&
+            (old_input[y+1][x] == ' ') &&
+            (old_input[y+1][x-1] == ' ')
           new_input[y][x] = ' '
           new_input[y-1][x+1] = '*'
         end
