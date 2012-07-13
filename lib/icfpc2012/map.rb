@@ -1,5 +1,13 @@
 module Icfpc2012
   class Map
+    ROBOT       = 'R'
+    WALL        = 'W'
+    ROCK        = '*'
+    LAMBDA      = '\\'
+    CLOSED_LIFT = 'L'
+    EARTH       = '.'
+    EMPTY       = ' '
+
     attr_reader :width, :height, :score, :robot_dead, :remaining_lambdas, :collected_lambdas
 
     def initialize(input)
@@ -14,16 +22,16 @@ module Icfpc2012
       @score  = 0
       @robot_dead = false
       @collected_lambdas = 0
-      @remaining_lambdas = input.count('\\')
+      @remaining_lambdas = input.count(LAMBDA)
     end
 
     # Map item at the given coordinates
     def get_at(x, y)
       if x >= width || x < 0 || y >= height || y < 0
-        return '%'
+        '%'
+      else
+        @input[y][x]
       end
-
-      @input[y][x]
     end
 
     # Checks whether two maps are identical (including Robot coordinates)
@@ -34,20 +42,13 @@ module Icfpc2012
     # Returns a new instance of the map after the given step
     def step(move)
       case move
-      when 'W'
-        move([robot_x, robot_y])
-      when 'R'
-        move([robot_x+1, robot_y])
-      when 'L'
-        move([robot_x-1, robot_y])
-      when 'D'
-        move([robot_x, robot_y-1])
-      when 'U'
-        move([robot_x, robot_y+1])
-      when 'A'
-        exit()
-      else
-        raise move.inspect
+      when 'W' then move([robot_x, robot_y])
+      when 'R' then move([robot_x+1, robot_y])
+      when 'L' then move([robot_x-1, robot_y])
+      when 'D' then move([robot_x, robot_y-1])
+      when 'U' then move([robot_x, robot_y+1])
+      when 'A' then exit
+      else          raise move.inspect
       end
     end
 
@@ -78,11 +79,11 @@ module Icfpc2012
     private
 
     def robot_position
-      @robot_position ||= locate2d(@input, 'R').flatten
+      @robot_position ||= locate2d(@input, ROBOT)
     end
 
     def lift_position
-      @lift_position ||= locate2d(@input, 'L').flatten
+      @lift_position ||= locate2d(@input, CLOSED_LIFT)
     end
 
     def move(new_robot_position)
@@ -97,10 +98,10 @@ module Icfpc2012
       target_cell = get_at(x, y)
       if target_cell.match(/[ \.\\]/)
         new_map.instance_variable_set('@robot_position', new_robot_position)
-        new_input[robot_y][robot_x] = ' '
-        new_input[y][x] = 'R'
+        new_input[robot_y][robot_x] = EMPTY
+        new_input[y][x] = ROBOT
 
-        if target_cell == '\\'
+        if target_cell == LAMBDA
           new_map.instance_variable_set('@remaining_lambdas', @remaining_lambdas - 1)
           new_map.instance_variable_set('@collected_lambdas', @collected_lambdas + 1)
         end
@@ -118,35 +119,35 @@ module Icfpc2012
 
       (0..width-1).map do |x|
         (0..height-1).map do |y|
-          if (old_input[y][x] == '*') &&
-              (old_input[y-1][x] == ' ')
-            new_input[y][x] = ' '
-            new_input[y-1][x] = '*'
+          if (old_input[y][x] == ROCK) &&
+              (old_input[y-1][x] == EMPTY)
+            new_input[y][x] = EMPTY
+            new_input[y-1][x] = ROCK
           end
 
-          if (old_input[y][x] == '*') &&
-              (old_input[y-1][x] == '*') &&
-              (old_input[y][x+1] == ' ') &&
-              (old_input[y-1][x+1] == ' ')
-            new_input[y][x] = ' '
-            new_input[y-1][x+1] = '*'
+          if (old_input[y][x] == ROCK) &&
+              (old_input[y-1][x] == ROCK) &&
+              (old_input[y][x+1] == EMPTY) &&
+              (old_input[y-1][x+1] == EMPTY)
+            new_input[y][x] = EMPTY
+            new_input[y-1][x+1] = ROCK
           end
 
-          if (old_input[y][x] == '*') &&
-              (old_input[y-1][x] == '*') &&
-              ((old_input[y][x+1] != ' ') || (old_input[y-1][x+1] != ' ')) &&
-              (old_input[y][x-1] == ' ') &&
-              (old_input[y-1][x-1] == ' ')
-            new_input[y][x] = ' '
-            new_input[y-1][x-1] = '*'
+          if (old_input[y][x] == ROCK) &&
+              (old_input[y-1][x] == ROCK) &&
+              ((old_input[y][x+1] != EMPTY) || (old_input[y-1][x+1] != EMPTY)) &&
+              (old_input[y][x-1] == EMPTY) &&
+              (old_input[y-1][x-1] == EMPTY)
+            new_input[y][x] = EMPTY
+            new_input[y-1][x-1] = ROCK
           end
 
-          if (old_input[y][x] == '*') &&
-              (old_input[y-1][x] == '\\') &&
-              (old_input[y][x+1] == ' ') &&
-              (old_input[y-1][x+1] == ' ')
-            new_input[y][x] = ' '
-            new_input[y-1][x+1] = '*'
+          if (old_input[y][x] == ROCK) &&
+              (old_input[y-1][x] == LAMBDA) &&
+              (old_input[y][x+1] == EMPTY) &&
+              (old_input[y-1][x+1] == EMPTY)
+            new_input[y][x] = EMPTY
+            new_input[y-1][x+1] = ROCK
           end
         end
       end
@@ -167,7 +168,7 @@ module Icfpc2012
           end
         end
       end
-      r
+      r.flatten
     end
   end
 end

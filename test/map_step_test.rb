@@ -15,10 +15,10 @@ EOS
     assert_equal(0, map1.score)
     assert_equal(-1, map2.score)
 
-    assert_equal('*', map1.get_at(1, 2))
-    assert_equal(' ', map1.get_at(1, 1))
-    assert_equal(' ', map2.get_at(1, 2))
-    assert_equal('*', map2.get_at(1, 1))
+    assert_equal(Icfpc2012::Map::ROCK, map1.get_at(1, 2))
+    assert_equal(Icfpc2012::Map::EMPTY, map1.get_at(1, 1))
+    assert_equal(Icfpc2012::Map::EMPTY, map2.get_at(1, 2))
+    assert_equal(Icfpc2012::Map::ROCK, map2.get_at(1, 1))
   end
 
   def test_step_simple_slide
