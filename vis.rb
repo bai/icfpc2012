@@ -13,7 +13,7 @@ end
 
 $stdin.raw!
 
-def read_step
+def read_step 
 	step = $stdin.getc
 	step = step[0].capitalize
 	puts step
@@ -22,8 +22,10 @@ end
 
 map = read_map
 while true
+	puts ''
 	print_map map
-	step = read_step
+	step = read_step 
+	map = map.step step
 	if step[0] == "A"
 		break; 
 	end
