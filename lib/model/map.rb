@@ -29,15 +29,19 @@ class Map
     self
   end
 
-  def robot_position
-    locate2d(@input, 'R')
+  def robot_x
+    robot_position[0]
   end
 
-  def to_s
-    @input.map(&:join)
+  def robot_y
+    robot_position[1]
   end
 
   private
+
+  def robot_position
+    @robot_position ||= locate2d(@input, 'R').flatten
+  end
 
   def locate2d(arr, test)
     r = []
