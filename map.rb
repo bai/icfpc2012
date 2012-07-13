@@ -7,10 +7,20 @@ class Map
     @score = 0
   end
 
+  # Map item at the given coordinates
+  # TODO: implement
+  def get_at(x, y)
+    ' '
+  end
+
+  # If the map, including Robot coordinates, is the same as given
+  # TODO: implement
   def map_equals(other_map)
     false
   end
 
+  # Returns a new instance of the map after the given step
+  # TODO: implement
   def step(move)
     self
   end
