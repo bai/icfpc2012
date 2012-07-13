@@ -11,6 +11,7 @@ class Map
     input.each_line do |l|
       @input << l.chomp.split(//)
     end
+    @input.reverse!
 
     @width  = @input.max_by(&:length).size
     @height = @input.length
@@ -73,7 +74,7 @@ class Map
   end
 
   def to_s
-    @input.map(&:join).join("\n")
+    @input.reverse.map(&:join).join("\n")
   end
 
   private
