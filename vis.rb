@@ -12,7 +12,7 @@ end
 
 def read_step
 	step = gets
-	step[0]
+	step[0].capitalize
 end
 
 map = read_map
