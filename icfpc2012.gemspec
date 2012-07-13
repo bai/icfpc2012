@@ -18,5 +18,4 @@ Gem::Specification.new do |s|
   s.rubyforge_project = '[none]'
 
   s.add_development_dependency 'minitest'
-  s.add_dependency 'thor', ['>= 0.15.2', '< 2']
 end
