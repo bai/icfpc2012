@@ -1,4 +1,12 @@
-## On Unix system:
+## Dependencies
+
+    gem install bundler
+
+## Setup
+
+    bundle install
+
+## On Unix system
 
     cat maps/contest1.map.txt | ./miner.rb
 
