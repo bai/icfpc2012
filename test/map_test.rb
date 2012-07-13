@@ -33,6 +33,5 @@ EOS
     assert_equal(1, map2.robot_y)
     assert_equal('#', map2.get_at(0, 0))
     assert_equal('\\', map2.get_at(4, 1))
-
   end
 end
