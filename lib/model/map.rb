@@ -23,6 +23,10 @@ class Map
 
   # Map item at the given coordinates
   def get_at(x, y)
+    if x >= width || x < 0 || y >= height || y < 0
+      return '%'
+    end
+
     @input[y][x]
   end
 
@@ -86,26 +90,19 @@ class Map
   end
 
   def move(new_robot_position)
-    if new_robot_position[0] >= width || new_robot_position[0] < 0 ||
-      new_robot_position[1] >= height || new_robot_position[1] < 0
-      return self
-    end
+
+    new_map = self.dup
+    new_map.instance_variable_set('@score', @score-1)
+    new_input = @input.dup
 
     target_cell = get_at(*new_robot_position)
     if target_cell.match(/[ \.\\]/)
 
-      new_map = self.dup
       new_map.instance_variable_set('@robot_position', new_robot_position)
-      new_map.instance_variable_set('@score', @score-1)
-      new_input = @input.dup
       new_input[robot_y][robot_x] = ' '
       x = new_robot_position[0]
       y = new_robot_position[1]
       new_input[y][x] = 'R'
-
-      new_input = update_map(new_input)
-
-      new_map.instance_variable_set('@input', new_input)
 
       if target_cell == '\\'
         new_map.instance_variable_set('@remaining_lambdas', @remaining_lambdas - 1)
