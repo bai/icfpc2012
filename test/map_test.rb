@@ -33,5 +33,7 @@ EOS
     assert_equal(1, map2.robot_y)
     assert_equal('#', map2.get_at(0, 0))
     assert_equal('\\', map2.get_at(3, 1))
+
+    assert !map1.map_equals(map2), 'Maps should be equal'
   end
 end

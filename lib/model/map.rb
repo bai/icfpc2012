@@ -21,7 +21,7 @@ class Map
 
   # If the map, including Robot coordinates, is the same as given
   def map_equals(other_map)
-    false
+    self.to_s == other_map.to_s
   end
 
   # Returns a new instance of the map after the given step
