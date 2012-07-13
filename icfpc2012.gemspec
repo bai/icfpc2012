@@ -12,8 +12,7 @@ Gem::Specification.new do |s|
   s.summary       = "ICFPC 2012 task"
   s.description   = "ICFPC 2012 task"
 
-  # s.files         = `git ls-files app lib`.split("\n")
-  s.files         = [ "README*", "lib/**/*" ].map { |glob| Dir[glob] }.flatten
+  s.files         = `git ls-files bin lib`.split("\n")
   s.platform      = Gem::Platform::RUBY
   s.require_paths = ['lib']
   s.rubyforge_project = '[none]'
