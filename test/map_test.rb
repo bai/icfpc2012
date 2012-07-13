@@ -15,5 +15,24 @@ class MapTest < Test::Unit::TestCase
     assert_equal(1, map1.width)
     assert_equal(1, map1.height)
     assert_equal(0, map1.score)
+    assert_equal('#', map1.get_at(0, 0))
+
+    # TODO: Assert that we fail if no robot or lift found
+
+    map2_string = <<EOS
+#####
+#R \#
+# * #
+#####
+EOS
+
+    map2 = Map.new(map2_string)
+    assert_equal(5, map2.width)
+    assert_equal(4, map2.height)
+    assert_equal(1, map2.robot_x)
+    assert_equal(1, map2.robot_y)
+    assert_equal('#', map2.get_at(0, 0))
+    assert_equal('\\', map2.get_at(4, 1))
+
   end
 end
