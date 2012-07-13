@@ -12,9 +12,7 @@ module Icfpc2012
 
     def initialize(input)
       @input = []
-      input.each_line do |l|
-        @input << l.chomp.split(//)
-      end
+      input.each_line { |l| @input << l.chomp.split(//) }
       @input.reverse!
 
       @width  = @input.max_by(&:length).size
@@ -79,11 +77,11 @@ module Icfpc2012
     private
 
     def robot_position
-      @robot_position ||= locate2d(@input, ROBOT)
+      @robot_position ||= locate(ROBOT)
     end
 
     def lift_position
-      @lift_position ||= locate2d(@input, CLOSED_LIFT)
+      @lift_position ||= locate(CLOSED_LIFT)
     end
 
     def move(new_robot_position)
@@ -155,20 +153,11 @@ module Icfpc2012
       new_input
     end
 
-    def locate2d(arr, test)
-      [].tap do |r|
-        arr.each_index do |i|
-          row, j0 = arr[i], 0
-          while row.include? test
-            if j = (row.index test)
-              r << [j0 + j, i]
-              j  += 1
-              j0 += j
-              row = row.drop j
-            end
-          end
-        end
-      end.flatten
+    def locate(element)
+      @input.each_with_index do |subarray, i|
+        j = subarray.index(element)
+        return j, i if j
+      end
     end
   end
 end
