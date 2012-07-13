@@ -67,4 +67,27 @@ EOS
     assert(map3.robot_dead)
   end
 
+  def test_step_right
+    map1_string = <<EOS
+#####
+#*R.#
+#...#
+#####
+EOS
+    map1 = Map.new(map1_string)
+
+    map2 = map1.step('R')
+
+    map2_string = <<EOS
+#####
+#* R#
+#...#
+#####
+EOS
+
+    assert(map2.map_equals(Map.new(map2_string)), 'not eq')
+
+  end
+
+
 end
