@@ -120,7 +120,7 @@ class Map
     new_input = old_input.dup
 
     (0..width-1).map do |x|
-      (height-1..0).map do |y|
+      (0..height-1).map do |y|
         if (get_at(x, y) == 'R') &&
             (get_at(x, y-1) == ' ')
           new_input[y][x] = ' '
