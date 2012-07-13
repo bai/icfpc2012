@@ -6,39 +6,38 @@ require 'io/console'
 
 require 'icfpc2012'
 
-$stdout.flush
+begin
+  require "Win32API"
+
+  def read_char
+    Win32API.new("crtdll", "_getch", [], "L").Call
+  end
+rescue LoadError
+  def read_char
+    system "stty raw -echo"
+    STDIN.getc
+  ensure
+    system "stty -raw echo"
+  end
+end
 
 def read_map
   Icfpc2012::Map.new(File.read('./maps/contest1.map.txt'))
 end
 
 def print_map(map)
-  map.to_s.each_line do |line|
-    puts line
-  end
-end
-
-$stdin.raw!
-
-def read_step
-  $stdin.getc.chr.capitalize.tap { |s| puts s }
+  map.to_s.each_line { |line| puts line }
 end
 
 begin
   map = read_map
-  while true
-    puts ''
+  loop do
     print_map(map)
-    step = read_step
+    step = read_char.capitalize
     map = map.step(step)
     raise Interrupt if step.chr == "A"
   end
 rescue Interrupt
-  pute 'Quitting...'
+  puts 'Quitting...'
   exit 1
-end
-
-# Output message to $stderr, prefixed with the program name
-def pute(message="")
-  $stderr.puts "#{$0}: #{message}"
 end
