@@ -2,8 +2,13 @@ class Map
   attr_reader :width, :height, :score, :robot_x, :robot_y
 
   def initialize(input)
-    @input = input.split("\n").map { |l| l.split(//) }
-    @width = @input.max_by(&:length)
+    @input = []
+    input.each_line do |l|
+      @input << l.split(//)
+    end
+
+    @input = input.split("  \n").map { |l| l.split(//) }
+    @width = @input.max_by(&:length).size
     @height = @input.length
     @score = 0
   end
