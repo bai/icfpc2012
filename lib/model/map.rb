@@ -91,17 +91,17 @@ class Map
 
   def move(new_robot_position)
 
+    x = new_robot_position[0]
+    y = new_robot_position[1]
+
     new_map = self.dup
     new_map.instance_variable_set('@score', @score-1)
-    new_input = @input.dup
-
-    target_cell = get_at(*new_robot_position)
+    new_input = @input.collect {|l| l.dup}
+    
+    target_cell = get_at(x, y)
     if target_cell.match(/[ \.\\]/)
-
       new_map.instance_variable_set('@robot_position', new_robot_position)
       new_input[robot_y][robot_x] = ' '
-      x = new_robot_position[0]
-      y = new_robot_position[1]
       new_input[y][x] = 'R'
 
       if target_cell == '\\'
@@ -110,7 +110,7 @@ class Map
       end
     end
 
-    #new_input = update_map(new_input)
+    new_input = update_map(new_input)
 
     new_map.instance_variable_set('@input', new_input)
     new_map
@@ -152,11 +152,6 @@ class Map
           new_input[y][x] = ' '
           new_input[y-1][x+1] = '*'
         end
-
-        #if get_at(x, y) == 'L'
-        #  new_input[y][x] = 'O'
-        #end
-
       end
     end
 
