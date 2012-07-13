@@ -119,8 +119,8 @@ class Map
   def update_map(old_input)
     new_input = old_input.dup
 
-    0.upto(width) do |x|
-      height.downto(0) do |y|
+    (0..width-1).map do |x|
+      (height-1..0).map do |y|
         if (get_at(x, y) == 'R') &&
             (get_at(x, y-1) == ' ')
           new_input[y][x] = ' '
