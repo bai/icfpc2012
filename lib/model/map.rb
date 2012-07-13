@@ -1,5 +1,7 @@
 class Map
 
+  attr_reader :width, :height, :score
+
   def initialize(input)
     @input = input.split("\n").map { |l| l.split(//) }
     @width = @input.max_by(&:length)

@@ -16,9 +16,12 @@ class MapTest < Test::Unit::TestCase
   end
 
   # Fake test
-  def test_fail
+  def test_construct_simple
 
-    # To change this template use File | Settings | File Templates.
-    fail("Not implemented")
+    map1 = Map.new("#")
+    assert_equal(1, map1.width)
+    assert_equal(1, map1.height)
+    assert_equal(0, map1.score)
+
   end
 end
