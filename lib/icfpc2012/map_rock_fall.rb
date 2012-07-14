@@ -4,7 +4,7 @@ module Icfpc2012
       @old_input = old_input
       @robot_position = robot_position
       @robot_dead = false
-      @updated_input = update_map
+      update_map
     end
 
     # TODO: Implement a list of falling rocks
@@ -14,7 +14,7 @@ module Icfpc2012
 
     # TODO: Rename "input" so smth like "mapArray"
     def updated_input
-      @updated_input
+      @new_input
     end
 
     def alive?
@@ -23,29 +23,32 @@ module Icfpc2012
 
     private
 
-    def can_fall_to(x, y)
-      @old_input[y][x] == Map::EMPTY
+    def fall_to(x, y)
+      @new_input[y][x] = Map::ROCK
+
+      if x == @robot_position[0] && y == @robot_position[1]+1
+        @robot_dead = true
+      end
     end
 
     # Returns an updated input array
     def update_map()
-      new_input = @old_input.map(&:dup)
-      #new_input[@robot_position[1]][@robot_position[0]] = Map::EMPTY
+      @new_input = @old_input.map(&:dup)
 
       (0..@old_input[0].size-1).each do |x|
         (0..@old_input.size-1).each do |y|
           if (@old_input[y][x] == Map::ROCK) &&
               (@old_input[y-1][x] == Map::EMPTY)
-            new_input[y][x] = Map::EMPTY
-            new_input[y-1][x] = Map::ROCK
+            @new_input[y][x] = Map::EMPTY
+            fall_to(x, y-1)
           end
 
           if (@old_input[y][x] == Map::ROCK) &&
               (@old_input[y-1][x] == Map::ROCK) &&
               (@old_input[y][x+1] == Map::EMPTY) &&
               (@old_input[y-1][x+1] == Map::EMPTY)
-            new_input[y][x] = Map::EMPTY
-            new_input[y-1][x+1] = Map::ROCK
+            @new_input[y][x] = Map::EMPTY
+            fall_to(x+1, y-1)
           end
 
           if (@old_input[y][x] == Map::ROCK) &&
@@ -53,26 +56,23 @@ module Icfpc2012
               ((@old_input[y][x+1] != Map::EMPTY) || (@old_input[y-1][x+1] != Map::EMPTY)) &&
               (@old_input[y][x-1] == Map::EMPTY) &&
               (@old_input[y-1][x-1] == Map::EMPTY)
-            new_input[y][x] = Map::EMPTY
-            new_input[y-1][x-1] = Map::ROCK
+            @new_input[y][x] = Map::EMPTY
+            fall_to(x-1, y-1)
           end
 
           if (@old_input[y][x] == Map::ROCK) &&
               (@old_input[y-1][x] == Map::LAMBDA) &&
               (@old_input[y][x+1] == Map::EMPTY) &&
               (@old_input[y-1][x+1] == Map::EMPTY)
-            new_input[y][x] = Map::EMPTY
-            new_input[y-1][x+1] = Map::ROCK
+            @new_input[y][x] = Map::EMPTY
+            fall_to(x+1, y-1)
           end
         end
       end
 
-      if new_input[@robot_position[1]][@robot_position[0]] == Map::ROCK
-      #  new_input[@robot_position[1]][@robot_position[0]] == Map::ROBOT
-      #else
+      if @new_input[@robot_position[1]][@robot_position[0]] == Map::ROCK
         @robot_dead = true
       end
-      new_input
     end
   end
 end

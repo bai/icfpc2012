@@ -52,11 +52,10 @@ EOS
 
     map1 = Icfpc2012::Map.new(map1_string)
     map2 = map1.step('W')
-    map3 = map2.step('W')
+    #map3 = map2.step('W')
 
     assert(map1.robot.alive?)
-    assert(map1.robot.alive?)
-    assert(!map3.robot.alive?, "Robot should be dead on map:\n#{map3.to_s}")
+    assert(!map2.robot.alive?, "Robot should be dead on map:\n#{map2.to_s}")
   end
 
   def test_step_left
