@@ -13,4 +13,11 @@ EOS
     pf1.do_wave
     #pf1.trace_distmap
   end
+
+  def test_wave_big
+    map1 = Icfpc2012::Map.new(File.read('../maps/contest10.map.txt'))
+    pf1 = Icfpc2012::PathFinder.new(map1)
+    pf1.do_wave
+    #pf1.trace_distmap
+  end
 end
