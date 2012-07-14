@@ -10,14 +10,16 @@ class PathFinderTest < Test::Unit::TestCase
 EOS
     map1 = Icfpc2012::Map.new(map1_string)
     pf1 = Icfpc2012::PathFinder.new(map1)
-    pf1.do_wave(map1.robot.x, map1.robot.y, false)
-    #pf1.trace_distmap
+    pf1.do_wave(map1.robot.position, false)
+    assert_equal(pf1.get_shortest_dist_to([1, 1]), 1)
   end
 
-  def test_wave_big
+  def test_shortest_path
     map1 = Icfpc2012::Map.new(File.read('../maps/contest6.map.txt'))
     pf1 = Icfpc2012::PathFinder.new(map1)
-    pf1.do_wave(map1.robot.x, map1.robot.y, true)
-    pf1.trace_distmap
+    pf1.do_wave(map1.robot.position, false)
+    #pf1.print_distmap
+    assert_equal(pf1.trace_shortest_path_to(pf1.enum_closest_lambdas[10]).size,
+                 pf1.get_shortest_dist_to(pf1.enum_closest_lambdas[10]) + 1)
   end
 end
