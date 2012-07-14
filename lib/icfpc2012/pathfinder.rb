@@ -41,7 +41,7 @@ module Icfpc2012
       next (map.walkable?(nci, nri) || map.get_at(nci, nri) == '*')
     end
     
-    def do_wave(coords, policy)
+    def do_wave(coords, policy = MIND_ROCKS)
       x = coords[0]
       y = coords[1]
       newFront = []
