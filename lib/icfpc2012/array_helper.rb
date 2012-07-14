@@ -4,7 +4,7 @@ class Array
   def shuffle
     sort_by { Kernel.rand }
   end
-	
+  
   # Returns a shuffled copy of the array.
   def shuffle!
     self.replace shuffle
@@ -36,4 +36,25 @@ class Array
    return self[0..position], self[position+1..-1]
   end
   
+  # gga4r relies on this method from RoR
+  # taken from http://apidock.com/rails/v3.2.3/Array/in_groups_of
+  def in_groups_of(number, fill_with = nil)
+    if fill_with == false
+      collection = self
+    else
+      # size % number gives how many extra we have;
+      # subtracting from number gives how many to add;
+      # modulo number ensures we don't add group of just fill.
+      padding = (number - size % number) % number
+      collection = dup.concat([fill_with] * padding)
+    end
+
+    if block_given?
+      collection.each_slice(number) { |slice| yield(slice) }
+    else
+      groups = []
+      collection.each_slice(number) { |group| groups << group }
+      groups
+    end
+  end
 end

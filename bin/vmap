@@ -77,6 +77,12 @@ begin
     waypoint = all_waypoints.last.step(step)
     all_waypoints << waypoint
 
+    if !waypoint.map.robot.alive?
+      puts "You DIED!!!"
+      print_map(all_waypoints)
+      break
+    end
+
     puts step
 
   end

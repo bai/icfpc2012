@@ -24,4 +24,33 @@ EOS
 
     assert(path != nil, "No path generated")
   end
+
+  def test_init_population
+    map_string = <<EOS
+#L###
+#*.\\#
+# R #
+#####
+EOS
+    map = Icfpc2012::Map.new(map_string)
+
+    ga = Icfpc2012::Ga.new(1000, map)
+
+    assert_same(1000, ga.population.length)
+  end
+
+  def test_evolve # currently fails
+
+    map_string = <<EOS
+#L###
+#*.\\#
+# R #
+#####
+EOS
+    map = Icfpc2012::Map.new(map_string)
+
+    ga = Icfpc2012::Ga.new(1000, map)
+
+    assert(ga.evolve() != nil, 'No best fit found')
+  end
 end

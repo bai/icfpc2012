@@ -11,7 +11,18 @@ module Icfpc2012
     end
 
     def fitness
-      raise 'Not Implemented Yet'
+      waypoints = [Icfpc2012::Waypoint.new(nil, @map)]
+      waypoint = waypoints[0]
+
+      self.each do |action|
+        waypoint = waypoint.step(action)
+        if (waypoint.map.remaining_lambdas == 0) || !waypoint.map.robot.alive?
+          break
+        end
+        waypoints << waypoint
+      end
+
+      waypoints[waypoints.length - 1].map.score
     end
 
     def recombine (c2)
@@ -25,9 +36,9 @@ module Icfpc2012
     end
 
     def mutate
-      posssible_moves = ['L', 'R', 'U', 'D']
+      posssible_moves = ['L', 'R', 'U', 'D', 'W']
       mutate_point = (self.length * rand).to_i
-      self[mutate_point] = posssible_moves[rand(4)]
+      self[mutate_point] = posssible_moves[rand(5)]
     end
   end
 
@@ -40,8 +51,9 @@ module Icfpc2012
       @genetic_algorithm = GeneticAlgorithm.new (@population)
     end
 
-    def evolve_step
-      raise 'Not Implemented Yet'
+    def evolve (generations = 1000)
+      generations.times { @genetic_algorithm.evolve }
+      @genetic_algorithm.best_fit[0]
     end
 
     def init_population (population_size)
@@ -53,12 +65,12 @@ module Icfpc2012
     end
 
     def init_path
-      posssible_moves = ['L', 'R', 'U', 'D']
+      posssible_moves = ['L', 'R', 'U', 'D', 'W']
       path = ''
       len = (@map.height + @map.width);
       len = (len * rand(201) / 100).to_i
       len.times do
-        path += posssible_moves[rand(4)]
+        path += posssible_moves[rand(5)]
       end
       path
     end

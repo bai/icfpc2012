@@ -9,32 +9,26 @@ module Icfpc2012
     EARTH       = '.'
     EMPTY       = ' '
 
-    attr_writer   :width, :height, :robot
-    attr_accessor :input, :score, :remaining_lambdas, :collected_lambdas
+    attr_writer   :width, :height
+    attr_accessor :input, :score, :remaining_lambdas, :collected_lambdas, :robot
 
     def initialize(input)
       self.input = input.split(/\r?\n/).map { |l| l.strip.split(//) }.reverse
 
-      @lift_position = locate(CLOSED_LIFT) || locate(OPEN_LIFT)
-      unless @lift_position
+      unless @lift_position = locate(CLOSED_LIFT) || locate(OPEN_LIFT)
         raise "Lift not found on map"
       end
 
-      @robot_position = locate(ROBOT)
-      unless @robot_position
+      unless robot_position = locate(ROBOT)
         raise "Robot not found on map"
       end
 
       # Locate robot
-      @robot = Robot.new(*@robot_position)
+      @robot = Robot.new(*robot_position)
 
       self.score             = 0
       self.collected_lambdas = 0
       self.remaining_lambdas = input.count(LAMBDA)
-    end
-
-    def robot
-      @robot
     end
 
     # Map item at the given coordinates
@@ -55,7 +49,9 @@ module Icfpc2012
     def step(direction)
       case direction
       when 'W', 'R', 'L', 'D', 'U'
-        move @robot.step(direction)
+        new_coordinates = @robot.step(direction)
+        #new_coordinates = walkable?(*new_coordinates) ? new_coordinates : robot.position
+        move new_coordinates
       when 'A'
         exit
       else
@@ -87,11 +83,9 @@ module Icfpc2012
       get_at(x, y).match(/[ \.\\O]/)
     end
 
-    private
-
-    def move(new_robot_position)
-      x = new_robot_position[0]
-      y = new_robot_position[1]
+    def move(new_position)
+      x = new_position[0]
+      y = new_position[1]
 
       new_map = self.dup
       new_map.score = score - 1
@@ -122,57 +116,16 @@ module Icfpc2012
         new_input[@robot.y][@robot.x] = EMPTY
         new_input[y][x] = ROBOT
         new_input[y][2 * x - @robot.x] = ROCK
+      else
+        new_position = @robot.position
       end
 
-      fallen_input = update_map(new_input)
+      rockfall = MapRockFall.new(new_input, new_position)
 
-      robot_crashed = fallen_input[y][x] == ROCK
-      new_map.robot = Robot.new(x, y, !robot_crashed)
+      new_map.robot = Robot.new(new_position[0], new_position[1], rockfall.alive?)
 
-      new_map.input = fallen_input
+      new_map.input = rockfall.updated_input
       new_map
-    end
-
-    # Returns an updated input array
-    def update_map(old_input)
-      new_input = old_input.map(&:dup)
-
-      (0..width-1).map do |x|
-        (0..height-1).map do |y|
-          if (old_input[y][x] == ROCK) &&
-              (old_input[y-1][x] == EMPTY)
-            new_input[y][x] = EMPTY
-            new_input[y-1][x] = ROCK
-          end
-
-          if (old_input[y][x] == ROCK) &&
-              (old_input[y-1][x] == ROCK) &&
-              (old_input[y][x+1] == EMPTY) &&
-              (old_input[y-1][x+1] == EMPTY)
-            new_input[y][x] = EMPTY
-            new_input[y-1][x+1] = ROCK
-          end
-
-          if (old_input[y][x] == ROCK) &&
-              (old_input[y-1][x] == ROCK) &&
-              ((old_input[y][x+1] != EMPTY) || (old_input[y-1][x+1] != EMPTY)) &&
-              (old_input[y][x-1] == EMPTY) &&
-              (old_input[y-1][x-1] == EMPTY)
-            new_input[y][x] = EMPTY
-            new_input[y-1][x-1] = ROCK
-          end
-
-          if (old_input[y][x] == ROCK) &&
-              (old_input[y-1][x] == LAMBDA) &&
-              (old_input[y][x+1] == EMPTY) &&
-              (old_input[y-1][x+1] == EMPTY)
-            new_input[y][x] = EMPTY
-            new_input[y-1][x+1] = ROCK
-          end
-        end
-      end
-
-      new_input
     end
 
     def locate(element)
