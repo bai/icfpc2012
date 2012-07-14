@@ -43,7 +43,12 @@ def is_valid_input(i)
 end
 
 def read_map
-  Icfpc2012::Map.new(File.read('./maps/contest1.map.txt'))
+  input_map = './maps/contest1.map.txt'
+  if ARGF.argv != []
+    input_map = ARGF.argv[0]
+  end
+  
+  Icfpc2012::Map.new(File.read(input_map))
 end
 
 def print_map(map)
