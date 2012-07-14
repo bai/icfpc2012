@@ -79,6 +79,10 @@ module Icfpc2012
       @height ||= input.size
     end
 
+    def won?
+      remaining_lambdas == 0 && robot.position == @lift_position
+    end
+
     def walkable?(x, y)
       get_at(x, y).match(/[ \.\\O]/)
     end

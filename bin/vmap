@@ -83,6 +83,12 @@ begin
       break
     end
 
+    if waypoint.map.won?
+      puts "We have a WINNER!!!"
+      print_map(all_waypoints)
+      break
+    end
+
     puts step
 
   end
