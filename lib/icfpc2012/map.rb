@@ -143,10 +143,8 @@ module Icfpc2012
 
       # Use old water level
       robot_underwater = robot_underwater?(new_position[1])
-      robot_alive = rockfall.alive? &&
+      robot_alive = new_rockfall.alive? &&
           (!robot_underwater || robot.underwater_ticks < self.waterproof)
-
-      new_map.input = new_rockfall.updated_input
 
       if new_map.flooding != 0 && (new_map.timer % new_map.flooding == 0)
         new_map.water = water+1
@@ -156,7 +154,7 @@ module Icfpc2012
                                 robot_underwater ? robot.underwater_ticks+1 : 0)
 
       # Win freezes the world
-      new_map.map_array = new_map.won? ? new_input : rockfall.updated_input
+      new_map.map_array = new_map.won? ? new_input : new_rockfall.updated_input
       new_map
     end
 
