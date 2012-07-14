@@ -133,6 +133,13 @@ module Icfpc2012
           new_position = trampolines[target_cell]
           new_input[y][x] = EMPTY
           new_input[new_position[1]][new_position[0]] = ROBOT
+          trampolines.each do |src, dst| 
+            if dst == new_position
+              x, y = locate(src)
+              new_input[y][x] = EMPTY
+              trampolines.delete(src)
+            end
+          end
         elsif target_cell == OPEN_LIFT
           new_map.score += new_map.collected_lambdas*50
         end
