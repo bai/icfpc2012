@@ -14,8 +14,11 @@ EOS
     assert_equal(pf1.get_shortest_dist_to([1, 1]), 1)
   end
 
+  def get_mapfile(file)
+    File.read(File.join(File.dirname(__FILE__), '../maps/', file))
+  end
   def test_shortest_path
-    map1 = Icfpc2012::Map.new(File.read('../maps/contest6.map.txt'))
+    map1 = Icfpc2012::Map.new(get_mapfile('contest6.map.txt'))
     pf1 = Icfpc2012::PathFinder.new(map1)
     pf1.do_wave(map1.robot.position, false)
     #pf1.print_distmap
@@ -24,7 +27,7 @@ EOS
   end
 
   def test_commands_path
-    map1 = Icfpc2012::Map.new(File.read('../maps/contest3.map.txt'))
+    map1 = Icfpc2012::Map.new(get_mapfile('contest3.map.txt'))
     pf1 = Icfpc2012::PathFinder.new(map1)
     pf1.do_wave(map1.robot.position, false)
     #pf1.print_distmap
