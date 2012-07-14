@@ -1,4 +1,11 @@
 module Icfpc2012
+  def Icfpc2012.do_nb(c)
+    opts = [ [1, 0], [-1, 0], [0, 1], [0, -1] ]
+    opts.each do |p| 
+      yield c[0] + p[0], c[1] + p[1]
+    end
+  end
+    
   class PathFinder
 
     attr_accessor :map, :distmap, :lambdas
@@ -11,14 +18,30 @@ module Icfpc2012
       self.lambdas = Array.new
     end
 
-    def do_nb(c)
-      opts = [ [1, 0], [-1, 0], [0, 1], [0, -1] ]
-      opts.each do |p| 
-        yield c[0] + p[0], c[1] + p[1]
+    STAY_AWAY_FROM_ROCKS = Proc.new do |map, nri, nci|
+      # don't go anywhere near any rocks
+      # probably should not test if there are any rocks
+      # under the robot ???
+      any_rocks = false
+      Icfpc2012.do_nb ([nci, nri]) do |r, c|
+        if map.get_at(r, c) == '*'
+          any_rocks = true
+        end
       end
+      next map.walkable?(nci, nri) && !any_rocks
     end
 
-    def do_wave(coords, ignore_rocks = true)
+    MIND_ROCKS = Proc.new do |map, nri, nci|
+      # don't go through the rocks
+      next map.walkable?(nci, nri)
+    end
+    
+    IGNORE_ROCKS = Proc.new do |map, nri, nci|
+      # crash right through the rocks
+      next (map.walkable?(nci, nri) || map.get_at(nci, nri) == '*')
+    end
+    
+    def do_wave(coords, policy)
       x = coords[0]
       y = coords[1]
       newFront = []
@@ -35,8 +58,8 @@ module Icfpc2012
 
           lambdas.push [ci, ri] if map.get_at(ci, ri) == '\\'
 
-          do_nb(c) do |nri, nci|
-            if distmap[nri][nci] == -1 && (map.walkable?(nci, nri) || (ignore_rocks && map.get_at(nci, nri) == '*'))
+          Icfpc2012.do_nb(c) do |nri, nci|
+            if distmap[nri][nci] == -1 && policy.call(map, nri, nci)
               distmap[nri][nci] = t + 1
               newFront.push [nri, nci]
             end
@@ -71,7 +94,7 @@ module Icfpc2012
         mv = distmap[y1][x1]
         mx = x1
         my = y1
-        do_nb ([y1, x1]) do |ny, nx|
+        Icfpc2012.do_nb ([y1, x1]) do |ny, nx|
           if distmap[ny][nx] != - 1 && distmap[ny][nx] < mv
             mv = distmap[ny][nx]
             my = ny
