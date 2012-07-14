@@ -18,7 +18,7 @@ module Icfpc2012
       end
     end
 
-    def do_wave(coords, ignore_rocks)
+    def do_wave(coords, ignore_rocks = true)
       x = coords[0]
       y = coords[1]
       newFront = []
