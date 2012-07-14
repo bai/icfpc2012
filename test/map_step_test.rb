@@ -54,8 +54,8 @@ EOS
     map2 = map1.step('W')
     map3 = map2.step('W')
 
-    assert(!map1.robot_dead)
-    assert(!map1.robot_dead)
+    assert(map1.robot.alive?)
+    assert(map1.robot.alive?)
     #assert(map3.robot_dead)
   end
 
