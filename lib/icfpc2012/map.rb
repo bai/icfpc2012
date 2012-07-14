@@ -9,7 +9,7 @@ module Icfpc2012
     EARTH       = '.'
     EMPTY       = ' '
 
-    attr_writer   :width, :height
+    attr_writer   :width, :height, :robot
     attr_accessor :input, :score, :remaining_lambdas, :collected_lambdas
 
     def initialize(input)
@@ -85,6 +85,10 @@ module Icfpc2012
 
     private
 
+    def walkable?(x, y)
+      get_at(x, y).match(/[ \.\\O]/)
+    end
+
     def move(new_robot_position)
       x = new_robot_position[0]
       y = new_robot_position[1]
@@ -95,7 +99,7 @@ module Icfpc2012
 
       target_cell = get_at(x, y)
 
-      if target_cell.match(/[ \.\\O]/)
+      if walkable?(x, y)
         new_input[@robot.y][@robot.x] = EMPTY
         new_input[y][x] = ROBOT
 
@@ -114,14 +118,18 @@ module Icfpc2012
         end
       elsif target_cell == ROCK && y == @robot.y &&
           new_input[y][2 * x - @robot.x] == EMPTY
+
         new_input[@robot.y][@robot.x] = EMPTY
         new_input[y][x] = ROBOT
         new_input[y][2 * x - @robot.x] = ROCK
       end
 
-      new_input = update_map(new_input)
+      fallen_input = update_map(new_input)
 
-      new_map.input = new_input
+      robot_crashed = fallen_input[y][x] == ROCK
+      new_map.robot = Robot.new(x, y, !robot_crashed)
+
+      new_map.input = fallen_input
       new_map
     end
 

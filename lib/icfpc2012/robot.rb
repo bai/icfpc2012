@@ -2,9 +2,10 @@ module Icfpc2012
   class Robot
     attr_accessor :x, :y
 
-    def initialize(x, y)
+    def initialize(x, y, alive = true)
       @x = x
       @y = y
+      @alive = alive
     end
 
     def step(direction)
@@ -14,6 +15,7 @@ module Icfpc2012
       when 'R' then [@x+1, @y] # move right
       when 'U' then [@x, @y+1] # move up
       when 'D' then [@x, @y-1] # move down
+      else raise "Invalid direction: #{direction}".inspect
       end
     end
 
@@ -22,7 +24,7 @@ module Icfpc2012
     end
 
     def alive?
-      true
+      @alive
     end
   end
 end

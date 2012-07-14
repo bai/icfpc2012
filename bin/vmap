@@ -54,7 +54,7 @@ end
 def print_map(map)
   map.to_s.each_line { |line| puts line }
   puts "score: " + map.score.to_s
-  puts "path: " + map.path.to_s
+  #puts "path: " + map.path.to_s
 end
 
 begin

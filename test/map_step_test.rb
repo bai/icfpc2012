@@ -56,7 +56,7 @@ EOS
 
     assert(map1.robot.alive?)
     assert(map1.robot.alive?)
-    #assert(map3.robot_dead)
+    assert(!map3.robot.alive?, "Robot should be dead on map:\n#{map3.to_s}")
   end
 
   def test_step_left
