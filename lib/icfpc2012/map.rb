@@ -13,7 +13,7 @@ module Icfpc2012
     attr_accessor :input, :score, :remaining_lambdas, :collected_lambdas, :robot
 
     def initialize(input)
-      self.input = input.split(/\r?\n/).map { |l| l.strip.split(//) }.reverse
+      self.input = input.split(/\r?\n/).map { |l| l.rstrip.split(//) }.reverse
 
       unless @lift_position = locate(CLOSED_LIFT) || locate(OPEN_LIFT)
         raise "Lift not found on map"
