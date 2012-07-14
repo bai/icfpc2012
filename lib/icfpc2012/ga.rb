@@ -36,9 +36,9 @@ module Icfpc2012
     end
 
     def mutate
-      posssible_moves = ['L', 'R', 'U', 'D']
+      posssible_moves = ['L', 'R', 'U', 'D', 'W']
       mutate_point = (self.length * rand).to_i
-      self[mutate_point] = posssible_moves[rand(4)]
+      self[mutate_point] = posssible_moves[rand(5)]
     end
   end
 
@@ -65,12 +65,12 @@ module Icfpc2012
     end
 
     def init_path
-      posssible_moves = ['L', 'R', 'U', 'D']
+      posssible_moves = ['L', 'R', 'U', 'D', 'W']
       path = ''
       len = (@map.height + @map.width);
       len = (len * rand(201) / 100).to_i
       len.times do
-        path += posssible_moves[rand(4)]
+        path += posssible_moves[rand(5)]
       end
       path
     end
