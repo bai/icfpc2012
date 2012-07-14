@@ -2,6 +2,7 @@
 
 $:.unshift File.expand_path('../lib', __FILE__)
 require 'icfpc2012/version'
+require "find"
 
 Gem::Specification.new do |s|
   s.name          = "icfpc2012"
@@ -12,7 +13,7 @@ Gem::Specification.new do |s|
   s.summary       = "ICFPC 2012 task"
   s.description   = "ICFPC 2012 task"
 
-  s.files         = `git ls-files bin lib`.split("\n")
+  s.files         = Find.find('.').select{|f| f.match(/^\.\/(bin|lib)/)&&FileTest.file?(f)}
   s.platform      = Gem::Platform::RUBY
   s.require_paths = ['lib']
   s.rubyforge_project = '[none]'
