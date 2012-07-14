@@ -83,11 +83,11 @@ module Icfpc2012
       @height ||= input.size
     end
 
-    private
-
     def walkable?(x, y)
       get_at(x, y).match(/[ \.\\O]/)
     end
+
+    private
 
     def move(new_robot_position)
       x = new_robot_position[0]
