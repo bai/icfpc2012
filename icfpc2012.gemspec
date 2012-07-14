@@ -19,5 +19,6 @@ Gem::Specification.new do |s|
   s.rubyforge_project = '[none]'
 
   s.add_development_dependency 'minitest'
-  s.add_dependency 'gga4r'
+  s.add_dependency 'logger'
+  s.add_dependency 'active_support'
 end

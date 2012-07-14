@@ -3,6 +3,13 @@
 module Icfpc2012
 
   class RobotPath < Array
+    attr_accessor :map
+
+    def initialize(map, path)
+      super (path.split(//))
+      @map = map
+    end
+
     def fitness
       raise 'Not Implemented Yet'
     end
@@ -14,7 +21,7 @@ module Icfpc2012
       c1_a, c1_b = self.separate(cross_point_1)
       c2_a, c2_b = c2.separate(cross_point_2)
 
-      [RobotPath.new(c1_a + c2_b), RobotPath.new(c2_a + c1_b)]      
+      [RobotPath.new(@map, c1_a + c2_b), RobotPath.new(@map, c2_a + c1_b)]
     end
 
     def mutate
@@ -25,17 +32,22 @@ module Icfpc2012
   end
 
   class Ga
-    attr_accessor :map, :population_size, :genetic_algorithm
+    attr_accessor :map, :population, :genetic_algorithm
 
     def initialize(population_size, map)
-      @population_size = population_size
       @map = map
+      @population = init_population(population_size)
+      @genetic_algorithm = GeneticAlgorithm.new (@population)
     end
-    
-    def init_population
+
+    def evolve_step
+      raise 'Not Implemented Yet'
+    end
+
+    def init_population (population_size)
       population = Array.new(population_size)
       population.size.times do |i|
-        population[i] = RobotPath.new init_path
+        population[i] = RobotPath.new(@map, init_path)
       end
       population
     end
