@@ -66,4 +66,13 @@ EOS
                  Icfpc2012::CoordHelper.coords_to_actions(pf1.trace_shortest_path_to(pf1.enum_closest_lambdas[0])))
   end
 
+  def test_trampoline_path
+    map1 = Icfpc2012::Map.new(get_mapfile('trampoline1.map.txt'))
+    pf1 = Icfpc2012::PathFinder.new(map1)
+    pf1.do_wave(map1.robot.position)
+    pf1.print_distmap
+    assert_equal("LDLL",
+                 Icfpc2012::CoordHelper.coords_to_actions(pf1.trace_shortest_path_to(pf1.enum_closest_lambdas[0])))
+  end
+
 end

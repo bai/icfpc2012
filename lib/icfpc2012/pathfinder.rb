@@ -8,10 +8,11 @@ module Icfpc2012
     
   class PathFinder
 
-    attr_accessor :map, :distmap, :lambdas
+    attr_accessor :map, :distmap, :lambdas, :teleport
 
     def initialize(map)
       self.map = map
+      self.teleport = Hash.new
 
       rows, cols = map.width, map.height
       self.distmap = Array.new(cols) { Array.new(rows, -1) }
@@ -67,6 +68,15 @@ module Icfpc2012
 
           lambdas.push [ci, ri] if map.get_at(ci, ri) == '\\'
 
+          if map.jumpable?(ci, ri)
+            c = map.trampolines[map.get_at(ci, ri)]
+            c[1],c[0] = c
+            if gval(distmap, c) != -1
+              next
+            end
+            teleport[c] = [ri, ci]
+            distmap[c[0]][c[1]] = gval(distmap, [ri,ci])
+          end
           Icfpc2012.do_nb(c) do |nri, nci|
             if gval(distmap, [nri, nci]) == -1 && policy.call(map, nri, nci)
               distmap[nri][nci] = t + 1
@@ -101,6 +111,10 @@ module Icfpc2012
         mv = distmap[y1][x1]
         mx = x1
         my = y1
+        if teleport[[y1, x1]] != nil
+          y1, x1 = teleport[[y1, x1]]
+          path.push [x1, y1]
+        end
         Icfpc2012.do_nb ([y1, x1]) do |ny, nx|
           if gval(distmap, [ny, nx]) != - 1 && gval(distmap, [ny, nx]) < mv
             mv = gval(distmap, [ny,nx])
