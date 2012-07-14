@@ -106,6 +106,7 @@ module Icfpc2012
         if target_cell == LAMBDA
           new_map.remaining_lambdas = remaining_lambdas - 1
           new_map.collected_lambdas = collected_lambdas + 1
+          new_map.score+=25
         end
       elsif target_cell == ROCK &&
           new_input[y][2 * x - robot_x] == EMPTY

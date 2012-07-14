@@ -39,8 +39,7 @@ rescue LoadError
 end
 
 def is_valid_input(i)
-	return true
-	i == 'U' || i == 'D' || i == 'L' || i == 'R' ? true : false
+	i == 'U' || i == 'D' || i == 'L' || i == 'R' || i == 'W' ? true : false
 end
 
 def read_map
@@ -60,9 +59,9 @@ begin
       step = read_char.capitalize
       raise Interrupt if step.chr == "A" || step.chr == "\e"
     end until is_valid_input(step)
-    puts step
-
+    
     map = map.step(step)
+    puts step + " score: " + map.score.to_s
     
   end
 rescue Interrupt
