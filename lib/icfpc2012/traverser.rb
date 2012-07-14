@@ -8,9 +8,7 @@ module Icfpc2012
         end 
 
         start_point = points[index]
-        puts start_point.inspect
         end_point = points[index + 1]
-        puts end_point.inspect
 
         pathfinder = Icfpc2012::PathFinder.new map
         pathfinder.do_wave start_point
