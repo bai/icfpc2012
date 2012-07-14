@@ -128,55 +128,12 @@ module Icfpc2012
         new_position = @robot.position
       end
 
-      fallen_input = update_map(new_input)
+      rockfall = MapRockFall.new(new_input, new_position)
 
-      robot_crashed = fallen_input[new_position[1]][new_position[0]] == ROCK
-      new_map.robot = Robot.new(new_position[0], new_position[1], !robot_crashed)
+      new_map.robot = Robot.new(new_position[0], new_position[1], rockfall.alive?)
 
-      new_map.input = fallen_input
+      new_map.input = rockfall.updated_input
       new_map
-    end
-
-    # Returns an updated input array
-    def update_map(old_input)
-      new_input = old_input.map(&:dup)
-
-      (0..width-1).map do |x|
-        (0..height-1).map do |y|
-          if (old_input[y][x] == ROCK) &&
-              (old_input[y-1][x] == EMPTY)
-            new_input[y][x] = EMPTY
-            new_input[y-1][x] = ROCK
-          end
-
-          if (old_input[y][x] == ROCK) &&
-              (old_input[y-1][x] == ROCK) &&
-              (old_input[y][x+1] == EMPTY) &&
-              (old_input[y-1][x+1] == EMPTY)
-            new_input[y][x] = EMPTY
-            new_input[y-1][x+1] = ROCK
-          end
-
-          if (old_input[y][x] == ROCK) &&
-              (old_input[y-1][x] == ROCK) &&
-              ((old_input[y][x+1] != EMPTY) || (old_input[y-1][x+1] != EMPTY)) &&
-              (old_input[y][x-1] == EMPTY) &&
-              (old_input[y-1][x-1] == EMPTY)
-            new_input[y][x] = EMPTY
-            new_input[y-1][x-1] = ROCK
-          end
-
-          if (old_input[y][x] == ROCK) &&
-              (old_input[y-1][x] == LAMBDA) &&
-              (old_input[y][x+1] == EMPTY) &&
-              (old_input[y-1][x+1] == EMPTY)
-            new_input[y][x] = EMPTY
-            new_input[y-1][x+1] = ROCK
-          end
-        end
-      end
-
-      new_input
     end
 
     def locate(element)
