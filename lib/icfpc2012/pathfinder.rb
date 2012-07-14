@@ -1,17 +1,26 @@
 module Icfpc2012
   class PathFinder
 
-    attr_accessor :map, :distmap
+    attr_accessor :map, :distmap, :lambdas
 
     def initialize(map)
       self.map = map
 
       rows, cols = map.width, map.height
       self.distmap = Array.new(cols) { Array.new(rows, -1) }
+      self.lambdas = Array.new
     end
 
-    def do_wave(x, y, ignore_rocks)
+    def do_nb(c)
+      opts = [ [1, 0], [-1, 0], [0, 1], [0, -1] ]
+      opts.each do |p| 
+        yield c[0] + p[0], c[1] + p[1]
+      end
+    end
 
+    def do_wave(coords, ignore_rocks)
+      x = coords[0]
+      y = coords[1]
       newFront = []
       oldFront = []
       oldFront.push [y, x]
@@ -23,21 +32,14 @@ module Icfpc2012
         oldFront.each { |c|
           ri = c[0]
           ci = c[1]
-          if distmap[ri + 1][ci] == -1 && (map.walkable?(ci, ri + 1) || (ignore_rocks && map.get_at(ci, ri + 1) == '*'))
-            distmap[ri + 1][ci] = t + 1
-            newFront.push [ri + 1, ci]
-          end
-          if distmap[ri - 1][ci] == -1 && (map.walkable?(ci, ri - 1) || (ignore_rocks && map.get_at(ci, ri - 1) == '*'))
-            distmap[ri - 1][ci] = t + 1
-            newFront.push [ri - 1, ci]
-          end
-          if distmap[ri][ci + 1] == -1 && (map.walkable?(ci + 1, ri) || (ignore_rocks && map.get_at(ci + 1, ri) == '*'))
-            distmap[ri][ci + 1] = t + 1
-            newFront.push [ri, ci + 1]
-          end
-          if distmap[ri][ci - 1] == -1 && (map.walkable?(ci - 1, ri) || (ignore_rocks && map.get_at(ci - 1, ri) == '*'))
-            distmap[ri][ci - 1] = t + 1
-            newFront.push [ri, ci - 1]
+
+          lambdas.push [ci, ri] if map.get_at(ci, ri) == '\\'
+
+          do_nb(c) do |nri, nci|
+            if distmap[nri][nci] == -1 && (map.walkable?(nci, nri) || (ignore_rocks && map.get_at(nci, nri) == '*'))
+              distmap[nri][nci] = t + 1
+              newFront.push [nri, nci]
+            end
           end
         }
         oldFront = newFront
@@ -46,7 +48,46 @@ module Icfpc2012
       end
     end
 
-    def trace_distmap
+    def enum_closest_lambdas
+      lambdas
+    end
+
+    def get_shortest_dist_to(coords)
+      x1 = coords[0]
+      y1 = coords[1]
+      distmap[y1][x1]
+    end
+
+    def trace_shortest_path_to(coords)
+      path = []
+      x1 = coords[0]
+      y1 = coords[1]
+
+      path.push [x1, y1]
+      begin
+
+        #puts distmap[y1][x1]
+
+        mv = distmap[y1][x1]
+        mx = x1
+        my = y1
+        do_nb ([y1, x1]) do |ny, nx|
+          if distmap[ny][nx] != - 1 && distmap[ny][nx] < mv
+            mv = distmap[ny][nx]
+            my = ny
+            mx = nx
+          end
+        end
+
+        x1 = mx
+        y1 = my
+        path.push [x1, y1]
+        #puts [x1, y1].inspect
+      end  while distmap[y1][x1] != 0
+      path.reverse
+    end
+
+    def print_distmap
       distmap.reverse.each {|r|
         r.each {|c|
           print c
@@ -57,4 +98,3 @@ module Icfpc2012
     end
   end
 end
-
