@@ -5,7 +5,7 @@ module Icfpc2012
     def initialize(x, y)
       @x = x
       @y = y
-      @waypoints = []
+      @waypoints = [ [ x, y, nil ] ]
     end
 
     def step(direction)
