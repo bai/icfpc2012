@@ -14,7 +14,7 @@ module Icfpc2012
 
     def initialize(input)
       input = parse_water(input)
-      self.map_array = input.split(/\r?\n/).map { |l| l.strip.split(//) }.reverse
+      self.map_array = input.split(/\r?\n/).map { |l| l.split(//) }.reverse
 
       unless (@lift_position = locate(CLOSED_LIFT) || locate(OPEN_LIFT))
         raise "Lift not found on map"
@@ -143,7 +143,7 @@ module Icfpc2012
       robot_alive = rockfall.alive? &&
           (!robot_underwater || robot.underwater_ticks < self.waterproof)
 
-      if new_map.flooding && (new_map.timer % new_map.flooding == 0)
+      if new_map.flooding != 0 && (new_map.timer % new_map.flooding == 0)
         new_map.water = water+1
       end
 
