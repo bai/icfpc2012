@@ -3,7 +3,7 @@ require File.expand_path('../test_helper', __FILE__)
 class MapStepTest < Test::Unit::TestCase
   def test_step_simple
     map1_string = <<EOS
-#####
+####L
 #*.\\#
 # R #
 #####
@@ -23,14 +23,14 @@ EOS
 
   def test_step_simple_slide
     map1_string = <<EOS
-#####
+###L#
 #*.\\#
 #  R#
 #####
 EOS
 
     map2_string = <<EOS
-#####
+###L#
 # .\\#
 #* R#
 #####
@@ -45,7 +45,7 @@ EOS
 
   def test_step_death
     map1_string = <<EOS
-#*#
+#*L
 # #
 #R#
 EOS
@@ -61,7 +61,7 @@ EOS
 
   def test_step_left
     map1_string = <<EOS
-#####
+####L
 #*.R#
 #...#
 #####
@@ -71,7 +71,7 @@ EOS
     map2 = map1.step('L')
 
     map2_string = <<EOS
-#####
+####L
 #*R #
 #...#
 #####
