@@ -103,8 +103,8 @@ module Icfpc2012
         end
 
         if target_cell == OPEN_LIFT
-            new_map.score+=new_map.collected_lambdas*50
-      end
+          new_map.score += new_map.collected_lambdas*50
+        end
       elsif target_cell == ROCK && y == @robot.y &&
           new_input[y][2 * x - @robot.x] == EMPTY
         new_input[@robot.y][@robot.x] = EMPTY
