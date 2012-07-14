@@ -10,22 +10,22 @@ begin
   require "Win32API"
 
   def read_char
-  	# little hack to capture arrow keys
+    # little hack to capture arrow keys
     c = Win32API.new("crtdll", "_getch", [], "L").Call.chr
     if c == "\xE0"
-    	c = Win32API.new("crtdll", "_getch", [], "L").Call.chr
-    	case c
-    	when "H"
-    	  return "U"
-    	when "P"
-    	  return "D"
-    	when "K"
-    	  return "L"
-    	when "M"
-    	  return "R"
-    	else
-    	  c
-    	end
+      c = Win32API.new("crtdll", "_getch", [], "L").Call.chr
+      case c
+      when "H"
+        return "U"
+      when "P"
+        return "D"
+      when "K"
+        return "L"
+      when "M"
+        return "R"
+      else
+        c
+      end
     end
     c
   end
@@ -39,7 +39,7 @@ rescue LoadError
 end
 
 def is_valid_input(i)
-	i == 'U' || i == 'D' || i == 'L' || i == 'R' || i == 'W' ? true : false
+  i == 'U' || i == 'D' || i == 'L' || i == 'R' || i == 'W' ? true : false
 end
 
 def read_map
