@@ -69,7 +69,7 @@ module Icfpc2012
           lambdas.push [ci, ri] if map.get_at(ci, ri) == '\\'
 
           if map.jumpable?(ci, ri)
-            c = map.trampolines[map.get_at(ci, ri)]
+            c = map.trampolines[map.get_at(ci, ri)].dup
             c[1],c[0] = c
             if gval(distmap, c) != -1
               next
