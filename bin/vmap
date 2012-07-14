@@ -51,6 +51,16 @@ def read_map
   Icfpc2012::Map.new(File.read(input_map))
 end
 
+def create_reader
+  args = ARGF.argv
+  if args.size > 1
+    char_index = 0
+    return proc { char_index += 1; args[1][char_index-1] }
+  end
+
+  proc { read_char }
+end
+
 def print_map(waypoints)
   waypoint = waypoints.last
   waypoint.map.to_s.each_line { |line| puts line }
@@ -62,11 +72,13 @@ end
 begin
   map = read_map
   all_waypoints = [ Icfpc2012::Waypoint.new(nil, map) ]
+  input = create_reader
+
   loop do
     print_map(all_waypoints)
 
     begin
-      step = read_char.capitalize
+      step = input.call(self).capitalize
       raise Interrupt if step.chr == "A" || step.chr == "\e"
       if step.chr == "Z"
         all_waypoints.pop
