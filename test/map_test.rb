@@ -40,12 +40,12 @@ EOS
     assert !(map1 == map2), 'Maps should be equal'
   end
 
-  def test_sinking
+  def test_flooding
     map_string = <<EOS
-#R###
-#  \\#
-# * #
-#-L##
+#####
+#R  #
+#   #
+##L##
 
 Water 2
 Flooding 11
@@ -56,9 +56,23 @@ EOS
     assert_equal(2, map.water)
     assert_equal(11, map.flooding)
     assert_equal(5, map.waterproof)
+    assert(!map.robot_underwater?)
+
     assert_equal(4, map.height)
 
-    # сначала апдейт робота, потом мира и воды.
+    (1..10).each { |i|
+      map = map.step('W')
+      assert_equal(2, map.water, "Water is 2 on step #{i}")
+    }
+    map = map.step('W')
+    assert_equal(3, map.water, "Water raises on step 11")
+    assert(map.robot_underwater?)
 
+    (1..5).each {
+      map = map.step('W')
+      assert(map.robot.alive?)
+    }
+    map = map.step('W')
+    assert(!map.robot.alive?)
   end
 end

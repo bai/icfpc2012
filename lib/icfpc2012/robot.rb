@@ -1,11 +1,12 @@
 module Icfpc2012
   class Robot
-    attr_accessor :x, :y
+    attr_accessor :x, :y, :underwater_ticks
 
-    def initialize(x, y, alive = true)
+    def initialize(x, y, alive = true, underwater_ticks = 0)
       @x = x
       @y = y
       @alive = alive
+      @underwater_ticks = underwater_ticks
     end
 
     def step(direction)
