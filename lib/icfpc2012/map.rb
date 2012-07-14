@@ -9,19 +9,17 @@ module Icfpc2012
     EARTH       = '.'
     EMPTY       = ' '
 
-    attr_writer   :width, :height, :robot
-    attr_accessor :input, :score, :remaining_lambdas, :collected_lambdas
+    attr_writer   :width, :height
+    attr_accessor :input, :score, :remaining_lambdas, :collected_lambdas, :robot
 
     def initialize(input)
       self.input = input.split(/\r?\n/).map { |l| l.strip.split(//) }.reverse
 
-      @lift_position = locate(CLOSED_LIFT) || locate(OPEN_LIFT)
-      unless @lift_position
+      unless @lift_position = locate(CLOSED_LIFT) || locate(OPEN_LIFT)
         raise "Lift not found on map"
       end
 
-      robot_position = locate(ROBOT)
-      unless robot_position
+      unless robot_position = locate(ROBOT)
         raise "Robot not found on map"
       end
 
@@ -31,10 +29,6 @@ module Icfpc2012
       self.score             = 0
       self.collected_lambdas = 0
       self.remaining_lambdas = input.count(LAMBDA)
-    end
-
-    def robot
-      @robot
     end
 
     # Map item at the given coordinates
