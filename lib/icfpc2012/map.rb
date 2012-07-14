@@ -47,6 +47,10 @@ module Icfpc2012
 
     # Returns a new instance of the map after the given step
     def step(direction)
+      if !@robot.alive?
+        raise 'IllegalStateException: Robot is dead, you can no longer move!'
+      end
+
       case direction
       when 'W', 'R', 'L', 'D', 'U'
         new_coordinates = @robot.step(direction)
