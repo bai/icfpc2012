@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
+
+require 'io/console'
+
+require 'icfpc2012'
+
+def read_map
+  input_map = './maps/contest1.map.txt'
+  if ARGF.argv != []
+    input_map = ARGF.argv[0]
+  end
+
+  Icfpc2012::Map.new(File.read(input_map))
+end
+
+begin
+  map = read_map
+  sc = Icfpc2012::Scheduler.new(map)
+  puts sc.solve.inspect
+
+end
