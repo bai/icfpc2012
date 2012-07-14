@@ -155,7 +155,8 @@ module Icfpc2012
       new_map.robot = Robot.new(new_position[0], new_position[1], robot_alive,
                                 robot_underwater ? robot.underwater_ticks+1 : 0)
 
-      new_map.map_array = rockfall.updated_input
+      # Win freezes the world
+      new_map.map_array = new_map.won? ? new_input : rockfall.updated_input
       new_map
     end
 
