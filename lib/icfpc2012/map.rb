@@ -20,13 +20,13 @@ module Icfpc2012
         raise "Lift not found on map"
       end
 
-      @robot_position = locate(ROBOT)
-      unless @robot_position
+      robot_position = locate(ROBOT)
+      unless robot_position
         raise "Robot not found on map"
       end
 
       # Locate robot
-      @robot = Robot.new(*@robot_position)
+      @robot = Robot.new(*robot_position)
 
       self.score             = 0
       self.collected_lambdas = 0
@@ -55,7 +55,9 @@ module Icfpc2012
     def step(direction)
       case direction
       when 'W', 'R', 'L', 'D', 'U'
-        move @robot.step(direction)
+        new_coordinates = @robot.step(direction)
+        #new_coordinates = walkable?(*new_coordinates) ? new_coordinates : robot.position
+        move new_coordinates
       when 'A'
         exit
       else
@@ -89,9 +91,9 @@ module Icfpc2012
       get_at(x, y).match(/[ \.\\O]/)
     end
 
-    def move(new_robot_position)
-      x = new_robot_position[0]
-      y = new_robot_position[1]
+    def move(new_position)
+      x = new_position[0]
+      y = new_position[1]
 
       new_map = self.dup
       new_map.score = score - 1
@@ -122,12 +124,14 @@ module Icfpc2012
         new_input[@robot.y][@robot.x] = EMPTY
         new_input[y][x] = ROBOT
         new_input[y][2 * x - @robot.x] = ROCK
+      else
+        new_position = @robot.position
       end
 
       fallen_input = update_map(new_input)
 
-      robot_crashed = fallen_input[y][x] == ROCK
-      new_map.robot = Robot.new(x, y, !robot_crashed)
+      robot_crashed = fallen_input[new_position[1]][new_position[0]] == ROCK
+      new_map.robot = Robot.new(new_position[0], new_position[1], !robot_crashed)
 
       new_map.input = fallen_input
       new_map
