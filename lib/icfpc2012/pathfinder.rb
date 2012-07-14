@@ -40,7 +40,14 @@ module Icfpc2012
       # crash right through the rocks
       next (map.walkable?(nci, nri) || map.get_at(nci, nri) == '*')
     end
-    
+
+    def gval(m, c)
+      if c[0] >= 0 && c[0] < m.size && c[1] >= 0 and c[1] < m[c[0]].size
+          m[c[0]][c[1]]
+      end
+      -1
+    end
+
     def do_wave(coords, policy = MIND_ROCKS)
       x = coords[0]
       y = coords[1]
@@ -48,6 +55,7 @@ module Icfpc2012
       oldFront = []
       oldFront.push [y, x]
       distmap[y][x] = 0
+
       t = 0
 
       while oldFront.length != 0 do
@@ -59,7 +67,7 @@ module Icfpc2012
           lambdas.push [ci, ri] if map.get_at(ci, ri) == '\\'
 
           Icfpc2012.do_nb(c) do |nri, nci|
-            if distmap[nri][nci] == -1 && policy.call(map, nri, nci)
+            if gval(distmap, [nri, nci]) == -1 && policy.call(map, nri, nci)
               distmap[nri][nci] = t + 1
               newFront.push [nri, nci]
             end
@@ -76,9 +84,7 @@ module Icfpc2012
     end
 
     def get_shortest_dist_to(coords)
-      x1 = coords[0]
-      y1 = coords[1]
-      distmap[y1][x1]
+      gval(distmap, coords)
     end
 
     def trace_shortest_path_to(coords)
@@ -95,8 +101,8 @@ module Icfpc2012
         mx = x1
         my = y1
         Icfpc2012.do_nb ([y1, x1]) do |ny, nx|
-          if distmap[ny][nx] != - 1 && distmap[ny][nx] < mv
-            mv = distmap[ny][nx]
+          if gval(distmap, [ny, nx]) != - 1 && gval(distmap, [ny, nx]) < mv
+            mv = gval(distmap, [ny,nx])
             my = ny
             mx = nx
           end
@@ -106,7 +112,7 @@ module Icfpc2012
         y1 = my
         path.push [x1, y1]
         #puts [x1, y1].inspect
-      end  while distmap[y1][x1] != 0
+      end  while gval(distmap, [y1, x1]) != 0
       path.reverse
     end
 
