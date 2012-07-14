@@ -39,4 +39,26 @@ EOS
 
     assert !(map1 == map2), 'Maps should be equal'
   end
+
+  def test_sinking
+    map_string = <<EOS
+#R###
+#  \\#
+# * #
+#-L##
+
+Water 2
+Flooding 11
+Waterproof 5
+EOS
+
+    map = Icfpc2012::Map.new(map_string)
+    assert_equal(2, map.water)
+    assert_equal(11, map.flooding)
+    assert_equal(5, map.waterproof)
+    assert_equal(4, map.height)
+
+    # сначала апдейт робота, потом мира и воды.
+
+  end
 end

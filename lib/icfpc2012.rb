@@ -10,6 +10,7 @@ require 'icfpc2012/array_helper'
 require 'icfpc2012/gga4r_main'
 require 'icfpc2012/ga'
 require 'icfpc2012/pathfinder'
+require 'icfpc2012/coord_helper'
 
 module Icfpc2012
 end
