@@ -5,6 +5,7 @@ module Icfpc2012
     ROCK        = '*'
     LAMBDA      = '\\'
     CLOSED_LIFT = 'L'
+    OPEN_LIFT   = 'O'
     EARTH       = '.'
     EMPTY       = ' '
 
@@ -41,10 +42,12 @@ module Icfpc2012
       when 'L' then move([ robot_x-1, robot_y ])
       when 'D' then move([ robot_x, robot_y-1 ])
       when 'U' then move([ robot_x, robot_y+1 ])
-      when 'A' then exit
+      when 'A' then
+        exit
       else          raise move.inspect
       end
     end
+
 
     def robot_x
       robot_position[0]
@@ -99,7 +102,7 @@ module Icfpc2012
       target_cell = get_at(x, y)
 
       robot_x, robot_y = robot_position
-      if target_cell.match(/[ \.\\]/)
+      if target_cell.match(/[ \.\\O]/)
         new_input[robot_y][robot_x] = EMPTY
         new_input[y][x] = ROBOT
 
@@ -107,7 +110,16 @@ module Icfpc2012
           new_map.remaining_lambdas = remaining_lambdas - 1
           new_map.collected_lambdas = collected_lambdas + 1
           new_map.score+=25
+
+          if new_map.remaining_lambdas == 0
+            new_input[lift_y][lift_x] = OPEN_LIFT
+          end     
+
         end
+
+        if target_cell == OPEN_LIFT
+            new_map.score+=new_map.collected_lambdas*50
+	    end
       elsif target_cell == ROCK &&
           new_input[y][2 * x - robot_x] == EMPTY
         new_input[robot_y][robot_x] = EMPTY
