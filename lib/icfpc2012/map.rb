@@ -10,7 +10,7 @@ module Icfpc2012
     EMPTY       = ' '
 
     attr_writer   :width, :height
-    attr_accessor :input, :score, :remaining_lambdas, :collected_lambdas, :robot
+    attr_accessor :input, :score, :remaining_lambdas, :collected_lambdas, :robot, :rockfall
 
     def initialize(input)
       self.input = input.split(/\r?\n/).map { |l| l.rstrip.split(//) }.reverse
@@ -29,6 +29,7 @@ module Icfpc2012
       self.score             = 0
       self.collected_lambdas = 0
       self.remaining_lambdas = input.count(LAMBDA)
+      self.rockfall = nil
     end
 
     # Map item at the given coordinates
@@ -128,11 +129,12 @@ module Icfpc2012
         new_position = @robot.position
       end
 
-      rockfall = MapRockFall.new(new_input, new_position)
+      new_rockfall = MapRockFallFast.new(new_input, new_position, rockfall)
+      new_map.rockfall = new_rockfall
 
-      new_map.robot = Robot.new(new_position[0], new_position[1], rockfall.alive?)
+      new_map.robot = Robot.new(new_position[0], new_position[1], new_rockfall.alive?)
 
-      new_map.input = rockfall.updated_input
+      new_map.input = new_rockfall.updated_input
       new_map
     end
 
