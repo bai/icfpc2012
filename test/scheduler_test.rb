@@ -6,9 +6,9 @@ class PathFinderTest < Test::Unit::TestCase
   end
 
   def test_wave
-    map1 = Icfpc2012::Map.new(get_mapfile('contest4.map.txt'))
+    map1 = Icfpc2012::Map.new(get_mapfile('contest1.map.txt'))
     sc = Icfpc2012::Scheduler.new(map1)
-    puts sc.solve.inspect
+    assert_equal(sc.solve, ["DLRDDUULLLDDL", 212])
 
   end
 
