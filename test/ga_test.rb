@@ -3,7 +3,7 @@ require File.expand_path('../test_helper', __FILE__)
 class GaTest < Test::Unit::TestCase
   def test_init_path
     map_string = <<EOS
-#####
+#L###
 #*.\\#
 # R #
 #####

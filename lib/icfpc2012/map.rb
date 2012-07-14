@@ -15,8 +15,15 @@ module Icfpc2012
     def initialize(input)
       self.input = input.split(/\r?\n/).map { |l| l.strip.split(//) }.reverse
 
-      @lift_position  = locate(CLOSED_LIFT) || locate(OPEN_LIFT)
+      @lift_position = locate(CLOSED_LIFT) || locate(OPEN_LIFT)
+      unless @lift_position
+        raise "Lift not found on map"
+      end
+
       @robot_position = locate(ROBOT)
+      unless @robot_position
+        raise "Robot not found on map"
+      end
 
       # Locate robot
       @robot = Robot.new(*@robot_position)
@@ -165,6 +172,7 @@ module Icfpc2012
         j = subarray.index(element)
         return j, i if j
       end
+      nil
     end
   end
 end
