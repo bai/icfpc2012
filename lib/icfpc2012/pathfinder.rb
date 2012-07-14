@@ -109,6 +109,8 @@ module Icfpc2012
           end
         end
 
+        return path if x1 == mx && y1 == my
+
         x1 = mx
         y1 = my
         path.push [x1, y1]
