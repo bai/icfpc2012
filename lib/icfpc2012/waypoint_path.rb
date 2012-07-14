@@ -8,19 +8,8 @@ module Icfpc2012
       @way_passed = true
       if moves != ''
         moves.each_char do |letter|
-          if !@waypoints.last.map.robot.alive? || @waypoints.last.map.won?
-            break
-          end
-
-          waypoint = @waypoints.last.step(letter)
-
-          move_executed = (letter == 'W') || @waypoints.last.map.robot.position != waypoint.map.robot.position
-          unless move_executed
-            @way_passed = false
-            break
-          end
-
-          @waypoints << waypoint
+          break unless add_move(letter)
+          break if won?
         end
       end
     end
@@ -29,8 +18,28 @@ module Icfpc2012
       @waypoints.last.map.robot.alive? && @way_passed
     end
 
+    def won?
+      @waypoints.last.map.won?
+    end
+
     def path
       @waypoints.map(&:movement).join
+    end
+
+    def add_move(move)
+      raise "Can no longer move: already in invalid state" unless valid?
+      raise "Can no longer move: you already won" if won?
+
+      waypoint = @waypoints.last.step(move)
+
+      move_executed = (move == 'W') || @waypoints.last.map.robot.position != waypoint.map.robot.position
+      if move_executed
+        @waypoints << waypoint
+      else
+        @way_passed = false
+      end
+
+      move_executed
     end
   end
 end
