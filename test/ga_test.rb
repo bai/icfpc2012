@@ -10,7 +10,7 @@ class GaTest < Test::Unit::TestCase
 EOS
     map = Icfpc2012::Map.new(map_string)
 
-    ga = Icfpc2012::Ga.new(map)
+    ga = Icfpc2012::Ga.new(1000, map)
     path = ga.init_path
 
     # puts '------------------------------'
