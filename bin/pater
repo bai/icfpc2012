@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
+
+require 'io/console'
+
+require 'icfpc2012'
+
+map = Icfpc2012::Map.new(ARGF.read)
+
+puts map

@@ -14,4 +14,7 @@ require 'icfpc2012/ga'
 require 'icfpc2012/pathfinder'
 require 'icfpc2012/coord_helper'
 require 'icfpc2012/traverser'
+require 'icfpc2012/pattern/pattern.rb'
+require 'icfpc2012/pattern/pattern_defs.rb'
+require 'icfpc2012/pattern/pattern_matcher.rb'
 end
