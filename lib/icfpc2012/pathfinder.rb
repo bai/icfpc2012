@@ -29,7 +29,6 @@ module Icfpc2012
         end
       end
       next map.walkable?(nci, nri) && !any_rocks
-        
     end
 
     MIND_ROCKS = Proc.new do |map, nri, nci|
