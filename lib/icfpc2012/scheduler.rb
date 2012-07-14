@@ -15,9 +15,9 @@ module Icfpc2012
       if(score_so_far > self.best_score)
         self.best_score = score_so_far
         self.best_solution = path_so_far
+        map.to_s.each_line { |line| puts line }
+        puts [self.best_solution, self.best_score].inspect
       end
-
-      map.to_s.each_line { |line| puts line }
 
       pf = Icfpc2012::PathFinder.new(map)
       pf.do_wave(map.robot.position, Icfpc2012::PathFinder::MIND_ROCKS)
@@ -29,9 +29,8 @@ module Icfpc2012
         return if(path == 'E')
 
         wp = Icfpc2012::WaypointPath.new(map, path)
-        puts l.inspect
-        puts path
-        puts wp.waypoints.last.map.score
+        #puts path
+        #puts wp.waypoints.last.map.score
 
         if(wp.valid?)
           path_so_far += path
@@ -40,6 +39,8 @@ module Icfpc2012
           if(score_so_far > self.best_score)
             self.best_score = score_so_far
             self.best_solution = path_so_far
+            wp.waypoints.last.map.to_s.each_line { |line| puts line }
+            puts [self.best_solution, self.best_score].inspect
           end
         end
       end
@@ -56,9 +57,9 @@ module Icfpc2012
 
         wp = Icfpc2012::WaypointPath.new(map, path)
 
-        puts l.inspect
-        puts path
-        puts wp.waypoints.last.map.score
+        #puts l.inspect
+        #puts path
+        #puts wp.waypoints.last.map.score
 
         if(wp.valid?)
           recurse(wp.waypoints.last.map, path_so_far + path, wp.waypoints.last.map.score, depth + 1)

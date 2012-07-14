@@ -44,7 +44,7 @@ module Icfpc2012
 
     def gval(m, c)
       if c[0] >= 0 && c[0] < m.size && c[1] >= 0 and c[1] < m[c[0]].size
-          m[c[0]][c[1]]
+        m[c[0]][c[1]]
       else
         -1
       end
