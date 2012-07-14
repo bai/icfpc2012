@@ -11,6 +11,7 @@ module Icfpc2012
     TRAMPOLINES = ['A','B','C','D','E','F','G','H','I']
     TARGETS     = ['1','2','3','4','5','6','7','8','9']
 
+    attr_reader :lift_position
     attr_accessor :map_array, :score, :remaining_lambdas, :collected_lambdas, :robot
     attr_accessor :water, :flooding, :waterproof, :timer
     attr_accessor :trampolines

@@ -17,4 +17,5 @@ require 'icfpc2012/traverser'
 require 'icfpc2012/pattern/pattern.rb'
 require 'icfpc2012/pattern/pattern_defs.rb'
 require 'icfpc2012/pattern/pattern_matcher.rb'
+require 'icfpc2012/scheduler.rb'
 end
