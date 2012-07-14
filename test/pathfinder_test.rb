@@ -36,7 +36,7 @@ EOS
     map1 = Icfpc2012::Map.new(File.read('../maps/contest9.map.txt'))
     pf1 = Icfpc2012::PathFinder.new(map1)
     pf1.do_wave(map1.robot.position, true)
-    pf1.print_distmap
+    #pf1.print_distmap
 
     path = Icfpc2012::CoordHelper.coords_to_actions(pf1.trace_shortest_path_to([3, 10]))
     wp = Icfpc2012::WaypointPath.new(map1, path)
@@ -47,7 +47,7 @@ EOS
     map1 = Icfpc2012::Map.new(File.read('../maps/contest9.map.txt'))
     pf1 = Icfpc2012::PathFinder.new(map1)
     pf1.do_wave(map1.robot.position, true)
-    pf1.print_distmap
+    #pf1.print_distmap
 
     path = Icfpc2012::CoordHelper.coords_to_actions(pf1.trace_shortest_path_to([1, 1]))
     wp = Icfpc2012::WaypointPath.new(map1, path)
