@@ -24,7 +24,8 @@ module Icfpc2012
         elsif previous[x] == current[x] and previous[y] == (current[y] + 1)
           path += 'D'
         else
-          raise "Coordinates are not adjasted: (#{ previous.join(', ') }) and (#{ current.join(', ')})"
+          # gracefully ignore, assume it's teleport
+#          raise "Coordinates are not adjasted: (#{ previous.join(', ') }) and (#{ current.join(', ')})"
         end
       end
 
