@@ -9,17 +9,18 @@ module Icfpc2012
     EARTH       = '.'
     EMPTY       = ' '
 
-    attr_writer   :width, :height
-    attr_accessor :input, :score, :remaining_lambdas, :collected_lambdas, :robot
+    attr_accessor :map_array, :score, :remaining_lambdas, :collected_lambdas, :robot
+    attr_accessor :water, :flooding, :waterproof, :timer
 
     def initialize(input)
-      self.input = input.split(/\r?\n/).map { |l| l.rstrip.split(//) }.reverse
+      input = parse_water(input)
+      self.map_array = input.split(/\r?\n/).map { |l| l.strip.split(//) }.reverse
 
-      unless @lift_position = locate(CLOSED_LIFT) || locate(OPEN_LIFT)
+      unless (@lift_position = locate(CLOSED_LIFT) || locate(OPEN_LIFT))
         raise "Lift not found on map"
       end
 
-      unless robot_position = locate(ROBOT)
+      unless (robot_position = locate(ROBOT))
         raise "Robot not found on map"
       end
 
@@ -29,6 +30,8 @@ module Icfpc2012
       self.score             = 0
       self.collected_lambdas = 0
       self.remaining_lambdas = input.count(LAMBDA)
+
+      self.timer = 0
     end
 
     # Map item at the given coordinates
@@ -36,7 +39,7 @@ module Icfpc2012
       if x >= width || x < 0 || y >= height || y < 0
         '%'
       else
-        input[y][x]
+        map_array[y][x]
       end
     end
 
@@ -47,7 +50,7 @@ module Icfpc2012
 
     # Returns a new instance of the map after the given step
     def step(direction)
-      if !@robot.alive?
+      unless @robot.alive?
         raise 'IllegalStateException: Robot is dead, you can no longer move!'
       end
 
@@ -72,15 +75,15 @@ module Icfpc2012
     end
 
     def to_s
-      input.reverse.map(&:join).join("\n")
+      map_array.reverse.map(&:join).join("\n")
     end
 
     def width
-      @width ||= input.max_by(&:size).size
+      @width ||= map_array.max_by(&:size).size
     end
 
     def height
-      @height ||= input.size
+      @height ||= map_array.size
     end
 
     def won?
@@ -97,7 +100,7 @@ module Icfpc2012
 
       new_map = self.dup
       new_map.score = score - 1
-      new_input = input.map(&:dup)
+      new_input = map_array.map(&:dup)
 
       target_cell = get_at(x, y)
 
@@ -132,16 +135,33 @@ module Icfpc2012
 
       new_map.robot = Robot.new(new_position[0], new_position[1], rockfall.alive?)
 
-      new_map.input = rockfall.updated_input
+      new_map.map_array = rockfall.updated_input
       new_map
     end
 
     def locate(element)
-      input.each_with_index do |subarray, i|
+      map_array.each_with_index do |subarray, i|
         j = subarray.index(element)
         return j, i if j
       end
       nil
+    end
+
+    def parse_water(input)
+      chopped_input = input
+      owner = self
+      owner.water = 0
+      owner.flooding = 0
+      owner.waterproof = 0
+
+      input.gsub(/(.*)\r?\nWater (\d+).*Flooding (\d+).*Waterproof (\d+)/m) {
+        chopped_input = $1
+        owner.water = Integer($2)
+        owner.flooding = Integer($3)
+        owner.waterproof = Integer($4)
+        return chopped_input
+      }
+      chopped_input
     end
   end
 end
