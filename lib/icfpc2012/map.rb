@@ -98,7 +98,6 @@ module Icfpc2012
     end
 
     def jumpable?(x, y)
-      puts get_at(x, y)
       get_at(x, y).match(/[A-I]/)
     end
 
