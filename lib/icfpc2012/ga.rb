@@ -11,8 +11,18 @@ module Icfpc2012
     end
 
     def fitness
-      # raise 'Not Implemented Yet'
-      0
+      waypoints = [Icfpc2012::Waypoint.new(nil, @map)]
+      waypoint = waypoints[0]
+
+      self.each do |action|
+        waypoint = waypoint.step(action)
+        if (waypoint.map.remaining_lambdas == 0) || !waypoint.map.robot.alive?
+          break
+        end
+        waypoints << waypoint
+      end
+
+      waypoints[waypoints.length - 1].map.score
     end
 
     def recombine (c2)

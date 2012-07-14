@@ -39,7 +39,7 @@ EOS
     assert_same(1000, ga.population.length)
   end
 
-  def _test_evolve # currently fails
+  def test_evolve # currently fails
 
     map_string = <<EOS
 #L###
