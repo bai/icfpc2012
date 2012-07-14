@@ -11,7 +11,8 @@ module Icfpc2012
     end
 
     def fitness
-      raise 'Not Implemented Yet'
+      # raise 'Not Implemented Yet'
+      0
     end
 
     def recombine (c2)
@@ -40,8 +41,9 @@ module Icfpc2012
       @genetic_algorithm = GeneticAlgorithm.new (@population)
     end
 
-    def evolve_step
-      raise 'Not Implemented Yet'
+    def evolve (generations = 1000)
+      generations.times { @genetic_algorithm.evolve }
+      @genetic_algorithm.best_fit[0]
     end
 
     def init_population (population_size)
