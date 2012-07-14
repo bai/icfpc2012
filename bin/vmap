@@ -51,27 +51,32 @@ def read_map
   Icfpc2012::Map.new(File.read(input_map))
 end
 
-def print_map(map)
-  map.to_s.each_line { |line| puts line }
-  puts "score: " + map.score.to_s
-  #puts "path: " + map.path.to_s
+def print_map(waypoints)
+  waypoint = waypoints.last
+  waypoint.map.to_s.each_line { |line| puts line }
+  puts "score: " + waypoint.map.score.to_s
+  path = waypoints.map(&:movement).join
+  puts "path: " + path
 end
 
 begin
   map = read_map
+  all_waypoints = [ Icfpc2012::Waypoint.new(nil, map) ]
   loop do
-    print_map(map)
+    print_map(all_waypoints)
 
     begin
       step = read_char.capitalize
       raise Interrupt if step.chr == "A" || step.chr == "\e"
       if step.chr == "Z"
-        map = map.step_back
-        print_map(map)
+        all_waypoints.pop
+        print_map(all_waypoints)
       end
     end until is_valid_input(step)
 
-    map = map.step(step)
+    waypoint = all_waypoints.last.step(step)
+    all_waypoints << waypoint
+
     puts step
 
   end
