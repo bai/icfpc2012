@@ -94,7 +94,12 @@ module Icfpc2012
     end
 
     def walkable?(x, y)
-      get_at(x, y).match(/[ \.\\O]/)
+      get_at(x, y).match(/[A-I \.\\O]/)
+    end
+
+    def jumpable?(x, y)
+      puts get_at(x, y)
+      get_at(x, y).match(/[A-I]/)
     end
 
     def robot_underwater?(robot_y = @robot.y)
@@ -124,9 +129,11 @@ module Icfpc2012
           if new_map.remaining_lambdas == 0
             new_input[lift_y][lift_x] = OPEN_LIFT
           end
-        end
-
-        if target_cell == OPEN_LIFT
+        elsif jumpable?(x, y)
+          new_position = trampolines[target_cell]
+          new_input[y][x] = EMPTY
+          new_input[new_position[1]][new_position[0]] = ROBOT
+        elsif target_cell == OPEN_LIFT
           new_map.score += new_map.collected_lambdas*50
         end
       elsif target_cell == ROCK && y == @robot.y &&
@@ -190,6 +197,7 @@ module Icfpc2012
           raise "Unknown input line : " + line.inspect
         end
       end
+      owner.trampolines.each {|k, v| owner.trampolines[k] = locate(v)}
     end
   end
 end
