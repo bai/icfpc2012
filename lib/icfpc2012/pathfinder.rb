@@ -11,6 +11,13 @@ module Icfpc2012
       self.lambdas = Array.new
     end
 
+    def do_nb(c)
+      opts = [ [1, 0], [-1, 0], [0, 1], [0, -1] ]
+      opts.each do |p| 
+        yield c[0] + p[0], c[1] + p[1]
+      end
+    end
+
     def do_wave(coords, ignore_rocks)
       x = coords[0]
       y = coords[1]
@@ -28,21 +35,11 @@ module Icfpc2012
 
           lambdas.push [ci, ri] if map.get_at(ci, ri) == '\\'
 
-          if distmap[ri + 1][ci] == -1 && (map.walkable?(ci, ri + 1) || (ignore_rocks && map.get_at(ci, ri + 1) == '*'))
-            distmap[ri + 1][ci] = t + 1
-            newFront.push [ri + 1, ci]
-          end
-          if distmap[ri - 1][ci] == -1 && (map.walkable?(ci, ri - 1) || (ignore_rocks && map.get_at(ci, ri - 1) == '*'))
-            distmap[ri - 1][ci] = t + 1
-            newFront.push [ri - 1, ci]
-          end
-          if distmap[ri][ci + 1] == -1 && (map.walkable?(ci + 1, ri) || (ignore_rocks && map.get_at(ci + 1, ri) == '*'))
-            distmap[ri][ci + 1] = t + 1
-            newFront.push [ri, ci + 1]
-          end
-          if distmap[ri][ci - 1] == -1 && (map.walkable?(ci - 1, ri) || (ignore_rocks && map.get_at(ci - 1, ri) == '*'))
-            distmap[ri][ci - 1] = t + 1
-            newFront.push [ri, ci - 1]
+          do_nb(c) do |nri, nci|
+            if distmap[nri][nci] == -1 && (map.walkable?(nci, nri) || (ignore_rocks && map.get_at(nci, nri) == '*'))
+              distmap[nri][nci] = t + 1
+              newFront.push [nri, nci]
+            end
           end
         }
         oldFront = newFront
@@ -74,26 +71,14 @@ module Icfpc2012
         mv = distmap[y1][x1]
         mx = x1
         my = y1
-        if distmap[y1 + 1][x1] != - 1 && distmap[y1 + 1][x1] < mv
-          mv = distmap[y1 + 1][x1]
-          my = y1 + 1
-          mx = x1
+        do_nb ([y1, x1]) do |ny, nx|
+          if distmap[ny][nx] != - 1 && distmap[ny][nx] < mv
+            mv = distmap[ny][nx]
+            my = ny
+            mx = nx
+          end
         end
-        if distmap[y1 - 1][x1] != - 1 && distmap[y1 - 1][x1] < mv
-          mv = distmap[y1 - 1][x1]
-          my = y1 - 1
-          mx = x1
-        end
-        if distmap[y1][x1 + 1] != - 1 && distmap[y1][x1 + 1] < mv
-          mv = distmap[y1][x1 + 1]
-          my = y1
-          mx = x1 + 1
-        end
-        if distmap[y1][x1 - 1] != - 1 && distmap[y1][x1 - 1] < mv
-          mv = distmap[y1][x1 - 1]
-          my = y1
-          mx = x1 - 1
-        end
+
         x1 = mx
         y1 = my
         path.push [x1, y1]

@@ -17,6 +17,7 @@ EOS
   def get_mapfile(file)
     File.read(File.join(File.dirname(__FILE__), '../maps/', file))
   end
+  
   def test_shortest_path
     map1 = Icfpc2012::Map.new(get_mapfile('contest6.map.txt'))
     pf1 = Icfpc2012::PathFinder.new(map1)
