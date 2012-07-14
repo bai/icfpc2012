@@ -8,13 +8,16 @@ module Icfpc2012
     OPEN_LIFT   = 'O'
     EARTH       = '.'
     EMPTY       = ' '
+    TRAMPOLINES = ['A','B','C','D','E','F','G','H','I']
+    TARGETS     = ['1','2','3','4','5','6','7','8','9']
 
     attr_accessor :map_array, :score, :remaining_lambdas, :collected_lambdas, :robot
-    attr_accessor :water, :flooding, :waterproof, :timer, :rockfall
+    attr_accessor :water, :flooding, :waterproof, :timer
+    attr_accessor :trampolines
+    attr_accessor :rockfall
 
     def initialize(input)
-      input = parse_water(input)
-      self.map_array = input.split(/\r?\n/).map { |l| l.split(//) }.reverse
+      parse_map(input)
 
       unless (@lift_position = locate(CLOSED_LIFT) || locate(OPEN_LIFT))
         raise "Lift not found on map"
@@ -166,21 +169,27 @@ module Icfpc2012
       nil
     end
 
-    def parse_water(input)
+    def parse_map(input)
       chopped_input = input
       owner = self
       owner.water = 0
       owner.flooding = 0
       owner.waterproof = 0
+      owner.map_array = Array.new
+      owner.trampolines = Hash.new
 
-      input.gsub(/(.*)\r?\nWater (\d+).*Flooding (\d+).*Waterproof (\d+)/m) {
-        chopped_input = $1
-        owner.water = Integer($2)
-        owner.flooding = Integer($3)
-        owner.waterproof = Integer($4)
-        return chopped_input
-      }
-      chopped_input
+      input_data = input.split(/\r?\n\r?\n/)
+      owner.map_array = input_data.shift.split(/\r?\n/).map { |l| l.split(//) }.reverse
+
+      input_data.join.split(/\r?\n/).each do |line|
+        if line.match('Water\s+(\d+)') {|m| owner.water = Integer(m[1])}
+        elsif line.match('Flooding\s+(\d+)') {|m| owner.flooding = Integer(m[1])  }
+        elsif line.match('Waterproof\s+(\d+)') {|m| owner.waterproof = Integer(m[1])}
+        elsif line.match('Trampoline\s+([A-I])\s+targets\s([1-9])') {|m| owner.trampolines[m[1]]=m[2]}
+        else
+          raise "Unknown input line : " + line.inspect
+        end
+      end
     end
   end
 end
