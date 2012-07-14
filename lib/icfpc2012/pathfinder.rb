@@ -99,7 +99,7 @@ module Icfpc2012
         path.push [x1, y1]
         #puts [x1, y1].inspect
       end  while distmap[y1][x1] != 0
-      path
+      path.reverse
     end
 
     def print_distmap
