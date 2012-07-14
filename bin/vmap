@@ -55,7 +55,14 @@ def create_reader
   args = ARGF.argv
   if args.size > 1
     char_index = 0
-    proc { char_index += 1; args[1][char_index-1] }
+    proc {
+      if char_index >= args[1].size
+        read_char
+      else
+        char_index += 1
+        args[1][char_index-1]
+      end
+    }
   else
     proc { read_char }
   end
@@ -91,14 +98,10 @@ begin
 
     if !waypoint.map.robot.alive?
       puts "You DIED!!!"
-      print_map(all_waypoints)
-      break
     end
 
     if waypoint.map.won?
       puts "We have a WINNER!!!"
-      print_map(all_waypoints)
-      break
     end
 
     puts step
