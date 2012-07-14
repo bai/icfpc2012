@@ -47,7 +47,7 @@ def read_map
   if ARGF.argv != []
     input_map = ARGF.argv[0]
   end
-  
+
   Icfpc2012::Map.new(File.read(input_map))
 end
 
@@ -61,7 +61,7 @@ begin
   map = read_map
   loop do
     print_map(map)
-    
+
     begin
       step = read_char.capitalize
       raise Interrupt if step.chr == "A" || step.chr == "\e"
@@ -70,10 +70,10 @@ begin
         print_map(map)
       end
     end until is_valid_input(step)
-    
+
     map = map.step(step)
     puts step
-    
+
   end
 rescue Interrupt
   puts 'Quitting...'

@@ -38,7 +38,7 @@ module Icfpc2012
 
     # Returns a new instance of the map after the given step
     def step(move)
-      self.path += move   
+      self.path += move
       case move
       when 'W' then move([ robot_x, robot_y ])
       when 'R' then move([ robot_x+1, robot_y ])
@@ -114,7 +114,7 @@ module Icfpc2012
       robot_x, robot_y = robot_position
 
       path_state = [[robot_x, robot_y], target_cell, []]
-      
+
       if target_cell.match(/[ \.\\O]/)
         new_input[robot_y][robot_x] = EMPTY
         new_input[y][x] = ROBOT
@@ -126,7 +126,7 @@ module Icfpc2012
 
           if new_map.remaining_lambdas == 0
             new_input[lift_y][lift_x] = OPEN_LIFT
-          end     
+          end
 
         end
 
@@ -150,7 +150,7 @@ module Icfpc2012
 
      def move_back()
       new_map = self.dup
-      
+
       return new_map if new_map.path_states == []
 
       path_state = new_map.path_states.pop
@@ -165,8 +165,8 @@ module Icfpc2012
       if back_cell == OPEN_LIFT
           new_map.score-=new_map.collected_lambdas*50
       end
-      
-      if back_cell == LAMBDA        
+
+      if back_cell == LAMBDA
         new_map.remaining_lambdas = remaining_lambdas + 1
         new_map.collected_lambdas = collected_lambdas - 1
         new_map.score-=25
@@ -175,7 +175,7 @@ module Icfpc2012
           new_input[lift_y][lift_x] = CLOSED_LIFT
         end
       end
-      
+
       if back_cell == ROCK
         new_input[robot_y][2 * robot_x - old_x] = EMPTY
       end
@@ -238,7 +238,7 @@ module Icfpc2012
 
       update_state.each do |old_update|
         rule, x, y = old_update
-        
+
         new_input[y][x] = ROCK
         case rule
         when 0 then
@@ -255,7 +255,7 @@ module Icfpc2012
 
       new_input
     end
-    
+
     def locate(element)
       input.each_with_index do |subarray, i|
         j = subarray.index(element)
