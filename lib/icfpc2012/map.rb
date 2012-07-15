@@ -204,6 +204,27 @@ module Icfpc2012
       new_rockfall = MapRockFallFast.new(new_input, new_position, rockfall, beard_to_grow)
       new_map.beard_list = new_rockfall.beard_list if beard_to_grow
 
+      if new_rockfall.horoks_fall.size > 0
+        new_map.horock_list = horock_list.dup
+
+        new_rockfall.horoks_fall.each do |old_pos, new_pos|
+          new_map.horock_list.delete(old_pos)
+
+          if new_pos
+            new_map.horock_list.push(new_pos)
+          end
+
+        end
+      end
+
+      if new_rockfall.lambda_list.size > 0
+        if new_map.lambda_list.object_id == lambda_list.object_id
+          new_map.lambda_list = lambda_list.dup
+        end
+        new_map.lambda_list += new_rockfall.lambda_list
+      end
+
+
       new_map.rockfall = new_rockfall
 
       # Use old water level

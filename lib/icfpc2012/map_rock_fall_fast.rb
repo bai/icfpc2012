@@ -8,6 +8,9 @@ module Icfpc2012
       @beard_list = beard_list
       @beard_list_new = Array.new
 
+      @horoks_fall = Hash.new
+      @lambda_list = Array.new
+
 
       if prev_rock_fall
         @active_places = update_places(prev_rock_fall.instance_variable_get('@active_places'))
@@ -33,6 +36,14 @@ module Icfpc2012
       @beard_list
     end
 
+    def horoks_fall
+      @horoks_fall
+    end
+
+    def lambda_list
+      @lambda_list
+    end
+
     def alive?
       !@robot_dead
     end
@@ -56,23 +67,40 @@ module Icfpc2012
 
       if (apply_stone)
         case @new_input[yfall][xfall]
-        when Map::ROCK, Map::ROCK
+        when Map::LAMBDA
+          lambda_list.delete([xfall, yfall])
+        when Map::HOROCK
+          horoks_fall.each do |key, value|
+            if (value == [xfall, yfall])
+              horoks_fall[key] = nil
+            end
+          end
+        when Map::ROCK
         else
           @new_input[yfall][xfall] = is_rock ? Map::ROCK : Map::HOROCK
           @falling_rocks.push([xfall, yfall])
         end
+
+        unless is_rock
+          #convert to lambda
+          if is_value?(xfall, yfall - 1, Map::EMPTY)
+            horoks_fall[[x, y]] = [xfall, yfall]
+          else
+            horoks_fall[[x, y]] = nil
+            lambda_list.push([xfall, yfall])
+            # remove data for rocks
+            @new_input[yfall][xfall] = Map::LAMBDA
+            @falling_rocks.delete([xfall, yfall])
+          end
+        end
+
+      elsif (!is_rock)
+        horoks_fall[[x, y]] = nil
       end
 
-      if xfall == @robot_position[0] &&
-          yfall == @robot_position[1]+1
+      if (xfall == @robot_position[0]) &&
+          (yfall == @robot_position[1]+1)
         @robot_dead = true
-      end
-
-      unless is_rock
-        #convert to lambda
-        #unless is_value?(xfall, yfall - 1, Map::EMPTY)
-        #end
-        true
       end
     end
 
