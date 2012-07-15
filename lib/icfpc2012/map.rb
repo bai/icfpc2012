@@ -176,12 +176,12 @@ module Icfpc2012
         new_input[y][2 * x - @robot.x] = target_cell
         new_input[y][x] = ROBOT
         new_input[@robot.y][@robot.x] = EMPTY
-      elsif action && action == 'S' && razors > 0
+      elsif action == 'S' && razors > 0
         new_map.razors -= 1
         new_map.beard_list = beard_list.dup
 
         Icfpc2012.do_ab ([x, y]) do |razor_x, razor_y|
-          index = new_map.beard_list.index([razor_x, razor_y])
+          beard_index = new_map.beard_list.index([razor_x, razor_y])
           if beard_index
             new_input[razor_y][razor_x] = EMPTY
             new_map.beard_list.delete_at(beard_index)

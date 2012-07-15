@@ -66,6 +66,23 @@ module Icfpc2012
       assert_equal('RUDRLRLUUUUU', path.path)
     end
 
+    def test_razor
+      map_string = <<-'EOS'.gsub /^.*?-/, ''
+        -RWL
+        -..#
+      EOS
+      map = Icfpc2012::Map.new(map_string)
+
+      target = [0,0]
+
+      path = Icfpc2012::BacktrackingSolver::repair_path(map, [target], 0)
+      assert_equal('D', path.path)
+
+      map.razors = 1
+      path = Icfpc2012::BacktrackingSolver::repair_path(map, [target], 0)
+      assert_equal('SD', path.path)
+    end
+
     def test_contest_10
       map_string = File.read("#{File.dirname(__FILE__)}/../maps/contest10.map.txt")
       map = Icfpc2012::Map.new(map_string)

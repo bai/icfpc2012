@@ -22,6 +22,7 @@ require 'icfpc2012/region.rb'
 require 'icfpc2012/solver/local_solver.rb'
 require 'icfpc2012/solver/backtracking_solver.rb'
 require 'icfpc2012/solver/pattern_solver.rb'
+require 'icfpc2012/solver/analyzer.rb'
 require 'icfpc2012/timer'
 require 'icfpc2012/lambda_clusterizer'
 

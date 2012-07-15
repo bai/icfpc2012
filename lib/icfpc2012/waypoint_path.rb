@@ -48,7 +48,7 @@ module Icfpc2012
 
       waypoint = @waypoints.last.step(move)
 
-      @way_passed = (move == 'W') || last_map.robot.position != waypoint.map.robot.position
+      @way_passed = (move == 'W') || (move == 'S') || last_map.robot.position != waypoint.map.robot.position
       @waypoints << waypoint  if @way_passed
       @way_passed
     end

@@ -10,6 +10,7 @@ module Icfpc2012
       @cur_solution = WaypointPath.new(map)
       @want_lambdas = false
       @want_path = true
+      @analyzer = Analyzer.new(@cur_solution)
     end
 
     def solve()
@@ -37,7 +38,7 @@ module Icfpc2012
       (@want_lambdas ? solution.last_map.collected_lambdas * 100 : 0) +
         (@want_path ? -solution.waypoints.size * 100 : 0) +
         (solution.won? ? 10000 : 0) #+
-        (in_target(rob) ? @target_cells.index(rob) * 100 : 0) +
+        (in_target(rob) ? @target_cells.index(rob) * 100 + 200 : 0) +
         (solution.last_map.razors * 10) +
         # FIXME: Better expression to express "We're gonna drown"
         (solution.last_map.waterproof == 0 ? 0 : solution.last_map.robot.underwater_ticks * 100 / solution.last_map.waterproof)
@@ -61,17 +62,19 @@ module Icfpc2012
       return  if !@want_lambdas && @best_solution &&
           (distance_to_target(rob) + @cur_solution.waypoints.size >= @best_solution.waypoints.size)
 
-      rocks_falling = @cur_solution.last_map.rockfall.falling_rocks.size > 0
+      if @analyzer.near_beard? && @cur_solution.last_map.razors > 0
+        if @cur_solution.add_move('S')
+          backtrack(visited)
+        end
+        @cur_solution.pop
+        return
+      end
 
-      lambda_collected = @cur_solution.waypoints.size > 1 &&
-          (@cur_solution.last_map.remaining_lambdas < @cur_solution.waypoints[-2].map.remaining_lambdas)
-
-      if rocks_falling || (@want_lambdas && lambda_collected)
+      if @analyzer.rocks_falling? || (@want_lambdas && @analyzer.lambda_collected?)
         visited = Set.new
       end
 
-      #next_points = points_around(rob).sort{ |x,y| distance_to_target(x) <=> distance_to_target(y) }
-      next_points = points_around(rob).sort_by { |x| distance_to_target(x) }
+      next_points = @analyzer.points_around(rob).sort_by { |x| distance_to_target(x) }
 
       next_points.each do |next_position|
         move = CoordHelper::coords_to_action(rob, next_position)
@@ -85,27 +88,12 @@ module Icfpc2012
         end
       end
 
-      if @cur_solution.waypoints.last.movement != 'W' && rocks_falling
+      if @cur_solution.waypoints.last.movement != 'W' && @analyzer.rocks_falling?
         if @cur_solution.add_move('W')
           backtrack(visited)
         end
         @cur_solution.pop
       end
-    end
-
-    def points_around(cluster)
-      cluster.is_a?(Region) ?
-          cluster.points_around :
-          points_around_point(cluster)
-    end
-
-    def points_around_point(point)
-      [
-          [point[0], point[1]+1],
-          [point[0], point[1]-1],
-          [point[0]+1, point[1]],
-          [point[0]-1, point[1]],
-      ]
     end
 
     # Manhattan distance to the best of the target cells
