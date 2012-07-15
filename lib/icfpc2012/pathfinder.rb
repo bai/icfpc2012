@@ -70,7 +70,7 @@ module Icfpc2012
 
     IGNORE_ROCKS = Proc.new do |map, nri, nci|
       # crash right through the rocks
-      next (map.walkable?(nci, nri) || map.get_at(nci, nri) == '*')
+      next (map.walkable?(nci, nri) || map.get_at(nci, nri) == '*' || map.get_at(nci, nri) == 'W' || map.get_at(nci, nri) == '@')
     end
 
     def gval(m, c)
