@@ -19,8 +19,9 @@ begin
     if ARGF.argv != [] && ARGF.argv[0] == "--verbose"
       original_puts result[1]
     end
+  rescue Exception
   ensure
-    original_puts sc.best_solution
+    original_puts sc.best_solution.size != 0 ? sc.best_solution : "A"
     #exit 0
   end
 end
