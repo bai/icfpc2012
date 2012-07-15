@@ -3,6 +3,7 @@ module Icfpc2012
     attr_accessor :x1, :x2, :y1, :y2
 
     def initialize(x1, y1, x2, y2)
+      raise "Invalid region: #{[x1, y1, x2, y2]}"  if (x1 >= x2) || (y1 >= y2)
       @x1 = x1
       @x2 = x2
       @y1 = y1
@@ -17,6 +18,10 @@ module Icfpc2012
     # approximate
     def radius
       [(@x2-@x1).abs, (@y2-@y1).abs].max/2+1
+    end
+
+    def in?(point)
+      point[0] >= x1 && point[0] <= x2 && point[1] >= y1 && point[1] <= y2
     end
 
     def self.enclosing(coord_list)

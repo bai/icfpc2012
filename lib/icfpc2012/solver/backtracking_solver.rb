@@ -4,8 +4,8 @@ module Icfpc2012
   class BacktrackingSolver < LocalSolver
     attr_reader :best_solution # WaypointPath
 
-    def initialize(map, region_center, region_radius, target_cells, max_depth=-1)
-      super(map, region_center, region_radius, target_cells, max_depth)
+    def initialize(map, region, target_cells, max_depth=-1)
+      super(map, region, target_cells, max_depth)
       @best_solution = nil
       @cur_solution = WaypointPath.new(map)
     end
@@ -24,9 +24,9 @@ module Icfpc2012
     def self.repair_path(map, target_path, priority = 3)
 
       target_points = target_path.take(5) # simple heuristic
+      region = Region.enclosing(target_points + [map.robot.position])
 
-      #BacktrackingSolver.new(map, )
-
+      BacktrackingSolver.new(map, region, target_points, priority*10).solve
     end
 
     private
@@ -62,7 +62,7 @@ module Icfpc2012
       'UDRL'.each_char { |move|
         next_position = CoordHelper::action_to_coords(r, move)
         if !visited.include?(next_position) &&
-            in_region(next_position) &&
+            @region.in?(next_position) &&
             @cur_solution.last_map.can_go_to?(*next_position)
           if @cur_solution.add_move(move)
             backtrack(visited + [next_position])

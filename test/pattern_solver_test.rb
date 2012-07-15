@@ -26,7 +26,7 @@ class PatternSolverTest < Test::Unit::TestCase
     defs.load(pattern_def)
 
     targets = [[3,2], [3,3]]
-    solver = Icfpc2012::PatternSolver.new(defs, map, [3,3], 3, targets)
+    solver = Icfpc2012::PatternSolver.new(defs, map, [0,0,5,4], targets)
 
     path = solver.solve
     assert_equal('UU', path)
@@ -52,7 +52,7 @@ class PatternSolverTest < Test::Unit::TestCase
     defs.load(pattern_def)
 
     target = [7,7]
-    solver = Icfpc2012::PatternSolver.new(defs, map, [6,8], 2, [target])
+    solver = Icfpc2012::PatternSolver.new(defs, map, [6,8, 10,10], [target])
 
     path = solver.solve
     assert_equal('RRR', path)
