@@ -11,7 +11,7 @@ class CoordHelperTest < Test::Unit::TestCase
     assert(path == 'URDWL')
   end
 
-  def test_coords_to_actions_invalid
+  def _test_coords_to_actions_invalid # ignore after introduction of teleports
     coords = [
       [0, 0], [1, 1]
     ]

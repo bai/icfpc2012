@@ -51,12 +51,9 @@ module Icfpc2012
           [coords[0]-1, coords[1]]
         when 'R'
           [coords[0]+1, coords[1]]
-        when 'W'
-          coords
         else
-          raise "Unknown move: #{action}"
+          coords
       end
-
     end
 
   end
