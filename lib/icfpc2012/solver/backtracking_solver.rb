@@ -26,7 +26,7 @@ module Icfpc2012
       target_points = target_path.take(5) # simple heuristic
       region = Region.enclosing(target_points + [map.robot.position])
 
-      BacktrackingSolver.new(map, region, target_points, priority*10).solve
+      BacktrackingSolver.new(map, region.expand(3 + priority/2), target_points, priority*3).solve
     end
 
     private

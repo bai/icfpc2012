@@ -32,5 +32,9 @@ module Icfpc2012
 
       Region.new(x1, y1, x2, y2)
     end
+
+    def expand(by)
+      Region.new(@x1-by, @y1-by, @x2+by, @y2+by)
+    end
   end
 end
