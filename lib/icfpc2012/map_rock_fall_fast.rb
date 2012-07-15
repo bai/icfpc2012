@@ -44,7 +44,7 @@ module Icfpc2012
 
     private
 
-    def fall_to(x, y, xfall, yfall)
+    def fall_to(x, y, xfall, yfall, apply_stone = true)
       if @new_input[y].object_id == @map_array[y].object_id
         @new_input[y] = @map_array[y].dup
       end
@@ -54,7 +54,7 @@ module Icfpc2012
 
       @new_input[y][x] = Map::EMPTY
 
-      if @new_input[yfall][xfall] != Map::ROCK
+      if apply_stone && @new_input[yfall][xfall] != Map::ROCK
         @new_input[yfall][xfall] = Map::ROCK
         @falling_rocks.push([xfall, yfall])
       end
@@ -147,11 +147,9 @@ module Icfpc2012
         x, y = pos
 
         if is_value?(x, y-1, Map::EMPTY)
-          unless is_value?(x+1, y, Map::BEARD)
-            fall_to(x, y, x, y-1)
-            unset_beard(x, y-1)
-          end
-
+          apply_stone = ! is_value?(x+1, y, Map::BEARD)
+          fall_to(x, y, x, y-1, apply_stone)
+          unset_beard(x, y-1) if apply_stone
         end
 
         is_down_rock = is_value?(x, y-1, Map::ROCK)
@@ -160,10 +158,9 @@ module Icfpc2012
 
         if is_right_free
           if is_down_rock || is_value?(x, y-1, Map::LAMBDA)
-            unless is_value?(x+2, y, Map::BEARD)
-              fall_to(x, y, x+1, y-1)
-              unset_beard(x+1, y-1)
-            end
+            apply_stone = ! is_value?(x+2, y, Map::BEARD)
+            fall_to(x, y, x+1, y-1, apply_stone)
+            unset_beard(x+1, y-1) if apply_stone
           end
         elsif is_down_rock &&
               is_value?(x-1, y, Map::EMPTY) &&

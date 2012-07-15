@@ -252,8 +252,10 @@ module Icfpc2012
           when BEARD
             beard_list.push([col, row])
           when *TRAMPOLINES
+            # for trampolines = coordinate + target
             owner.trampolines[cell] = [[col, row], nil]
           when *TARGETS
+            # for targets = coordinate
             owner.trampolines[cell] = [col, row]
           end
         end
