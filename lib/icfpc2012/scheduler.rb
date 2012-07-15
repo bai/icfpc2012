@@ -63,26 +63,37 @@ module Icfpc2012
     end
 
     def recurse(map, path_so_far, score_so_far, depth)
+      begin # try catch for timing exception
+        if(score_so_far > self.best_score)
+          self.best_score = score_so_far
+          self.best_solution = path_so_far
+          map.to_s.each_line { |line| puts line }
+          puts [self.best_solution, self.best_score].inspect
+        end
 
-      if(score_so_far > self.best_score)
-        self.best_score = score_so_far
-        self.best_solution = path_so_far
-        map.to_s.each_line { |line| puts line }
-        puts [self.best_solution, self.best_score].inspect
+        pf = Icfpc2012::PathFinder.new(map)
+
+        pf.max_lambdas = max_iterations
+        pf.do_wave(map.robot.position, Icfpc2012::PathFinder::MIND_ROCKS)
+        process_wave(pf, map, path_so_far, score_so_far, depth)
+
+        pf.do_wave(map.robot.position, Icfpc2012::PathFinder::IGNORE_ROCKS)
+        process_wave(pf, map, path_so_far, score_so_far, depth)   
+      rescue RuntimeError => e
+        puts 'Timer called'
+        puts e.inspect
+        if(score_so_far > self.best_score)
+          self.best_score = score_so_far
+          self.best_solution = path_so_far
+          map.to_s.each_line { |line| puts line }
+          puts [self.best_solution, self.best_score].inspect
+        end
       end
-
-      pf = Icfpc2012::PathFinder.new(map)
-
-      pf.max_lambdas = max_iterations
-      pf.do_wave(map.robot.position, Icfpc2012::PathFinder::MIND_ROCKS)
-      process_wave(pf, map, path_so_far, score_so_far, depth)
-
-      pf.do_wave(map.robot.position, Icfpc2012::PathFinder::IGNORE_ROCKS)
-      process_wave(pf, map, path_so_far, score_so_far, depth)
-
     end
 
     def solve
+      #timings    
+      Icfpc2012::Timer.new 150 # seconds
 
       self.max_iterations = LIGHT_SEARCH_WIDTH
       recurse(map_origin, "", 0, 0)

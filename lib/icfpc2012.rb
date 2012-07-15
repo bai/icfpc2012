@@ -20,4 +20,6 @@ require 'icfpc2012/pattern/pattern_matcher.rb'
 require 'icfpc2012/scheduler.rb'
 require 'icfpc2012/solver/local_solver.rb'
 require 'icfpc2012/solver/backtracking_solver.rb'
+require 'icfpc2012/timer'
+
 end
