@@ -126,6 +126,7 @@ module Icfpc2012
       y = new_position[1]
 
       new_map = self.dup
+      new_map.trampolines = self.trampolines.dup
       new_map.score = score - 1
       new_map.timer = timer+1
       new_input = map_array.map(&:dup)
@@ -152,7 +153,7 @@ module Icfpc2012
             if dst == new_position
               x, y = locate(src)
               new_input[y][x] = EMPTY
-              trampolines.delete(src)
+              new_map.trampolines.delete(src)
             end
           end
         elsif target_cell == OPEN_LIFT
