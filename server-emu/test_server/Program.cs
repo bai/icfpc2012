@@ -12,26 +12,49 @@ namespace ConsoleApplication1
         static void Main(string[] args)
         {
             string PathMap="";
+            string RunDirectory=System.IO.Directory.GetCurrentDirectory();
+            int TimeForExit=150000;
             DateTime TimeBegin;
             TimeBegin = DateTime.Now;
             Boolean streaming = false;
             Console.WriteLine("Begin test: " + TimeBegin.ToString("HH:mm:ss.ms"));
+            //Console.WriteLine(RunDirectory);
             if (args.Length > 0)
             {
                 int i;
-                for (i = 0; i < args.Length; i++ )
+                /*for (i = 0; i < args.Length; i++ )
                 {
                     Console.WriteLine(args[i]);
                 }
-
+                */
                 String PrefixCommandLine="";
-                for (i = 1; i < args.Length-1; i++)
-                {
-                    if (args[i] == "--verbose") streaming = true;
-                    PrefixCommandLine = PrefixCommandLine + args[i] + " ";
-                }
                 PathMap = args[args.Length-1];
+                if (PathMap[0]=='-' && PathMap[1]=='-')
+                {
+                    string tmp = PathMap.Substring(2);
+                    if (int.TryParse(tmp, out TimeForExit))
+                    {
+                        TimeForExit *= 1000;
+                    }
+                    for (i = 1; i < args.Length-2; i++)
+                    {
+                        if (args[i] == "--verbose") streaming = true;
+                        PrefixCommandLine = PrefixCommandLine + args[i] + " ";
+                    }
+                    PathMap = args[args.Length - 2];
+                }
+                else
+                {
+                    for (i = 1; i < args.Length - 1; i++)
+                    {
+                        if (args[i] == "--verbose") streaming = true;
+                        PrefixCommandLine = PrefixCommandLine + args[i] + " ";
+                    }
+                    PathMap = args[args.Length - 1];
+                }
                 string[] files = System.IO.Directory.GetFiles(PathMap);
+
+
                 foreach (string NameFile in files)
                 {
                     Console.WriteLine();
@@ -45,8 +68,7 @@ namespace ConsoleApplication1
                     {
                         CommandLine = PrefixCommandLine + NameFile;
                     }
-                    //Console.WriteLine(PathMap);
-                    Console.WriteLine("Command line:" + CommandLine);
+                    //Console.WriteLine("Command line:" + CommandLine);
                     Process proc = new Process();
                     proc.StartInfo.UseShellExecute = false;
                     proc.StartInfo.RedirectStandardOutput = true;
@@ -70,7 +92,7 @@ namespace ConsoleApplication1
                         proc.StandardInput.Write("");
                         proc.StandardInput.Close();
                     }
-                    if (!proc.WaitForExit(150000)) proc.Kill();//150sec
+                    if (!proc.WaitForExit(TimeForExit)) proc.Kill();//150sec
                     DateTime EndProc = DateTime.Now;
                     string strout = proc.StandardOutput.ReadToEnd();
                     Console.WriteLine("Proc begin:" + StartProc.ToString("HH:mm:ss.ms"));
@@ -84,7 +106,7 @@ namespace ConsoleApplication1
             }
             else
             {
-                Console.WriteLine("You must enter command line: <ruby simulator program> <parameters> <path to folder with maps>");
+                Console.WriteLine(@"You must enter command line: <PATH\ruby> <PATH\rubyscript> <PATH\maps> <--XXXX time run>");
                 Console.ReadKey();
             }
         }
