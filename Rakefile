@@ -29,11 +29,16 @@ directory 'submission'
 
 task :package => [:pkg,:submission] do
   sh "mkdir pkg/src"
+  # to make binaries work
+  sh "git archive master | tar -x -C pkg"
+  # to make src folder as required by spec
   sh "git archive master | tar -x -C pkg/src"
-  sh "cp -R pkg/src/PACKAGES pkg"
-  sh "cp -R pkg/src/install pkg"
-  sh "cp -R pkg/src/lifter pkg"
-  sh "cp -R pkg/src/README.md pkg/README"
+  #sh "cp -R pkg/src/PACKAGES pkg"
+  #sh "cp -R pkg/src/install pkg"
+  #sh "cp -R pkg/src/lifter pkg"
+  #sh "cp -R pkg/src/README.md pkg/README"
+  #sh "cp -R pkg/src/GemFile pkg"
+  #sh "cp -R pkg/src/icfpc2012.gemspec pkg"
   sh "cd pkg;tar -cvf ../submission/icfp-xxx.tgz *"
 end
 
