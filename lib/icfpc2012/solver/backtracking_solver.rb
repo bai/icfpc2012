@@ -40,7 +40,7 @@ module Icfpc2012
         (in_target(rob) ? @target_cells.index(rob) * 100 : 0) +
         (solution.last_map.razors * 10) +
         # FIXME: Better expression to express "We're gonna drown"
-        (solution.last_map.robot.underwater_ticks * 100 / solution.last_map.waterproof)
+        (solution.last_map.waterproof == 0 ? 0 : solution.last_map.robot.underwater_ticks * 100 / solution.last_map.waterproof)
     end
 
     def backtrack(visited)
