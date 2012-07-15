@@ -8,6 +8,8 @@ module Icfpc2012
       super(map, region, target_cells, max_depth)
       @best_solution = nil
       @cur_solution = WaypointPath.new(map)
+      @want_lambdas = false
+      @want_path = true
     end
 
     def solve()
@@ -29,6 +31,11 @@ module Icfpc2012
 
     private
 
+    def heuristic(solution)
+      (@want_lambdas ? solution.last_map.collected_lambdas * 100 : 0) +
+        (@want_path ? -solution.waypoints.size * 100 : 0)
+    end
+
     def backtrack(visited)
       #puts "entering: #{@cur_solution.path}"
       return  unless @cur_solution.valid?
@@ -42,13 +49,14 @@ module Icfpc2012
       end
 
       return  if max_depth > 0 && visited.size > max_depth
+      return  if @best_solution && (heuristic(@cur_solution) < heuristic(@best_solution))
 
       rocks_falling = @cur_solution.last_map.rockfall.falling_rocks.size > 0
 
       lambda_collected = @cur_solution.waypoints.size > 1 &&
           (@cur_solution.last_map.remaining_lambdas < @cur_solution.waypoints[-2].map.remaining_lambdas)
 
-      if lambda_collected || rocks_falling
+      if rocks_falling || (@want_lambdas && lambda_collected)
         visited = Set.new
       end
 
