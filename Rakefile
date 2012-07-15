@@ -24,10 +24,6 @@ CLOBBER.include('submission')
 CLOBBER.include('pkg')
 
 
-file "README" => "README.md" do
-  sh "cp README.md README"
-end
-
 directory 'pkg'
 directory 'submission'
 
@@ -37,7 +33,7 @@ task :package => [:pkg,:submission] do
   sh "cp -R pkg/src/PACKAGES pkg"
   sh "cp -R pkg/src/install pkg"
   sh "cp -R pkg/src/lifter pkg"
-  sh "cp -R pkg/src/README pkg"
+  sh "cp -R pkg/src/README.md pkg/README"
   sh "cd pkg;tar -cvf ../submission/icfp-xxx.tgz *"
 end
 
