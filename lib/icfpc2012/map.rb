@@ -19,6 +19,7 @@ module Icfpc2012
     attr_accessor :trampolines
     attr_accessor :beard_growth, :razors
     attr_accessor :rockfall
+    attr_accessor :lambda_list, :beard_list
 
     def initialize(input)
       parse_map(input)
@@ -126,9 +127,9 @@ module Icfpc2012
       y = new_position[1]
 
       new_map = self.dup
-      new_map.trampolines = self.trampolines.dup
       new_map.score = score - 1
       new_map.timer = timer+1
+
       new_input = map_array.map(&:dup)
 
       target_cell = get_at(x, y)
@@ -140,19 +141,23 @@ module Icfpc2012
         if target_cell == LAMBDA
           new_map.remaining_lambdas = remaining_lambdas - 1
           new_map.collected_lambdas = collected_lambdas + 1
+          new_map.lambda_list = lambda_list.dup
+          new_map.lambda_list.delete(new_position)
           new_map.score+=25
 
           if new_map.remaining_lambdas == 0
             new_input[lift_y][lift_x] = OPEN_LIFT
           end
         elsif jumpable?(x, y)
-          new_position = trampolines[target_cell]
+          new_map.trampolines = trampolines.dup
+
+          target = new_map.trampolines[target_cell][1]
+          new_position = new_map.trampolines[target]
           new_input[y][x] = EMPTY
           new_input[new_position[1]][new_position[0]] = ROBOT
-          trampolines.each do |src, dst|
-            if dst == new_position
-              x, y = locate(src)
-              new_input[y][x] = EMPTY
+          new_map.trampolines.each do |src, dst|
+            if dst[1] == target
+              new_input[dst[0][1]][dst[0][0]] = EMPTY
               new_map.trampolines.delete(src)
             end
           end
@@ -168,16 +173,32 @@ module Icfpc2012
         new_input[y][2 * x - @robot.x] = ROCK
       elsif action && action == 'S' && razors > 0
         new_map.razors -= 1
+        new_map.beard_list = beard_list.dup
+
         Icfpc2012.do_ab ([x, y]) do |razor_x, razor_y|
-          if get_at(razor_x, razor_y) == BEARD
+          index = new_map.beard_list.index([razor_x, razor_y])
+          if beard_index
             new_input[razor_y][razor_x] = EMPTY
+            new_map.beard_list.delete_at(beard_index)
           end
         end
       else
         new_position = @robot.position
       end
 
-      new_rockfall = MapRockFallFast.new(new_input, new_position, rockfall)
+      #use beards
+      beard_to_grow = nil
+      if (new_map.beard_list.size > 0) &&
+          (new_map.beard_growth != 0) && (new_map.timer % new_map.beard_growth == 0)
+          if new_map.beard_list.object_id == beard_list.object_id
+            new_map.beard_list = beard_list.dup
+          end
+          beard_to_grow = new_map.beard_list
+      end
+
+      new_rockfall = MapRockFallFast.new(new_input, new_position, rockfall, beard_to_grow)
+      new_map.beard_list = new_rockfall.beard_list if beard_to_grow
+
       new_map.rockfall = new_rockfall
 
       # Use old water level
@@ -188,24 +209,11 @@ module Icfpc2012
       if new_map.flooding != 0 && (new_map.timer % new_map.flooding == 0)
         new_map.water = water+1
       end
+
       new_map.robot = Robot.new(new_position[0], new_position[1], robot_alive,
                                 robot_underwater ? robot.underwater_ticks+1 : 0)
 
       updated_input = new_rockfall.updated_input
-      if new_map.beard_growth != 0 && (new_map.timer % new_map.beard_growth == 0)
-        updated_input.each_index do |b_row|
-          updated_input[b_row].each_index do |b_col|
-            if updated_input[b_row][b_col] == EMPTY
-              Icfpc2012.do_ab ([b_col, b_row]) do |c, r|
-                if (get_at(c, r) == BEARD) && (updated_input[r][c] == BEARD)# i.e. beard not deleted
-                  updated_input[b_row][b_col] = BEARD
-                  break
-                end
-              end
-            end
-          end
-        end
-      end
 
       # Win freezes the world
       new_map.map_array = new_map.won? ? new_input : updated_input
@@ -220,44 +228,50 @@ module Icfpc2012
       nil
     end
 
-    def lambda_list
-      ll = []
-      (0..width-1).each do |x|
-        (0..height-1).each do |y|
-          if get_at(x, y) == LAMBDA
-            ll.push([x, y])
-          end
-        end
-      end
-      ll
-    end
-
     def parse_map(input)
       owner = self
       owner.water = 0
       owner.flooding = 0
       owner.waterproof = 0
       owner.map_array = Array.new
+      owner.lambda_list = Array.new
+      owner.beard_list = Array.new
       owner.trampolines = Hash.new
 
       owner.beard_growth = 25
       owner.razors = 0
 
       input_data = input.split(/\r?\n\r?\n/)
-      owner.map_array = input_data.shift.split(/\r?\n/).map { |l| l.split(//) }.reverse
+
+      input_data.shift.split(/\r?\n/).reverse.each_with_index do |l, row|
+        owner.map_array[row] = l.split(//)
+        owner.map_array[row].each_with_index do |cell, col|
+          case cell
+          when LAMBDA
+            lambda_list.push([col, row])
+          when BEARD
+            beard_list.push([col, row])
+          when *TRAMPOLINES
+            # for trampolines = coordinate + target
+            owner.trampolines[cell] = [[col, row], nil]
+          when *TARGETS
+            # for targets = coordinate
+            owner.trampolines[cell] = [col, row]
+          end
+        end
+      end
 
       input_data.join.split(/\r?\n/).each do |line|
         if line.match('Water\s+(\d+)') {|m| owner.water = Integer(m[1])}
         elsif line.match('Flooding\s+(\d+)') {|m| owner.flooding = Integer(m[1])  }
         elsif line.match('Waterproof\s+(\d+)') {|m| owner.waterproof = Integer(m[1])}
-        elsif line.match('Trampoline\s+([A-I])\s+targets\s([1-9])') {|m| owner.trampolines[m[1]]=m[2]}
+        elsif line.match('Trampoline\s+([A-I])\s+targets\s([1-9])') {|m| owner.trampolines[m[1]][1]=m[2];}
         elsif line.match('Growth\s+(\d+)') {|m| owner.beard_growth = Integer(m[1])}
         elsif line.match('Razors\s+(\d+)') {|m| owner.razors = Integer(m[1])}
         else
           raise "Unknown input line : " + line.inspect
         end
       end
-      owner.trampolines.each {|k, v| owner.trampolines[k] = locate(v)}
     end
   end
 end
