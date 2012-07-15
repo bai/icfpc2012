@@ -70,9 +70,52 @@ EOS
     map1 = Icfpc2012::Map.new(get_mapfile('trampoline1.map.txt'))
     pf1 = Icfpc2012::PathFinder.new(map1)
     pf1.do_wave(map1.robot.position)
-    pf1.print_distmap
+    #pf1.print_distmap
     assert_equal("LDLL",
                  Icfpc2012::CoordHelper.coords_to_actions(pf1.trace_shortest_path_to(pf1.enum_closest_lambdas[0])))
+  end
+
+  def test_interrupted_path_reminder
+
+    map_string = <<-'EOS'.gsub /^.*?-/, ''
+      -L#####
+      -#\   #
+      -##*###
+      -# .  #
+      -#   R#
+      -######
+    EOS
+    map1 = Icfpc2012::Map.new(map_string)
+    pf1 = Icfpc2012::PathFinder.new(map1)
+    pf1.do_wave(map1.robot.position, Icfpc2012::PathFinder::IGNORE_ROCKS)
+    #pf1.print_distmap
+
+    path_coords = pf1.trace_shortest_path_to(pf1.enum_closest_lambdas[0])
+    path = Icfpc2012::CoordHelper.coords_to_actions(path_coords)
+
+    #path = "LLRULUUL"
+
+    wp = Icfpc2012::WaypointPath.new(map1, path)
+    assert_equal(false, wp.valid?)
+    assert_equal("LLU", wp.path)
+
+    path_remainder_coords = path_coords.last(path.size - wp.path.size)
+    assert_equal([[2, 3],  [2, 4], [1, 4]], path_remainder_coords)
+
+
+    #puts path
+    #puts wp.path
+
+    #puts (path_remainder_coords).inspect
+
+    #wp.last_map.to_s.each_line { |line| puts line }
+
+    #wp.path
+
+    solution = Icfpc2012::BacktrackingSolver.repair_path(wp.last_map, path_remainder_coords)
+    #puts solution.inspect
+
+    assert(solution.last_map.robot.position[1] >= 3)
   end
 
   def test_clusterized_path
@@ -117,20 +160,14 @@ EOS
     assert pf.clusters == clusters, 'Search for limited lambda clusters failed'
   end
 
-  def test_clusters_for_map999
-    # map = Icfpc2012::Map.new(get_mapfile('map999.txt'))
-    # pf = Icfpc2012::PathFinder.new(map)
+  def _test_clusters_for_map999
+    map = Icfpc2012::Map.new(get_mapfile('map999.txt'))
+    pf = Icfpc2012::PathFinder.new(map)
 
-    # pf.do_wave(map.robot.position)   
-    # puts '_________________________'
-    # puts pf.clusters.inspect
-    # puts '_________________________'
-    # clusters = [
-    #   [[3, 4], [3, 5], [3, 6], [4, 6], [5, 6], [6, 6], [7, 6], [8, 6], [9, 6]], 
-    #   [[3, 8], [4, 8], [5, 8], [6, 8], [7, 8], [8, 8]], 
-    #   [[6, 1]], 
-    #   [[9, 1], [8, 1]]
-    # ]
-    # assert pf.clusters == clusters, 'Search for unlimited lambda clusters on map999 failed'
+    pf.do_wave(map.robot.position)   
+    puts '_________________________'
+    puts pf.clusters.inspect
+    puts '_________________________'
+    assert pf.clusters == clusters, 'Search for unlimited lambda clusters on map999 failed'
   end
 end

@@ -1,10 +1,23 @@
 #!/usr/bin/env ruby
 
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), 'lib'))
 
 require 'icfpc2012'
 
+alias :original_puts :puts
+alias :original_pring :print
+def puts(*); end
+def print(*); end
+
 map = Icfpc2012::Map.new($stdin.read)
 sc = Icfpc2012::Scheduler.new(map)
+result = sc.solve
 
-puts sc.solve.inspect
+if ARGF.argv != [] && ARGF.argv[0] == "--verbose"
+  original_puts result[0]
+  original_puts result[1]
+else
+  original_puts result.first
+end
+
+

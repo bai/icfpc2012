@@ -74,7 +74,7 @@ module Icfpc2012
       oldFront.push [y, x]
       distmap[y][x] = 0
 
-      clusterizer = Icfpc2012::LambdaClusterizer.new map
+      clusterizer = Icfpc2012::LambdaClusterizer.new @map
       t = 0
 
       while oldFront.length != 0 do
@@ -92,7 +92,8 @@ module Icfpc2012
           end
 
           if map.jumpable?(ci, ri)
-            c = map.trampolines[map.get_at(ci, ri)].dup
+            target = map.trampolines[map.get_at(ci, ri)][1]
+            c = map.trampolines[target].dup
             c[1],c[0] = c
             if gval(distmap, c) != -1
               next

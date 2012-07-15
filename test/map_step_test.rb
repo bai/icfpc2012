@@ -52,7 +52,6 @@ EOS
 
     map1 = Icfpc2012::Map.new(map1_string)
     map2 = map1.step('W')
-    #map3 = map2.step('W')
 
     assert(map1.robot.alive?)
     assert(!map2.robot.alive?, "Robot should be dead on map:\n#{map2.to_s}")
@@ -83,5 +82,44 @@ EOS
 
   end
 
+  def test_falling_twice
+    map_strings = [ <<-'EOS'.gsub(/^.*?-/, ''),
+          - .* **L
+          -   *#..
+          -  *R.*\
+          - *.**.#
+      EOS
+      <<-'EOS'.gsub(/^.*?-/, ''),
+          - .  **L
+          -  **#..
+          -  *R.*\
+          - *.**.#
+      EOS
+      <<-'EOS'.gsub(/^.*?-/, ''),
+            - .  **L
+            -   *#..
+            - **R.*\
+            - *.**.#
+      EOS
+      <<-'EOS'.gsub(/^.*?-/, '')
+            - .  **L
+            -   *#..
+            -  *R.*\
+            -**.**.#
+      EOS
+    ]
+    maps = map_strings.map{|s| Icfpc2012::Map.new(s)}
 
+    assert_equal(1, maps[0].rockfall.falling_rocks.size)
+    assert_equal(1, maps[1].rockfall.falling_rocks.size)
+    assert_equal(1, maps[2].rockfall.falling_rocks.size)
+    assert_equal(0, maps[3].rockfall.falling_rocks.size)
+
+    maps_stepped = [ maps[0] ]
+    (1..3).each do |i|
+      maps_stepped << maps_stepped.last.step('W')
+      assert_equal(maps[i], maps_stepped.last, "Step #{i}: ")
+    end
+
+  end
 end
