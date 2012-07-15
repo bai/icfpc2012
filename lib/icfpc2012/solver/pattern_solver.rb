@@ -35,26 +35,30 @@ module Icfpc2012
 
     def match(pos, dir, pts, map)
       pattens = pts[dir]
-      pattens.each do |offset, pdata, path|
+      if !pattens
+        return nil
+      end
+      pattens.each do |pdata, path|
+        offset = get_offset(pdata)
         x1 = pos[0] + offset[0]
         y1 = pos[1] + offset[1]
         my = pdata.size - 1
         mx = pdata[0].size - 1
 
-        puts "new"
+#        puts "new"
         h = Icfpc2012::Pattern.new("aoeu")
         match = true
         (0..mx).each do |x|
           (0..my).each do |y|
             ms = map.get_at(x1 + x, y1 - y)
             ps = pdata[y][x]
-            print ms, ps
+#            print ms, ps
             if !h.match_sym?(ms, ps)
-              print [ms, ps]
+#              print [ms, ps]
               match = false
             end
           end
-          puts
+#          puts
         end
         if match
           return path
@@ -63,30 +67,37 @@ module Icfpc2012
       return nil
     end
 
+    def get_offset(ptn)
+      ptn.each_with_index do |x, i|
+        j = x.index('R')
+        return [-j, i] if j
+      end
+    end
     def solve(map,  desired_pos)
       pts = Hash.new
       pts[[1, 0]] = [
-                     [[0,0], ["R*","ee"], "DRLUR"],
-                     [[-1,0], ["eR*","?e*"], "DULRR"],
-                     [[0,1], ["e?","R*", "e*"], "DUUDR"]
+                     [["R*","ee"], "DRLUR"],
+                     [["eR*","?e*"], "DULRR"],
+                     [["e?","R*", "e*"], "DUUDR"]
                     ]
       pts[[-1, 0]] = [
-                      [[-1, 0], ["*R", "ee"], "DLRUL"],
-                      [[-1, 0], ["*Re", "*e?"], "DURLL"],
-                      [[-1, 1], ["?e", "*R", "*e"], "DUUDL"]
+                      [ ["*R", "ee"], "DLRUL"],
+                      [ ["*Re", "*e?"], "DURLL"],
+                      [ ["?e", "*R", "*e"], "DUUDL"]
                      ]
       pts[[0, 1]] = [
-                     [[-1, -1], ["e*",
-                                 "eR"], "LURU"],
-                     [[0, -1], ["*e",
-                                "Re"], "RULU"],
-                     [[-1, 1], ["?*",
-                                "eR",
-                                "ee"], "LDRLURU"],
-                     [[0, 1], ["*?",
-                               "Re",
-                               "ee"], "RDLRULU"],
+                     [ ["e*",
+                        "eR"], "LURU"],
+                     [ ["*e",
+                        "Re"], "RULU"],
+                     [ ["?*",
+                        "eR",
+                        "ee"], "LDRLURU"],
+                     [ ["*?",
+                        "Re",
+                        "ee"], "RDLRULU"],
                     ]
+
       rpos = map.robot.position
       dir = [desired_pos[0] - rpos[0], desired_pos[1] - rpos[1]]
       match(map.robot.position, dir, pts, map)

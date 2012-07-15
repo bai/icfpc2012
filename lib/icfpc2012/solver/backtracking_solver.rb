@@ -25,6 +25,16 @@ module Icfpc2012
     # @param priority 1 to 10, 10 being highest
     # @return a fixed path as a command list, nil if not found
     def self.repair_path(map, target_path, priority = 3)
+      # if we add more pattern we can test more points in target_path
+      # in order to advance futher using pattern
+      if target_path.length > 0
+        ps = Icfpc2012::PatternSolver2.new
+        path = ps.solve(map, target_path[0])
+        if path
+          return WaypointPath.new(map, path)
+        end
+      end
+      
       target_points = target_path.take(10) # simple heuristic
       region = Region.enclosing(target_points + [map.robot.position])
       BacktrackingSolver.new(map, region.expand(3 + priority/3), target_points, 3+priority).solve
