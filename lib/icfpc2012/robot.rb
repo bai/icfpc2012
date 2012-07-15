@@ -11,7 +11,7 @@ module Icfpc2012
 
     def step(direction)
       case direction
-      when 'W' then [@x, @y] # wait
+      when 'W','S' then [@x, @y] # wait, apply razor
       when 'L' then [@x-1, @y] # move left
       when 'R' then [@x+1, @y] # move right
       when 'U' then [@x, @y+1] # move up

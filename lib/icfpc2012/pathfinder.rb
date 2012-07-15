@@ -1,11 +1,19 @@
 module Icfpc2012
   def Icfpc2012.do_nb(c)
     opts = [ [1, 0], [-1, 0], [0, 1], [0, -1] ]
-    opts.each do |p| 
+    opts.each do |p|
       yield c[0] + p[0], c[1] + p[1]
     end
   end
-    
+  def Icfpc2012.do_ab(c)
+    opts = [ [-1, -1], [0, -1], [1, -1],
+             [-1,  0],          [1,  0],
+             [-1,  1], [0,  1], [1,  1] ]
+    opts.each do |p|
+      yield c[0] + p[0], c[1] + p[1]
+    end
+  end
+
   class PathFinder
 
     attr_accessor :map, :distmap, :lambdas, :teleport
@@ -40,7 +48,7 @@ module Icfpc2012
       # don't go through the rocks
       next map.walkable?(nci, nri)
     end
-    
+
     IGNORE_ROCKS = Proc.new do |map, nri, nci|
       # crash right through the rocks
       next (map.walkable?(nci, nri) || map.get_at(nci, nri) == '*')

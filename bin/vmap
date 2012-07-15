@@ -39,7 +39,7 @@ rescue LoadError
 end
 
 def is_valid_input(i)
-  i == 'U' || i == 'D' || i == 'L' || i == 'R' || i == 'W' ? true : false
+  i == 'U' || i == 'D' || i == 'L' || i == 'R' || i == 'W' || i == 'S' ? true : false
 end
 
 def read_map
