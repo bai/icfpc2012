@@ -41,9 +41,10 @@ class PatternSolverTest < Test::Unit::TestCase
       -body <<PATTERN
       -###?
       -eppx
-      -?**?
+      -?**x
       -PATTERN
 
+      -path "RRRD"
       -path "RRR"
     EOS
 

@@ -25,11 +25,11 @@ module Icfpc2012
     end
 
     def valid?
-      @waypoints.last.map.robot.alive? && @way_passed
+      last_map.robot.alive? && @way_passed
     end
 
     def won?
-      @waypoints.last.map.won?
+      last_map.won?
     end
 
     def path
@@ -48,7 +48,7 @@ module Icfpc2012
 
       waypoint = @waypoints.last.step(move)
 
-      @way_passed = (move == 'W') || @waypoints.last.map.robot.position != waypoint.map.robot.position
+      @way_passed = (move == 'W') || last_map.robot.position != waypoint.map.robot.position
       @waypoints << waypoint  if @way_passed
       @way_passed
     end
@@ -62,22 +62,26 @@ module Icfpc2012
 
     # TODO: Looks like too intimate work with Map internals. Move to Map?
     def current_value
-      @waypoints.last.map.score
+      last_map.score
     end
 
     def current_value_with_added
-      @waypoints.last.map.score
+      last_map.score
     end
 
     # Approximate value that can be achieved by collecting all reachable Lambdas
     # TODO: Improve using Pathfinder co count only reachable Lambdas
     def potential_value
-      average_distance_to_collect = @waypoints.last.map.width # Heuristics are approximate, you know?
-      @waypoints.last.map.remaining_lambdas * 50 - average_distance_to_collect
+      average_distance_to_collect = last_map.width # Heuristics are approximate, you know?
+      last_map.remaining_lambdas * 50 - average_distance_to_collect
     end
 
     def waypoints
       @waypoints
+    end
+
+    def last_map
+      @waypoints.last.map
     end
 
     protected
