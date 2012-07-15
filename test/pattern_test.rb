@@ -40,10 +40,10 @@ EOS
     assert_equal('p', defs[1].get_at(2, 1))
     assert_equal('*', defs[1].get_at(1, 2))
 
-    assert(defs[0].match(map, 0, 0))
-    assert(defs[0].match(map, 0, 2))
-    assert(!defs[0].match(map, 0, 1))
-    assert(!defs[0].match(map, 1, 1))
+    assert(defs[0].match?(map, 0, 0))
+    assert(defs[0].match?(map, 0, 2))
+    assert(!defs[0].match?(map, 0, 1))
+    assert(!defs[0].match?(map, 1, 1))
 
   end
 end

@@ -7,6 +7,11 @@ module Icfpc2012
       push(@partial_pattern) if @partial_pattern
     end
 
+    def load_file(string_def)
+      load(string_def)
+      push(@partial_pattern) if @partial_pattern
+    end
+
     def define_pattern name
       push(@partial_pattern) if @partial_pattern
       @partial_pattern = Pattern.new (name)
