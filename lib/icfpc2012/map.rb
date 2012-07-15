@@ -102,6 +102,14 @@ module Icfpc2012
       get_at(x, y).match(/[A-I]/)
     end
 
+    def pushable?(x, y)
+      get_at(x, y) == ROCK && y == @robot.y && map_array[y][2 * x - @robot.x] == EMPTY
+    end
+
+    def can_go_to?(x, y)
+      walkable?(x, y) || jumpable?(x, y) || pushable?(x, y)
+    end
+
     def robot_underwater?(robot_y = @robot.y)
       robot_y < self.water
     end
@@ -143,8 +151,7 @@ module Icfpc2012
         elsif target_cell == OPEN_LIFT
           new_map.score += new_map.collected_lambdas*50
         end
-      elsif target_cell == ROCK && y == @robot.y &&
-          new_input[y][2 * x - @robot.x] == EMPTY
+      elsif pushable?(x, y)
 
         new_input[@robot.y][@robot.x] = EMPTY
         new_input[y][x] = ROBOT

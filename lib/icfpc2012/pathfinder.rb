@@ -78,7 +78,7 @@ module Icfpc2012
           end
 
           if map.jumpable?(ci, ri)
-            c = map.trampolines[map.get_at(ci, ri)]
+            c = map.trampolines[map.get_at(ci, ri)].dup
             c[1],c[0] = c
             if gval(distmap, c) != -1
               next
