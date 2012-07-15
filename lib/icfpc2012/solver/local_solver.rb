@@ -8,7 +8,7 @@ module Icfpc2012
     def initialize(map, region, target_cells, max_depth=-1)
       @map = map
       @region = region.is_a?(Array) ? Region.new(*region) : region
-      @target_cells = Set.new(target_cells)
+      @target_cells = target_cells
       @max_depth = max_depth
     end
 

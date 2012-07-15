@@ -36,5 +36,14 @@ module Icfpc2012
     def expand(by)
       Region.new(@x1-by, @y1-by, @x2+by, @y2+by)
     end
+
+    # All the points around the given region
+    def points_around
+      around = []
+      around << (x1..x2).map do |x| [x, @y1-1] end
+      around << (x1..x2).map do |x| [x, @y2+1] end
+      around << (y1..y2).map do |y| [x1-1, y] end
+      around << (y1..y2).map do |y| [x2+1, y] end
+    end
   end
 end

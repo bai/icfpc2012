@@ -12,6 +12,7 @@ module Icfpc2012
     TARGETS     = ['1','2','3','4','5','6','7','8','9']
     BEARD       = 'W'
     RAZOR       = '!'
+    HOROCK      = '@'
 
     attr_reader :lift_position
     attr_accessor :map_array, :score, :remaining_lambdas, :collected_lambdas, :robot
@@ -19,7 +20,7 @@ module Icfpc2012
     attr_accessor :trampolines
     attr_accessor :beard_growth, :razors
     attr_accessor :rockfall
-    attr_accessor :lambda_list, :beard_list
+    attr_accessor :lambda_list, :beard_list, :horock_list
 
     def initialize(input)
       parse_map(input)
@@ -37,7 +38,7 @@ module Icfpc2012
 
       self.score             = 0
       self.collected_lambdas = 0
-      self.remaining_lambdas = input.count(LAMBDA)
+      self.remaining_lambdas = self.lambda_list.size + self.horock_list.size
       self.rockfall = MapRockFallFast.new(map_array, robot_position)
       self.timer = 0
     end
@@ -236,6 +237,7 @@ module Icfpc2012
       owner.map_array = Array.new
       owner.lambda_list = Array.new
       owner.beard_list = Array.new
+      owner.horock_list = Array.new
       owner.trampolines = Hash.new
 
       owner.beard_growth = 25
@@ -244,13 +246,15 @@ module Icfpc2012
       input_data = input.split(/\r?\n\r?\n/)
 
       input_data.shift.split(/\r?\n/).reverse.each_with_index do |l, row|
-        owner.map_array[row] = l.split(//)
+        owner.map_array[row] = l.chars.to_a
         owner.map_array[row].each_with_index do |cell, col|
           case cell
           when LAMBDA
-            lambda_list.push([col, row])
+            owner.lambda_list.push([col, row])
+          when HOROCK
+            owner.horock_list.push([col, row])
           when BEARD
-            beard_list.push([col, row])
+            owner.beard_list.push([col, row])
           when *TRAMPOLINES
             # for trampolines = coordinate + target
             owner.trampolines[cell] = [[col, row], nil]
