@@ -221,6 +221,18 @@ module Icfpc2012
       nil
     end
 
+    def lambda_list
+      ll = []
+      (0..width-1).each do |x|
+        (0..height-1).each do |y|
+          if get_at(x, y) == LAMBDA
+            ll.push([x, y])
+          end
+        end
+      end
+      ll
+    end
+
     def parse_map(input)
       owner = self
       owner.water = 0

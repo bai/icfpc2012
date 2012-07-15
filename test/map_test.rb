@@ -40,6 +40,19 @@ class MapTest < Test::Unit::TestCase
     assert !(map1 == map2), 'Maps should be equal'
   end
 
+  def test_lambdas_list
+    map_string = <<EOS
+#L###
+#*.\\#
+# R #
+#####
+EOS
+    map = Icfpc2012::Map.new(map_string)
+
+    lambdas = map.lambda_list
+    assert(lambdas[0] == [3, 2], 'Failed to find lambda at (3, 2)')
+  end
+
   def test_flooding
     map_string = <<-'EOS'.gsub /^.*?-/, ''
       -#####
