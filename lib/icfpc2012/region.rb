@@ -26,9 +26,9 @@ module Icfpc2012
 
     def self.enclosing(coord_list)
       x1 = coord_list.map(&:first).min
-      x2 = coord_list.map(&:first).max
-      y1 = coord_list.map(&:second).min
-      y2 = coord_list.map(&:second).max
+      x2 = coord_list.map(&:first).max+1
+      y1 = coord_list.map{ |a| a[1] }.min
+      y2 = coord_list.map{ |a| a[1] }.max+1
 
       Region.new(x1, y1, x2, y2)
     end
