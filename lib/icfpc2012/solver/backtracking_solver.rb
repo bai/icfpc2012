@@ -44,38 +44,18 @@ module Icfpc2012
 
       #todo: heuristic: -no Lambdas- and the best solution's score cannot be reached
 
-      next_position = [r[0], r[1]+1]
-      if !visited.include?(next_position) && in_region(next_position) && @cur_solution.waypoints.last.map.can_go_to?(*next_position)
-        if @cur_solution.add_move('U')
-          backtrack(visited + [next_position])
+      'UDRL'.each_char { |move|
+        next_position = CoordHelper::action_to_coords(r, move)
+        if !visited.include?(next_position) &&
+            in_region(next_position) &&
+            @cur_solution.waypoints.last.map.can_go_to?(*next_position)
+          if @cur_solution.add_move(move)
+            backtrack(visited + [next_position])
+          end
+          @cur_solution.pop
         end
-        @cur_solution.pop
-      end
+      }
 
-      next_position = [r[0], r[1]-1]
-      if !visited.include?(next_position) && in_region(next_position) && @cur_solution.waypoints.last.map.can_go_to?(*next_position)
-        if @cur_solution.add_move('D')
-          backtrack(visited + [next_position])
-        end
-        @cur_solution.pop
-      end
-
-      next_position = [r[0]+1, r[1]]
-      if !visited.include?(next_position) && in_region(next_position) && @cur_solution.waypoints.last.map.can_go_to?(*next_position)
-        #puts "Can go right to #{next_position}"
-        if @cur_solution.add_move('R')
-          backtrack(visited + [next_position])
-        end
-        @cur_solution.pop
-      end
-
-      next_position = [r[0]-1, r[1]]
-      if !visited.include?(next_position) && in_region(next_position) && @cur_solution.waypoints.last.map.can_go_to?(*next_position)
-        if @cur_solution.add_move('L')
-          backtrack(visited + [next_position])
-        end
-        @cur_solution.pop
-      end
     end
 
     # FIXME: Try W when there are boulders falling.
