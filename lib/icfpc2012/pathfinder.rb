@@ -74,7 +74,7 @@ module Icfpc2012
       oldFront.push [y, x]
       distmap[y][x] = 0
 
-      clusterizer = Icfpc2012::LambdaClusterizer.new
+      clusterizer = Icfpc2012::LambdaClusterizer.new map
       t = 0
 
       while oldFront.length != 0 do

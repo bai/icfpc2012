@@ -1,14 +1,23 @@
 module Icfpc2012
   class LambdaClusterizer
 
-    attr_accessor :clusters
+    attr_accessor :clusters, :map
 
-    def initialize
+    def initialize map
       @clusters = []
+      @map = map
     end
 
     def adjasted? l1, l2
-      ((l1[0] - l2[0]).abs() < 2) and ((l1[1] - l2[1]).abs() < 2) and (l1[0] == l2[0] or l1[1] == l2[1])
+      if (l1[0] - l2[0]).abs == 1 and (l1[1] - l2[1]).abs == 1 # diagonal
+        map.walkable?(l1[0], l2[1]) or map.walkable?(l2[0], l1[1])
+      elsif l1[0] == l2[0] # same vertical 
+        (l1[1] - l2[1]).abs() <= 2 and map.walkable?(l1[0], ((l1[1] + l2[1]) / 2).to_i)
+      elsif l1[1] == l2[1] # same horizontal
+        (l1[0] - l2[0]).abs() <= 2 and map.walkable?(((l1[0] + l2[0]) / 2).to_i, l1[1])
+      else
+        false
+      end
     end
 
     def add lambda
