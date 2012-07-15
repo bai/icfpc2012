@@ -179,8 +179,6 @@ module Icfpc2012
       new_rockfall = MapRockFallFast.new(new_input, new_position, rockfall)
       new_map.rockfall = new_rockfall
 
-      new_map.robot = Robot.new(new_position[0], new_position[1], new_rockfall.alive?)
-
       # Use old water level
       robot_underwater = robot_underwater?(new_position[1])
       robot_alive = new_rockfall.alive? &&
