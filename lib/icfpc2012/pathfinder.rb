@@ -113,7 +113,7 @@ module Icfpc2012
     end
 
     def get_shortest_dist_to(coords)
-      gval(distmap, coords)
+      gval(distmap, [coords[1], coords[0]])
     end
 
     def trace_shortest_path_to(coords)

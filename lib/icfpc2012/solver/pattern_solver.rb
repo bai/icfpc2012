@@ -2,23 +2,18 @@ require 'set'
 
 module Icfpc2012
   class PatternSolver < LocalSolver
-    def initialize(pattern_defs, map, region_center, region_radius, target_cells)
-      super(map, region_center, region_radius, target_cells)
+    def initialize(pattern_defs, map, region, target_cells)
+      super(map, region, target_cells)
       @pattern_defs = pattern_defs
     end
 
     def solve
       @pattern_defs.each do |pattern|
-        x1 = @region_center[0]-@region_radius
-        x2 = @region_center[0]+@region_radius
-        y1 = @region_center[1]-@region_radius
-        y2 = @region_center[1]+@region_radius
+        max_x = @region.x2-pattern.width
+        max_y = @region.y2-pattern.height
 
-        (x1..x2).each do |map_x|
-          (y1..y2).each do |map_y|
-            break  if map_x+pattern.width > x2
-            break  if map_y+pattern.height > y2
-
+        (@region.x1..max_x).each do |map_x|
+          (@region.y1..max_y).each do |map_y|
             if pattern.match?(@map, map_x, map_y)
               exit_cell = @target_cells.detect{ |cell| pattern.cell_is?(cell[0]-map_x, cell[1]-map_y, 'x') }
               #puts "trying #{map_x}, #{map_y} #{exit_cell}"
