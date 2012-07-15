@@ -4,7 +4,10 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), 'lib'))
 
 require 'icfpc2012'
 
+alias :original_puts :puts
+def puts(*); end
+
 map = Icfpc2012::Map.new($stdin.read)
 sc = Icfpc2012::Scheduler.new(map)
 
-puts sc.solve.inspect
+original_puts sc.solve.first.inspect
