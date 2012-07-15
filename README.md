@@ -18,4 +18,8 @@
 
     ./bin/vmap
 
+## Packaging
+
+    ./rake package
+
 ## test commit

@@ -75,7 +75,7 @@ EOS
                  Icfpc2012::CoordHelper.coords_to_actions(pf1.trace_shortest_path_to(pf1.enum_closest_lambdas[0])))
   end
 
-  def test_interrupted_path_reminder
+  def test_interrupted_path_solve
 
     map_string = <<-'EOS'.gsub /^.*?-/, ''
       -L#####
@@ -116,6 +116,45 @@ EOS
     #puts solution.inspect
 
     assert(solution.last_map.robot.position[1] >= 3)
+
+    #puts wp.path + solution.path
+  end
+
+  def test_interrupted_path_solve_fail
+
+    map_string = <<-'EOS'.gsub /^.*?-/, ''
+      -L#####
+      -#   R#
+      -##*###
+      -#**  #
+      -#.. \#
+      -######
+    EOS
+    map1 = Icfpc2012::Map.new(map_string)
+    pf1 = Icfpc2012::PathFinder.new(map1)
+    pf1.do_wave(map1.robot.position, Icfpc2012::PathFinder::IGNORE_ROCKS)
+    #pf1.print_distmap
+
+    path_coords = pf1.trace_shortest_path_to(pf1.enum_closest_lambdas[0])
+    path = Icfpc2012::CoordHelper.coords_to_actions(path_coords)
+
+    wp = Icfpc2012::WaypointPath.new(map1, path)
+
+    path_remainder_coords = path_coords.last(path.size - wp.path.size)
+
+
+    #puts path
+    #puts wp.path
+
+    #puts (path_remainder_coords).inspect
+
+    #wp.last_map.to_s.each_line { |line| puts line }
+
+    #wp.path
+
+    solution = Icfpc2012::BacktrackingSolver.repair_path(wp.last_map, path_remainder_coords)
+    assert_equal(nil, solution)
+
   end
 
   def test_interrupted_path_pattern_way
