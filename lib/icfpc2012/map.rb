@@ -38,7 +38,7 @@ module Icfpc2012
       self.score             = 0
       self.collected_lambdas = 0
       self.remaining_lambdas = input.count(LAMBDA)
-      self.rockfall = nil
+      self.rockfall = MapRockFallFast.new(map_array, robot_position)
       self.timer = 0
     end
 
