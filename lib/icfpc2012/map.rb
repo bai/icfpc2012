@@ -97,8 +97,12 @@ module Icfpc2012
       remaining_lambdas == 0 && robot.position == @lift_position
     end
 
+    def self.walkable?(char)
+      char.match(/[A-I! \.\\O]/)
+    end
+
     def walkable?(x, y)
-      get_at(x, y).match(/[A-I! \.\\O]/)
+      Map::walkable?(get_at(x, y))
     end
 
     def jumpable?(x, y)
@@ -218,7 +222,6 @@ module Icfpc2012
     end
 
     def parse_map(input)
-      chopped_input = input
       owner = self
       owner.water = 0
       owner.flooding = 0

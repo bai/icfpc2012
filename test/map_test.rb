@@ -41,16 +41,16 @@ class MapTest < Test::Unit::TestCase
   end
 
   def test_flooding
-    map_string = <<EOS
-#####
-#R  #
-#   #
-##L##
+    map_string = <<-'EOS'.gsub /^.*?-/, ''
+      -#####
+      -#R  #
+      -#   #
+      -##L##
 
-Water 2
-Flooding 11
-Waterproof 5
-EOS
+      -Water 2
+      -Flooding 11
+      -Waterproof 5
+    EOS
 
     map = Icfpc2012::Map.new(map_string)
     assert_equal(2, map.water)

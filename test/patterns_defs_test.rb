@@ -8,8 +8,8 @@ body <<EOS
 xpx
 #*#
 ?.p
-EpE
-EOS
+epe
+eOS
 path "LRTD"
 path "LRTD"
 
@@ -18,7 +18,7 @@ body <<EOS
 xpx
 #*#
 ?.p
-?pE
+?pe
 EOS
 path "LRTD"
 path "LRTD"
