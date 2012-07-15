@@ -80,7 +80,8 @@ module Icfpc2012
     end
 
     def is_value?(x, y, value)
-      @map_array[y] && @map_array[y][x] == value
+      val = y < 0 ? Map::WALL : value
+      @map_array[y] && @map_array[y][x] == val
     end
 
     #returns all rocks places on map

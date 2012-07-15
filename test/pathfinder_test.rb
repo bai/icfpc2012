@@ -172,9 +172,17 @@ EOS
     # puts '_________________________'
     # puts pf.clusters.inspect
     # puts '_________________________'
+
+    # strictly adjasted
+    # clusters = [
+    #   [[3, 4], [3, 5], [3, 6], [4, 6], [5, 6], [6, 6], [7, 6], [8, 6], [9, 6]], 
+    #   [[3, 8], [4, 8], [5, 8], [6, 8], [7, 8], [8, 8]], 
+    #   [[6, 1]], 
+    #   [[9, 1], [8, 1]]
+    # ]
+    # more liberal
     clusters = [
-      [[3, 4], [3, 5], [3, 6], [4, 6], [5, 6], [6, 6], [7, 6], [8, 6], [9, 6]], 
-      [[3, 8], [4, 8], [5, 8], [6, 8], [7, 8], [8, 8]], 
+      [[3, 4], [3, 5], [3, 6], [4, 6], [3, 8], [5, 6], [4, 8], [6, 6], [5, 8], [7, 6], [6, 8], [8, 6], [7, 8], [9, 6], [8, 8]], 
       [[6, 1]], 
       [[9, 1], [8, 1]]
     ]
@@ -182,11 +190,30 @@ EOS
 
     pf.max_clusters = 3
     pf.do_wave(map.robot.position)
+
+    # strictly adjasted
+    # clusters = [
+    #   [[3, 4], [3, 5], [3, 6], [4, 6], [5, 6]], 
+    #   [[3, 8]], 
+    #   [[6, 1]]
+    # ]
+    # more liberal
     clusters = [
-      [[3, 4], [3, 5], [3, 6], [4, 6], [5, 6]], 
-      [[3, 8]], 
-      [[6, 1]]
+      [[3, 4], [3, 5], [3, 6], [4, 6], [3, 8], [5, 6], [4, 8], [6, 6], [5, 8], [7, 6], [6, 8], [8, 6], [7, 8], [9, 6], [8, 8]], 
+      [[6, 1]], 
+      [[9, 1]]
     ]
     assert pf.clusters == clusters, 'Search for limited lambda clusters failed'
+  end
+
+  def _test_clusters_for_map999
+    map = Icfpc2012::Map.new(get_mapfile('map999.txt'))
+    pf = Icfpc2012::PathFinder.new(map)
+
+    pf.do_wave(map.robot.position)   
+    puts '_________________________'
+    puts pf.clusters.inspect
+    puts '_________________________'
+    assert pf.clusters == clusters, 'Search for unlimited lambda clusters on map999 failed'
   end
 end

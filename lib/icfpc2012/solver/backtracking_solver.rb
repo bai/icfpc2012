@@ -33,7 +33,6 @@ module Icfpc2012
 
     def backtrack(visited)
       #puts "entering: #{@cur_solution.path}"
-
       return  unless @cur_solution.valid?
 
       r = @cur_solution.last_map.robot.position
@@ -46,8 +45,9 @@ module Icfpc2012
 
       return  if max_depth > 0 && visited.size > max_depth
 
-      rocks_falling = @cur_solution.last_map.rockfall != nil &&
+      rocks_falling = #@cur_solution.last_map.rockfall != nil &&
           @cur_solution.last_map.rockfall.falling_rocks.size > 0
+      #puts "Rocks falling: #{@cur_solution.last_map.rockfall.falling_rocks.size}"
 
       #FIXME: implement!
       lambda_collected = @cur_solution.waypoints.size > 1 &&
