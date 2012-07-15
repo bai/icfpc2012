@@ -34,7 +34,7 @@ task :package => [:pkg,:submission] do
   # to make src folder as required by spec
   sh "git archive master | tar -x -C pkg/src"
   sh "cp -R pkg/src/README.md pkg/README"
-  sh "cd pkg;tar -cf ../submission/icfp-3795287808-94704244.tgz *"
+  sh "cd pkg;tar -cf ../submission/icfp-94704244.tgz *"
 end
 
 
