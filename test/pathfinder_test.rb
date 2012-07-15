@@ -75,4 +75,29 @@ EOS
                  Icfpc2012::CoordHelper.coords_to_actions(pf1.trace_shortest_path_to(pf1.enum_closest_lambdas[0])))
   end
 
+  def test_clusterized_path
+    map = Icfpc2012::Map.new(get_mapfile('contest5.map.txt'))
+    pf = Icfpc2012::PathFinder.new(map)
+
+    pf.do_wave(map.robot.position)   
+    # puts '_________________________'
+    # puts pf.clusters.inspect
+    # puts '_________________________'
+    clusters = [
+      [[3, 4], [3, 5], [3, 6], [4, 6], [5, 6], [6, 6], [7, 6], [8, 6], [9, 6]], 
+      [[3, 8], [4, 8], [5, 8], [6, 8], [7, 8], [8, 8]], 
+      [[6, 1]], 
+      [[9, 1], [8, 1]]
+    ]
+    assert pf.clusters == clusters, 'Search for unlimited lambda clusters failed'
+
+    pf.max_clusters = 3
+    pf.do_wave(map.robot.position)
+    clusters = [
+      [[3, 4], [3, 5], [3, 6], [4, 6], [5, 6]], 
+      [[3, 8]], 
+      [[6, 1]]
+    ]
+    assert pf.clusters == clusters, 'Search for limited lambda clusters failed'
+  end
 end
