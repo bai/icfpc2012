@@ -16,12 +16,13 @@ module Icfpc2012
 
   class PathFinder
 
-    attr_accessor :map, :distmap, :lambdas, :teleport
-    attr_accessor :max_lambdas
+    attr_accessor :map, :distmap, :lambdas, :teleport, :clusters
+    attr_accessor :max_lambdas, :max_clusters
 
     def initialize(map)
       self.map = map
-      self.max_lambdas = - 1
+      self.max_lambdas = -1
+      self.max_clusters = -1
     end
 
     def reset
@@ -29,6 +30,7 @@ module Icfpc2012
       rows, cols = map.width, map.height
       self.distmap = Array.new(cols) { Array.new(rows, -1) }
       self.lambdas = Array.new
+      self.clusters = Array.new
     end
 
     STAY_AWAY_FROM_ROCKS = Proc.new do |map, nri, nci|
@@ -72,6 +74,7 @@ module Icfpc2012
       oldFront.push [y, x]
       distmap[y][x] = 0
 
+      clusterizer = Icfpc2012::LambdaClusterizer.new
       t = 0
 
       while oldFront.length != 0 do
@@ -82,7 +85,10 @@ module Icfpc2012
 
           if map.get_at(ci, ri) == '\\'
             lambdas.push [ci, ri]
-            return if(max_lambdas != -1 && lambdas.size >= max_lambdas)
+            clusterizer.add [ci, ri]
+            self.clusters = clusterizer.clusters
+            return if (max_lambdas != -1 && lambdas.size >= max_lambdas)
+            return if (max_clusters != -1 && clusters.size >= max_clusters)
           end
 
           if map.jumpable?(ci, ri)
@@ -109,6 +115,10 @@ module Icfpc2012
 
     def enum_closest_lambdas
       lambdas
+    end
+
+    def enum_closest_clusters
+      clusters
     end
 
     def get_shortest_dist_to(coords)
