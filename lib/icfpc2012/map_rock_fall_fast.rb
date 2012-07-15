@@ -1,10 +1,10 @@
 module Icfpc2012
   class MapRockFallFast
-    def initialize(old_mapArray, robot_position, prev_rock_fall = nil)
-      @mapArray = old_mapArray
+    def initialize(old_map_array, robot_position, prev_rock_fall = nil)
+      @map_array = old_map_array
       @robot_position = robot_position
       @robot_dead = false
-      @new_input = @mapArray.map(&:dup)
+      @new_input = @map_array.map(&:dup)
 
 
       if prev_rock_fall
@@ -31,6 +31,11 @@ module Icfpc2012
       !@robot_dead
     end
 
+    # FIXME: Implement. Adds to the active list stones that robot could have touched.
+    def check_movement(old_robot_position)
+
+    end
+
     private
 
     def fall_to(x, y, xfall, yfall)
@@ -49,14 +54,15 @@ module Icfpc2012
     end
 
     def is_value?(x, y, value)
-      @mapArray[y] && @mapArray[y][x] == value
+      @map_array[y] && @map_array[y][x] == value
     end
 
     #returns all rocks places on map
+    # FIXME: Брать не все камни, а не только те, которые будут падать.
     def get_all_places()
       places = Array.new
 
-      @mapArray.each_with_index do |row, y|
+      @map_array.each_with_index do |row, y|
         row.each_with_index do |cell, x|
           places.push([x, y]) if cell == Map::ROCK
         end
@@ -66,7 +72,7 @@ module Icfpc2012
     end
 
     def visited!(x, y, pos, visited, places)
-      if !visited.has_key?(pos)
+      unless visited.has_key?(pos)
         places.push([x, y]) if is_value?(x, y, Map::ROCK)
         visited[pos] = 1
       end
