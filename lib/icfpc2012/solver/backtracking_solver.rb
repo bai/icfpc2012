@@ -24,7 +24,7 @@ module Icfpc2012
     # @param priority 1 to 10, 10 being highest
     # @return a fixed path as a command list, nil if not found
     def self.repair_path(map, target_path, priority = 3)
-      target_points = target_path.take(5) # simple heuristic
+      target_points = target_path.take(10) # simple heuristic
       region = Region.enclosing(target_points + [map.robot.position])
       BacktrackingSolver.new(map, region.expand(3 + priority/3), target_points, 3+priority).solve
     end
@@ -32,8 +32,12 @@ module Icfpc2012
     private
 
     def heuristic(solution)
+      rob = @cur_solution.last_map.robot.position
+
       (@want_lambdas ? solution.last_map.collected_lambdas * 100 : 0) +
-        (@want_path ? -solution.waypoints.size * 100 : 0)
+        (@want_path ? -solution.waypoints.size * 100 : 0) +
+          (solution.won? ? 10000 : 0) #+
+          (in_target(rob) ? @target_cells.index(rob) * 100 : 0)
     end
 
     def backtrack(visited)
@@ -42,7 +46,7 @@ module Icfpc2012
 
       rob = @cur_solution.last_map.robot.position
       if in_target(rob) || @cur_solution.won?
-        if !@best_solution || (@best_solution.current_value < @cur_solution.current_value)
+        if !@best_solution || (heuristic(@best_solution) < heuristic(@cur_solution))
           @best_solution = @cur_solution.deep_copy
         end
         return
@@ -50,6 +54,9 @@ module Icfpc2012
 
       return  if max_depth > 0 && visited.size > max_depth
       return  if @best_solution && (heuristic(@cur_solution) < heuristic(@best_solution))
+      # Rough heuristic
+      return  if !@want_lambdas && @best_solution &&
+          (distance_to_target(rob) + @cur_solution.waypoints.size >= @best_solution.waypoints.size)
 
       rocks_falling = @cur_solution.last_map.rockfall.falling_rocks.size > 0
 
@@ -60,9 +67,10 @@ module Icfpc2012
         visited = Set.new
       end
 
-      #todo: heuristic: -no Lambdas- and the best solution's score cannot be reached
+      #next_points = points_around(rob).sort{ |x,y| distance_to_target(x) <=> distance_to_target(y) }
+      next_points = points_around(rob).sort_by { |x| distance_to_target(x) }
 
-      points_around_point(rob).each do |next_position|
+      next_points.each do |next_position|
         move = CoordHelper::coords_to_action(rob, next_position)
         if !visited.include?(next_position) &&
             @region.in?(next_position) &&
@@ -82,7 +90,7 @@ module Icfpc2012
       end
     end
 
-    def points_around cluster
+    def points_around(cluster)
       cluster.is_a?(Region) ?
           cluster.points_around :
           points_around_point(cluster)
@@ -95,6 +103,11 @@ module Icfpc2012
           [point[0]+1, point[1]],
           [point[0]-1, point[1]],
       ]
+    end
+
+    # Manhattan distance to the best of the target cells
+    def distance_to_target(cell)
+      (cell[0] - @target_cells.last[0]).abs + (cell[1] - @target_cells.last[1]).abs
     end
   end
 end

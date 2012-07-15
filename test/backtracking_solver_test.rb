@@ -63,17 +63,17 @@ module Icfpc2012
 
       target = [1,6]
       path = Icfpc2012::BacktrackingSolver::repair_path(map, [target])
-      assert_equal('RUDRWLUUUUU', path.path)
+      assert_equal('RUDRLRLUUUUU', path.path)
     end
 
     def test_contest_10
-        map_string = File.read("#{File.dirname(__FILE__)}/../maps/contest10.map.txt")
-        map = Icfpc2012::Map.new(map_string)
+      map_string = File.read("#{File.dirname(__FILE__)}/../maps/contest10.map.txt")
+      map = Icfpc2012::Map.new(map_string)
 
-        #target = map.lift_position
-        target = [0,23]
-        path = Icfpc2012::BacktrackingSolver::repair_path(map, [target], 10)
-        puts "path: #{path}"
+      #target = map.lift_position
+      target = [[21,4], [21,5]]
+      path = Icfpc2012::BacktrackingSolver::repair_path(map, target, 30)
+      assert_equal('UUUULLLLULLD', path.path)
     end
 
   end
