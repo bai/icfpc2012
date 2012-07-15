@@ -193,10 +193,12 @@ module Icfpc2012
           if new_map.beard_list.object_id == beard_list.object_id
             new_map.beard_list = beard_list.dup
           end
-          beard_to_grow = new_map.beard_growth
+          beard_to_grow = new_map.beard_list
       end
 
-      new_rockfall = MapRockFallFast.new(new_input, new_position, rockfall)
+      new_rockfall = MapRockFallFast.new(new_input, new_position, rockfall, beard_to_grow)
+      new_map.beard_list = new_rockfall.beard_list if beard_to_grow
+
       new_map.rockfall = new_rockfall
 
       # Use old water level
