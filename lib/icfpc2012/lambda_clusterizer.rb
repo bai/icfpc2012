@@ -8,7 +8,7 @@ module Icfpc2012
     end
 
     def adjasted? l1, l2
-      ((l1[0] - l2[0]).abs() < 2) and ((l1[1] - l2[1]).abs() < 2)
+      ((l1[0] - l2[0]).abs() < 2) and ((l1[1] - l2[1]).abs() < 2) and (l1[0] == l2[0] or l1[1] == l2[1])
     end
 
     def add lambda

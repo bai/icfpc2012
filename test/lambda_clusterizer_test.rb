@@ -10,6 +10,8 @@ class LambdaClusterizerTest < Test::Unit::TestCase
       clusterizer.add lambda
     end
 
-    assert [[[0, 0], [0, 1], [1, 0], [1, 1], [3, 3], [3, 4], [2, 2]], [[7, 7]]] == clusterizer.clusters
+    
+    assert [[[0, 0], [0, 1], [1, 0], [1, 1]], [[3, 3], [3, 4]], [[7, 7]], [[2, 2]]] == clusterizer.clusters
+    # assert [[[0, 0], [0, 1], [1, 0], [1, 1], [3, 3], [3, 4], [2, 2]], [[7, 7]]] == clusterizer.clusters
   end
 end
