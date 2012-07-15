@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 
 require 'icfpc2012'
 
-map = Icfpc2012::Map.new(ARGF.argv[0])
+map = Icfpc2012::Map.new($stdin.read)
 sc = Icfpc2012::Scheduler.new(map)
 
 puts sc.solve.inspect
