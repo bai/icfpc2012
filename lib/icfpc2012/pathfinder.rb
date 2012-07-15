@@ -9,11 +9,15 @@ module Icfpc2012
   class PathFinder
 
     attr_accessor :map, :distmap, :lambdas, :teleport
+    attr_accessor :max_lambdas
 
     def initialize(map)
       self.map = map
-      self.teleport = Hash.new
+      self.max_lambdas = - 1
+    end
 
+    def reset
+      self.teleport = Hash.new
       rows, cols = map.width, map.height
       self.distmap = Array.new(cols) { Array.new(rows, -1) }
       self.lambdas = Array.new
@@ -51,6 +55,8 @@ module Icfpc2012
     end
 
     def do_wave(coords, policy = MIND_ROCKS)
+
+      reset
       x = coords[0]
       y = coords[1]
       newFront = []
@@ -66,7 +72,10 @@ module Icfpc2012
           ri = c[0]
           ci = c[1]
 
-          lambdas.push [ci, ri] if map.get_at(ci, ri) == '\\'
+          if map.get_at(ci, ri) == '\\'
+            lambdas.push [ci, ri]
+            return if(max_lambdas != -1 && lambdas.size >= max_lambdas)
+          end
 
           if map.jumpable?(ci, ri)
             c = map.trampolines[map.get_at(ci, ri)]

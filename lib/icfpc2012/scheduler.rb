@@ -2,25 +2,18 @@ module Icfpc2012
   class Scheduler
 
     LIGHT_SEARCH_WIDTH = 3
-    attr_accessor :map_origin, :best_solution, :best_score
+    HEAVY_SEARCH_WIDTH = 6
+
+    attr_accessor :map_origin, :best_solution, :best_score, :max_iterations
 
     def initialize(map)
       self.map_origin = map
       self.best_solution = ""
       self.best_score = 0
+      self.max_iterations = LIGHT_SEARCH_WIDTH
     end
 
-    def recurse(map, path_so_far, score_so_far, depth)
-
-      if(score_so_far > self.best_score)
-        self.best_score = score_so_far
-        self.best_solution = path_so_far
-        map.to_s.each_line { |line| puts line }
-        puts [self.best_solution, self.best_score].inspect
-      end
-
-      pf = Icfpc2012::PathFinder.new(map)
-      pf.do_wave(map.robot.position, Icfpc2012::PathFinder::MIND_ROCKS)
+    def process_wave(pf, map, path_so_far, score_so_far, depth)
       #pf.print_distmap
 
       if(map.remaining_lambdas == 0)
@@ -46,8 +39,7 @@ module Icfpc2012
       end
 
       # iterate thru
-      max_iterations = LIGHT_SEARCH_WIDTH
-      interation = 0
+      #interation = 0
       lambdas = pf.enum_closest_lambdas
       lambdas.each { |l|
 
@@ -65,13 +57,38 @@ module Icfpc2012
           recurse(wp.waypoints.last.map, path_so_far + path, wp.waypoints.last.map.score, depth + 1)
         end
 
-        interation+=1
-        break if interation > max_iterations
+        #interation+=1
+        #break if interation > max_iterations
       }
+    end
+
+    def recurse(map, path_so_far, score_so_far, depth)
+
+      if(score_so_far > self.best_score)
+        self.best_score = score_so_far
+        self.best_solution = path_so_far
+        map.to_s.each_line { |line| puts line }
+        puts [self.best_solution, self.best_score].inspect
+      end
+
+      pf = Icfpc2012::PathFinder.new(map)
+
+      pf.max_lambdas = max_iterations
+      pf.do_wave(map.robot.position, Icfpc2012::PathFinder::MIND_ROCKS)
+      process_wave(pf, map, path_so_far, score_so_far, depth)
+
+      pf.do_wave(map.robot.position, Icfpc2012::PathFinder::IGNORE_ROCKS)
+      process_wave(pf, map, path_so_far, score_so_far, depth)
 
     end
 
     def solve
+
+      self.max_iterations = LIGHT_SEARCH_WIDTH
+      recurse(map_origin, "", 0, 0)
+
+      # we got something dirty now: try deeper
+      self.max_iterations = HEAVY_SEARCH_WIDTH
       recurse(map_origin, "", 0, 0)
       [best_solution, best_score]
     end
