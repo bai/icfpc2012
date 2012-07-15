@@ -36,8 +36,11 @@ module Icfpc2012
 
       (@want_lambdas ? solution.last_map.collected_lambdas * 100 : 0) +
         (@want_path ? -solution.waypoints.size * 100 : 0) +
-          (solution.won? ? 10000 : 0) #+
-          (in_target(rob) ? @target_cells.index(rob) * 100 : 0)
+        (solution.won? ? 10000 : 0) #+
+        (in_target(rob) ? @target_cells.index(rob) * 100 : 0) +
+        (solution.last_map.razors * 10) +
+        # FIXME: Better expression to express "We're gonna drown"
+        (solution.last_map.robot.underwater_ticks * 100 / solution.last_map.waterproof)
     end
 
     def backtrack(visited)
