@@ -15,9 +15,5 @@ def read_map
   Icfpc2012::Map.new(File.read(input_map))
 end
 
-begin
-  map = read_map
-  sc = Icfpc2012::Scheduler.new(map)
-  puts sc.solve.inspect
-
-end
+sc = Icfpc2012::Scheduler.new(read_map)
+puts sc.solve.inspect

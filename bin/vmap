@@ -70,8 +70,12 @@ end
 
 def print_map(waypoints)
   waypoint = waypoints.last
-  waypoint.map.to_s.each_line { |line| puts line }
-  puts "score: " + waypoint.map.score.to_s
+  wp_map = waypoint.map
+  wp_map.to_s.each_line { |line| puts line }
+
+  puts "score: #{wp_map.score}" +
+       " WATER: level=#{wp_map.water}" +
+       " swim=#{wp_map.robot.underwater_ticks}/#{wp_map.waterproof}"
   path = waypoints.map(&:movement).join
   puts "path: " + path
 end
