@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.files = %w(README.md Rakefile icfpc2012.gemspec)
   s.files += Dir.glob("lib/**/*.rb")
   s.files += Dir.glob("bin/**/*")
-  s.files += Dir.glob("spec/**/*")
+  s.files += Dir.glob("test/**/*")
   s.bindir = 'bin'
   s.platform      = Gem::Platform::RUBY
   s.require_paths = ['lib']
