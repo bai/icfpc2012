@@ -22,11 +22,9 @@ module Icfpc2012
     # @param priority 1 to 10, 10 being highest
     # @return a fixed path as a command list, nil if not found
     def self.repair_path(map, target_path, priority = 3)
-
       target_points = target_path.take(5) # simple heuristic
       region = Region.enclosing(target_points + [map.robot.position])
-
-      BacktrackingSolver.new(map, region.expand(3 + priority/2), target_points, priority*3).solve
+      BacktrackingSolver.new(map, region.expand(3 + priority/3), target_points, 3+priority).solve
     end
 
     private
@@ -35,8 +33,8 @@ module Icfpc2012
       #puts "entering: #{@cur_solution.path}"
       return  unless @cur_solution.valid?
 
-      r = @cur_solution.last_map.robot.position
-      if in_target(r)
+      rob = @cur_solution.last_map.robot.position
+      if in_target(rob) || @cur_solution.won?
         if !@best_solution || (@best_solution.current_value < @cur_solution.current_value)
           @best_solution = @cur_solution.deep_copy
         end
@@ -45,11 +43,8 @@ module Icfpc2012
 
       return  if max_depth > 0 && visited.size > max_depth
 
-      rocks_falling = #@cur_solution.last_map.rockfall != nil &&
-          @cur_solution.last_map.rockfall.falling_rocks.size > 0
-      #puts "Rocks falling: #{@cur_solution.last_map.rockfall.falling_rocks.size}"
+      rocks_falling = @cur_solution.last_map.rockfall.falling_rocks.size > 0
 
-      #FIXME: implement!
       lambda_collected = @cur_solution.waypoints.size > 1 &&
           (@cur_solution.last_map.remaining_lambdas < @cur_solution.waypoints[-2].map.remaining_lambdas)
 
@@ -59,8 +54,8 @@ module Icfpc2012
 
       #todo: heuristic: -no Lambdas- and the best solution's score cannot be reached
 
-      'UDRL'.each_char { |move|
-        next_position = CoordHelper::action_to_coords(r, move)
+      points_around_point(rob).each do |next_position|
+        move = CoordHelper::coords_to_action(rob, next_position)
         if !visited.include?(next_position) &&
             @region.in?(next_position) &&
             @cur_solution.last_map.can_go_to?(*next_position)
@@ -69,7 +64,7 @@ module Icfpc2012
           end
           @cur_solution.pop
         end
-      }
+      end
 
       if @cur_solution.waypoints.last.movement != 'W' && rocks_falling
         if @cur_solution.add_move('W')
@@ -77,9 +72,21 @@ module Icfpc2012
         end
         @cur_solution.pop
       end
-
     end
 
-    # FIXME: Try W when there are boulders falling.
+    def points_around cluster
+      cluster.is_a?(Region) ?
+          cluster.points_around :
+          points_around_point(cluster)
+    end
+
+    def points_around_point(point)
+      [
+          [point[0], point[1]+1],
+          [point[0], point[1]-1],
+          [point[0]+1, point[1]],
+          [point[0]-1, point[1]],
+      ]
+    end
   end
 end
