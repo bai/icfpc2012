@@ -12,12 +12,12 @@ class MapTest < Test::Unit::TestCase
     assert_equal(0, map1.score)
     assert_equal('#', map1.get_at(0, 0))
 
-    map2_string = <<EOS
-#R###
-#  \\#
-# * #
-#-L##
-EOS
+    map2_string = <<-'EOS'.gsub /^.*?-/, ''
+      -#R###
+      -#  \#
+      -# * #
+      -#-L##
+    EOS
 
     map2 = Icfpc2012::Map.new(map2_string)
 
