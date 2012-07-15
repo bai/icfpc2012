@@ -15,6 +15,20 @@ module Icfpc2012
       @best_solution
     end
 
+    # Use to fix a stuck path.
+    # @param map Last valid map state
+    # @param target_path Array of desired path elements (coordinates)
+    # param time_limit Time limit in milliseconds
+    # @param priority 1 to 10, 10 being highest
+    # @return a fixed path as a command list, nil if not found
+    def self.repair_path(map, target_path, priority = 3)
+
+      target_points = target_path.take(5) # simple heuristic
+
+      #BacktrackingSolver.new(map, )
+
+    end
+
     private
 
     def backtrack(visited)
@@ -22,23 +36,24 @@ module Icfpc2012
 
       return  unless @cur_solution.valid?
 
-      r = @cur_solution.waypoints.last.map.robot.position
+      r = @cur_solution.last_map.robot.position
       if in_target(r)
         if !@best_solution || (@best_solution.current_value < @cur_solution.current_value)
           @best_solution = @cur_solution.deep_copy
-          #puts "better: #{@cur_solution.path}"
         end
         return
       end
 
       return  if max_depth > 0 && visited.size > max_depth
 
+      rocks_falling = @cur_solution.last_map.rockfall != nil &&
+          @cur_solution.last_map.rockfall.falling_rocks.size > 0
+
       #FIXME: implement!
       lambda_collected = @cur_solution.waypoints.size > 1 &&
-          (@cur_solution.waypoints.last.map.remaining_lambdas < @cur_solution.waypoints[-2].map.remaining_lambdas)
-      rocks_moved = false
+          (@cur_solution.last_map.remaining_lambdas < @cur_solution.waypoints[-2].map.remaining_lambdas)
 
-      if lambda_collected || rocks_moved
+      if lambda_collected || rocks_falling
         visited = Set.new
       end
 
@@ -48,13 +63,20 @@ module Icfpc2012
         next_position = CoordHelper::action_to_coords(r, move)
         if !visited.include?(next_position) &&
             in_region(next_position) &&
-            @cur_solution.waypoints.last.map.can_go_to?(*next_position)
+            @cur_solution.last_map.can_go_to?(*next_position)
           if @cur_solution.add_move(move)
             backtrack(visited + [next_position])
           end
           @cur_solution.pop
         end
       }
+
+      if @cur_solution.waypoints.last.movement != 'W' && rocks_falling
+        if @cur_solution.add_move('W')
+          backtrack(visited)
+        end
+        @cur_solution.pop
+      end
 
     end
 
