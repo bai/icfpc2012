@@ -161,8 +161,6 @@ module Icfpc2012
         end
       end
 
-      puts @active_places.inspect
-
       @active_places.each do |x, y, is_rock|
 
         if is_value?(x, y-1, Map::EMPTY)
