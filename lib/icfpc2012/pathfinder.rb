@@ -33,7 +33,7 @@ module Icfpc2012
 
   class PathFinder
 
-    attr_accessor :map, :distmap, :lambdas, :teleport, :clusters
+    attr_accessor :map, :distmap, :lambdas, :teleport, :clusters, :razors
     attr_accessor :max_lambdas, :max_clusters
 
     def initialize(map)
@@ -48,6 +48,7 @@ module Icfpc2012
       self.distmap = Array.new(cols) { Array.new(rows, -1) }
       self.lambdas = Array.new
       self.clusters = Array.new
+      self.razors = Array.new
     end
 
     STAY_AWAY_FROM_ROCKS = Proc.new do |map, nri, nci|
@@ -100,12 +101,19 @@ module Icfpc2012
           ri = c[0]
           ci = c[1]
 
+          razors.push [ci, ri] if(map.get_at(ci, ri) == '!')
+
           if map.get_at(ci, ri) == '\\'
             lambdas.push [ci, ri]
             clusterizer.add [ci, ri]
             self.clusters = clusterizer.clusters
             return if (max_lambdas != -1 && lambdas.size >= max_lambdas)
-            return if (max_clusters != -1 && clusters.size >= max_clusters)
+            # append razors so we lazily take them after we tried everything else
+            if (max_clusters != -1 && clusters.size >= max_clusters)
+
+              self.clusters.push(Array.new(1, razors[0])) if(razors.size != 0)
+              return
+            end
           end
 
           if map.jumpable?(ci, ri)
@@ -129,6 +137,8 @@ module Icfpc2012
         newFront = []
         t += 1
       end
+
+      self.clusters.push(Array.new(1, razors[0])) if(razors.size != 0)
     end
 
     def enum_closest_lambdas

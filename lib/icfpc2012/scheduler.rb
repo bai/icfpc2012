@@ -14,6 +14,8 @@ module Icfpc2012
     end
 
     def process_wave(pf, map, path_so_far, score_so_far, depth, pfMind = nil)
+
+      local_solver_priority = 2
       #pf.print_distmap
 
       if(map.remaining_lambdas == 0)
@@ -40,15 +42,15 @@ module Icfpc2012
 
           path_remainder_coords = path_coords.last(path.size - wp.path.size)
 
-          puts "Solver called to solve path to exit:"
+          #puts "Solver called to solve path to exit:"
           #puts path_remainder_coords.inspect
           #wp.last_map.to_s.each_line { |line| puts line }
 
-          solution = Icfpc2012::BacktrackingSolver.repair_path(wp.last_map, path_remainder_coords)
+          solution = Icfpc2012::BacktrackingSolver.repair_path(wp.last_map, path_remainder_coords, local_solver_priority)
           #puts "Solver returned: "+(solution == nil ? "nil" : solution.path)
 
           if solution != nil
-            puts "died solution found"
+            #puts "exit solution found"
             recurse(solution.last_map, path_so_far + path + solution.path, solution.last_map.score, depth + 1)
           end
         end
@@ -73,11 +75,11 @@ module Icfpc2012
             #puts path_coords_remainder.inspect
             #map.to_s.each_line { |line| puts line }
 
-            solution = Icfpc2012::BacktrackingSolver.repair_path(map, path_coords_remainder, 3)
+            solution = Icfpc2012::BacktrackingSolver.repair_path(map, path_coords_remainder, local_solver_priority)
             #puts "Solver returned: "+(solution == nil ? "nil" : solution.path)
 
             if solution != nil
-              puts "blocked solution found"
+              #puts "blocked solution found"
               recurse(solution.last_map, path_so_far + solution.path, solution.last_map.score, depth + 1)
             end
             return
@@ -104,11 +106,11 @@ module Icfpc2012
           #puts path_remainder_coords.inspect
           #wp.last_map.to_s.each_line { |line| puts line }
 
-          solution = Icfpc2012::BacktrackingSolver.repair_path(wp.last_map, path_remainder_coords)
+          solution = Icfpc2012::BacktrackingSolver.repair_path(wp.last_map, path_remainder_coords, local_solver_priority)
           #puts "Solver returned: "+(solution == nil ? "nil" : solution.path)
 
           if solution != nil
-            puts "died solution found"
+            #puts "died solution found"
             recurse(solution.last_map, path_so_far + path + solution.path, solution.last_map.score, depth + 1)
           end
 
@@ -145,7 +147,7 @@ module Icfpc2012
 
       begin # try catch for timing exception
         #timings
-        Icfpc2012::Timer.new 149 # seconds
+        Icfpc2012::Timer.new 10 # seconds
         self.max_iterations = LIGHT_SEARCH_WIDTH
         recurse(map_origin, "", 0, 0)
 
