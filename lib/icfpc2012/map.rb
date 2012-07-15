@@ -1,7 +1,7 @@
 module Icfpc2012
   class Map
     ROBOT       = 'R'
-    WALL        = 'W'
+    WALL        = '#'
     ROCK        = '*'
     LAMBDA      = '\\'
     CLOSED_LIFT = 'L'
@@ -44,7 +44,7 @@ module Icfpc2012
     # Map item at the given coordinates
     def get_at(x, y)
       if x >= width || x < 0 || y >= height || y < 0
-        '%'
+        WALL
       else
         map_array[y][x]
       end
