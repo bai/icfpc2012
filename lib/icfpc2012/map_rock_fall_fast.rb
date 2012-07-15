@@ -44,7 +44,7 @@ module Icfpc2012
 
     private
 
-    def fall_to(x, y, xfall, yfall, apply_stone = true)
+    def fall_to(x, y, xfall, yfall, is_rock = true, apply_stone = true)
       if @new_input[y].object_id == @map_array[y].object_id
         @new_input[y] = @map_array[y].dup
       end
@@ -54,14 +54,25 @@ module Icfpc2012
 
       @new_input[y][x] = Map::EMPTY
 
-      if apply_stone && @new_input[yfall][xfall] != Map::ROCK
-        @new_input[yfall][xfall] = Map::ROCK
-        @falling_rocks.push([xfall, yfall])
+      if (apply_stone)
+        case @new_input[yfall][xfall]
+        when Map::ROCK, Map::ROCK
+        else
+          @new_input[yfall][xfall] = is_rock ? Map::ROCK : Map::HOROCK
+          @falling_rocks.push([xfall, yfall])
+        end
       end
 
       if xfall == @robot_position[0] &&
           yfall == @robot_position[1]+1
         @robot_dead = true
+      end
+
+      unless is_rock
+        #convert to lambda
+        #unless is_value?(xfall, yfall - 1, Map::EMPTY)
+        #end
+        true
       end
     end
 
@@ -80,7 +91,18 @@ module Icfpc2012
     end
 
     def is_value?(x, y, value)
-      (y >= 0) && (x >= 0) && @map_array[y] && @map_array[y][x] == value
+      (y >= 0) && (x >= 0) && (@map_array[y]) &&
+        (value == @map_array[y][x])
+    end
+
+    def is_value_rock?(x, y)
+      if ((y >= 0) && (x >= 0) && @map_array[y])
+        case @map_array[y][x]
+        when Map::ROCK, Map::HOROCK
+          return true
+        end
+      end
+      false
     end
 
     #returns all rocks places on map
@@ -90,16 +112,24 @@ module Icfpc2012
 
       @map_array.each_with_index do |row, y|
         row.each_with_index do |cell, x|
-          places.push([x, y]) if cell == Map::ROCK
+          case cell
+          when Map::ROCK
+            places.push([x, y, true])
+          when Map::HOROCK
+            places.push([x, y, false])
+          end
         end
       end
 
       places
     end
 
-    def visited!(x, y, pos, visited, places)
+    def visited!(pos, visited, places)
       unless visited.has_key?(pos)
-        places.push([x, y]) if is_value?(x, y, Map::ROCK)
+        if is_value_rock?(pos[0], pos[1])
+          is_rock = @map_array[pos[1]][pos[0]] == Map::ROCK
+          places.push(pos + [is_rock])
+        end
         visited[pos] = 1
       end
     end
@@ -109,21 +139,13 @@ module Icfpc2012
       places = Array.new
       visited = Hash.new
 
-      x,y = @robot_position
-      (x-1..x+1).each do |xpos|
-        (y-1..y+2).each do |ypos|
-          new_pos = [xpos, ypos]
-          visited!(xpos, ypos, new_pos, visited, places)
-        end
+      Icfpc2012.do_aeb(@robot_position) do |x, y|
+        visited!([x, y], visited, places)
       end
 
-      old_places.each do |pos|
-        x, y = pos
-        (x-1..x+1).each do |xpos|
-          (y-1..y+1).each do |ypos|
-            new_pos = [xpos, ypos]
-            visited!(xpos, ypos, new_pos, visited, places)
-          end
+      old_places.each do |oldx, oldy, is_rock|
+        Icfpc2012.do_allb([oldx, oldy]) do |x, y|
+          visited!([x, y], visited, places)
         end
       end
 
@@ -133,39 +155,36 @@ module Icfpc2012
     # Returns an updated input array
     def update_map()
       # grow beard
-      if @beard_list
-        @beard_list.each do |pos|
-          Icfpc2012.do_ab (pos) do |beard_x, beard_y|
-            if is_value?(beard_x, beard_y, Map::EMPTY)
-              set_beard(beard_x, beard_y)
-            end
-          end
+      (@beard_list ? @beard_list : []).each do |pos|
+        Icfpc2012.do_ab (pos) do |beard_x, beard_y|
+          set_beard(beard_x, beard_y) if is_value?(beard_x, beard_y, Map::EMPTY)
         end
       end
 
-      @active_places.each do |pos|
-        x, y = pos
+      puts @active_places.inspect
+
+      @active_places.each do |x, y, is_rock|
 
         if is_value?(x, y-1, Map::EMPTY)
           apply_stone = ! is_value?(x+1, y, Map::BEARD)
-          fall_to(x, y, x, y-1, apply_stone)
+          fall_to(x, y, x, y-1, is_rock, apply_stone)
           unset_beard(x, y-1) if apply_stone
         end
 
-        is_down_rock = is_value?(x, y-1, Map::ROCK)
+        is_down_rock = is_value_rock?(x, y-1)
         is_right_free = is_value?(x+1, y, Map::EMPTY) &&
                         is_value?(x+1, y-1, Map::EMPTY)
 
         if is_right_free
           if is_down_rock || is_value?(x, y-1, Map::LAMBDA)
             apply_stone = ! is_value?(x+2, y, Map::BEARD)
-            fall_to(x, y, x+1, y-1, apply_stone)
+            fall_to(x, y, x+1, y-1, is_rock, apply_stone)
             unset_beard(x+1, y-1) if apply_stone
           end
         elsif is_down_rock &&
               is_value?(x-1, y, Map::EMPTY) &&
               is_value?(x-1, y-1, Map::EMPTY)
-            fall_to(x, y, x-1, y-1)
+          fall_to(x, y, x-1, y-1, is_rock)
         end
       end
 

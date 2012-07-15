@@ -112,7 +112,12 @@ module Icfpc2012
     end
 
     def pushable?(x, y)
-      get_at(x, y) == ROCK && y == @robot.y && map_array[y][2 * x - @robot.x] == EMPTY
+      if y == @robot.y
+        case get_at(x, y)
+        when ROCK, HOROCK
+          return map_array[y][2 * x - @robot.x] == EMPTY
+        end
+      end
     end
 
     def can_go_to?(x, y)
@@ -168,10 +173,9 @@ module Icfpc2012
           new_map.razors += 1
         end
       elsif pushable?(x, y)
-
-        new_input[@robot.y][@robot.x] = EMPTY
+        new_input[y][2 * x - @robot.x] = target_cell
         new_input[y][x] = ROBOT
-        new_input[y][2 * x - @robot.x] = ROCK
+        new_input[@robot.y][@robot.x] = EMPTY
       elsif action && action == 'S' && razors > 0
         new_map.razors -= 1
         new_map.beard_list = beard_list.dup

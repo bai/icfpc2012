@@ -13,6 +13,23 @@ module Icfpc2012
       yield c[0] + p[0], c[1] + p[1]
     end
   end
+  def Icfpc2012.do_allb(c)
+    opts = [ [-1, -1], [0, -1], [1, -1],
+             [-1,  0], [0,  0], [1,  0],
+             [-1,  1], [0,  1], [1,  1] ]
+    opts.each do |p|
+      yield c[0] + p[0], c[1] + p[1]
+    end
+  end
+  def Icfpc2012.do_aeb(c)
+    opts = [ [-1, -1], [0, -1], [1, -1],
+             [-1,  0], [0,  0], [1,  0],
+             [-1,  1], [0,  1], [1,  1],
+             [-1,  2], [0,  2], [1,  2]]
+    opts.each do |p|
+      yield c[0] + p[0], c[1] + p[1]
+    end
+  end
 
   class PathFinder
 
