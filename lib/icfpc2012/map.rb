@@ -15,6 +15,7 @@ module Icfpc2012
     attr_accessor :map_array, :score, :remaining_lambdas, :collected_lambdas, :robot
     attr_accessor :water, :flooding, :waterproof, :timer
     attr_accessor :trampolines
+    attr_accessor :beard_growth, :razors
     attr_accessor :rockfall
 
     def initialize(input)
@@ -141,7 +142,7 @@ module Icfpc2012
           new_position = trampolines[target_cell]
           new_input[y][x] = EMPTY
           new_input[new_position[1]][new_position[0]] = ROBOT
-          trampolines.each do |src, dst| 
+          trampolines.each do |src, dst|
             if dst == new_position
               x, y = locate(src)
               new_input[y][x] = EMPTY
@@ -199,6 +200,9 @@ module Icfpc2012
       owner.map_array = Array.new
       owner.trampolines = Hash.new
 
+      owner.beard_growth = 25
+      owner.razors = 0
+
       input_data = input.split(/\r?\n\r?\n/)
       owner.map_array = input_data.shift.split(/\r?\n/).map { |l| l.split(//) }.reverse
 
@@ -207,6 +211,8 @@ module Icfpc2012
         elsif line.match('Flooding\s+(\d+)') {|m| owner.flooding = Integer(m[1])  }
         elsif line.match('Waterproof\s+(\d+)') {|m| owner.waterproof = Integer(m[1])}
         elsif line.match('Trampoline\s+([A-I])\s+targets\s([1-9])') {|m| owner.trampolines[m[1]]=m[2]}
+        elsif line.match('Growth\s+(\d+)') {|m| owner.beard_growth = Integer(m[1])}
+        elsif line.match('Razors\s+(\d+)') {|m| owner.razors = Integer(m[1])}
         else
           raise "Unknown input line : " + line.inspect
         end
