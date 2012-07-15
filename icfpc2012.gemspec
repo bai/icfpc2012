@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.platform      = Gem::Platform::RUBY
   s.require_paths = ['lib']
   s.rubyforge_project = '[none]'
+  s.executables = %w(pater solve vmap)
 
   s.add_development_dependency 'minitest'
   s.add_dependency 'logger'
