@@ -6,11 +6,12 @@ module Icfpc2012
 
     attr_accessor :map_origin, :best_solution, :best_score, :max_iterations
 
-    def initialize(map)
+    def initialize(map, time_seconds = 150)
       self.map_origin = map
       self.best_solution = ""
       self.best_score = 0
       self.max_iterations = LIGHT_SEARCH_WIDTH
+      @time_seconds = time_seconds
     end
 
     def process_wave(pf, map, path_so_far, score_so_far, depth, pfMind = nil)
@@ -161,7 +162,7 @@ module Icfpc2012
 
       begin # try catch for timing exception
         #timings
-        Icfpc2012::Timer.new 150 # seconds
+        Icfpc2012::Timer.new @time_seconds
         self.max_iterations = LIGHT_SEARCH_WIDTH
         recurse(map_origin, "", 0, 0)
 

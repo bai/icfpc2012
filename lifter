@@ -6,17 +6,20 @@ require 'icfpc2012'
 
 alias :original_puts :puts
 alias :original_pring :print
-def puts(*); end
-def print(*); end
+def puts(*) end
+def print(*) end
 
 begin
 
+  time_index = ARGF.argv.index("--time")
+  time_seconds = time_index ? ARGF.argv[time_index] : 10
+
   map = Icfpc2012::Map.new($stdin.read)
-  sc = Icfpc2012::Scheduler.new(map)
+  sc = Icfpc2012::Scheduler.new(map, time_seconds)
   begin
     result = sc.solve
 
-    if ARGF.argv != [] && ARGF.argv[0] == "--verbose"
+    if ARGF.argv.include?("--verbose")
       original_puts result[1]
     end
   rescue Exception
