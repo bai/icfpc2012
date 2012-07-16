@@ -76,9 +76,13 @@ module Icfpc2012
     def solve(map,  desired_pos)
       pts = Hash.new
       pts[[1, 0]] = [
-                     [["R*","ee"], "DRLUR"],
-                     [["eR*","?e*"], "DULRR"],
-                     [["e?","R*", "e*"], "DUUDR"]
+                     [["R*",
+                       "ee"], "DRLUR"],
+                     [["eR*",
+                       "?e*"], "DULRR"],
+                     [["e?",
+                       "R*",
+                       "e*"], "DUUDR"],
                     ]
       pts[[-1, 0]] = [
                       [ ["*R", "ee"], "DLRUL"],
@@ -87,9 +91,12 @@ module Icfpc2012
                      ]
       pts[[0, 1]] = [
                      [ ["e*",
-                        "eR"], "LURU"],
+                        "eR"], "LUR"],
                      [ ["*e",
-                        "Re"], "RULU"],
+                        "Re"], "RUL"],
+                     [ ["?*",
+                        "eR",
+                        "ee"], "LDRUU"],
                      [ ["?*",
                         "eR",
                         "ee"], "LDRLURU"],
@@ -137,5 +144,5 @@ module Icfpc2012
       dir = [desired_pos[0] - rpos[0], desired_pos[1] - rpos[1]]
       match(map.robot.position, dir, pts, map)
     end
-  end  
+  end
 end
