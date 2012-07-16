@@ -161,7 +161,7 @@ module Icfpc2012
 
       begin # try catch for timing exception
         #timings
-        Icfpc2012::Timer.new 10 # seconds
+        Icfpc2012::Timer.new 150 # seconds
         self.max_iterations = LIGHT_SEARCH_WIDTH
         recurse(map_origin, "", 0, 0)
 
