@@ -1,14 +1,22 @@
 module Icfpc2012
   class LambdaClusterizer
 
-    attr_accessor :clusters, :map
+    attr_accessor :clusters, :map, :strict
 
-    def initialize map
+    def initialize map, strict = false
       @clusters = []
       @map = map
+      @strict = strict
     end
 
-    def adjasted? l1, l2
+    def strictly_adjasted? l1, l2
+      v_adj = (l1[0] == l2[0]) and ((l1[1] - l2[1]).abs() == 1)
+      h_adj = (l1[1] == l2[1]) and ((l1[0] - l2[0]).abs() == 1)
+      puts "#{l1.inspect}, #{l2.inspect} " + [v_adj, h_adj].join(', ')
+      v_adj or h_adj
+    end
+
+    def loosely_adjasted? l1, l2
       if (l1[0] - l2[0]).abs == 1 and (l1[1] - l2[1]).abs == 1 # diagonal
         map.walkable?(l1[0], l2[1]) or map.walkable?(l2[0], l1[1])
       elsif l1[0] == l2[0] # same vertical 
@@ -17,6 +25,14 @@ module Icfpc2012
         (l1[0] - l2[0]).abs() <= 2 and map.walkable?(((l1[0] + l2[0]) / 2).to_i, l1[1])
       else
         false
+      end
+    end
+
+    def adjasted? l1, l2
+      if @strict
+        return strictly_adjasted? l1, l2
+      else
+        return loosely_adjasted? l1, l2
       end
     end
 
