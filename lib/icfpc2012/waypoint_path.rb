@@ -24,6 +24,10 @@ module Icfpc2012
       end
     end
 
+    def size
+      @waypoints.size
+    end
+
     def valid?
       last_map.robot.alive? && @way_passed
     end
