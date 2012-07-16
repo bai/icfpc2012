@@ -11,7 +11,7 @@ class LambdaClusterizerTest < Test::Unit::TestCase
     lambdas = [
       [0,0], [3, 3], [3, 4], [7, 7], [0, 1], [1, 0], [1, 1], [2, 2]
     ]
-    clusterizer = Icfpc2012::LambdaClusterizer.new (DummyMap.new)
+    clusterizer = Icfpc2012::LambdaClusterizer.new(DummyMap.new)
     lambdas.each do |lambda|
       clusterizer.add lambda
     end
@@ -21,5 +21,15 @@ class LambdaClusterizerTest < Test::Unit::TestCase
 
     # more liberal
     assert [[[0, 0], [0, 1], [1, 0], [1, 1], [3, 3], [3, 4], [2, 2]], [[7, 7]]] == clusterizer.clusters
+  end
+
+  def test_whitespace_clusterize
+    coords = [[0, 0], [1, 1], [2, 2], [0, 1]]
+    clusterizer = Icfpc2012::LambdaClusterizer.new(DummyMap.new, true)
+
+    coords.each do |coord|
+      clusterizer.add coord
+    end
+    assert [[[0, 0], [1, 1], [0, 1]], [[2, 2]]] == clusterizer.clusters
   end
 end
