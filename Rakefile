@@ -28,11 +28,12 @@ directory 'pkg'
 directory 'submission'
 
 task :package => [:pkg,:submission] do
-  sh "mkdir pkg/src"
   # to make binaries work
   sh "git archive master | tar -x -C pkg"
   # to make src folder as required by spec
+  sh "mkdir pkg/src"
   sh "git archive master | tar -x -C pkg/src"
+  # turn git readme into submission readme
   sh "cp -R pkg/src/README.md pkg/README"
   sh "cd pkg;tar -cf ../submission/icfp-94704244.tgz *"
 end
