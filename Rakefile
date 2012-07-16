@@ -46,5 +46,3 @@ task :package => [:pkg,:submission] do
   sh "cp -R pkg/src/README.md pkg/README"
   sh "cd pkg;tar -czf ../submission/icfp-94704244.tgz *"
 end
-
-
