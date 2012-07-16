@@ -67,12 +67,15 @@ module Icfpc2012
     # e - entry
     # x - exit
     # ? - anything
+    # * - rocks and horocks
+    # # - wall, beard,razor, lift , trampolines, target AND earth - all that stops rocks
     def match_sym?(map_char, pattern_char)
       (pattern_char == '?') ||
           (pattern_char == nil) ||
           (pattern_char == map_char) ||
-          (pattern_char.match(/[pex]/) && Map::walkable?(map_char)) ||
-          (pattern_char.match(/[pex]/) && map_char == 'R') ||
+          (pattern_char.match(/[pex]/) && map_char.match(/! \.\\OR/)) ||
+          (pattern_char == "*" && pattern_char == "@") ||
+          (pattern_char == '#' && map_char.match(/W!LOA-I0-9\./)) ||
           (pattern_char == 'L' && map_char == 'O')
     end
 
