@@ -232,6 +232,11 @@ module Icfpc2012
       robot_alive = new_rockfall.alive? &&
           (!robot_underwater || robot.underwater_ticks < self.waterproof)
 
+      # update score if robot is dead
+      unless robot_alive
+        new_map.score -= new_map.collected_lambdas * 25
+      end
+
       if new_map.flooding != 0 && (new_map.timer % new_map.flooding == 0)
         new_map.water = water+1
       end

@@ -73,8 +73,9 @@ def print_map(waypoints)
   wp_map = waypoint.map
   wp_map.to_s.each_line { |line| puts line }
 
-  puts "score: #{wp_map.score} (#{wp_map.collected_lambdas}/#{wp_map.remaining_lambdas})" +
-       " WATER: #{wp_map.water} swim=#{wp_map.robot.underwater_ticks}/#{wp_map.waterproof}"
+  puts "score: #{wp_map.score} LAMBDAS:#{wp_map.collected_lambdas}/#{wp_map.remaining_lambdas} |" +
+       " WATER: #{wp_map.water} swim=#{wp_map.robot.underwater_ticks}/#{wp_map.waterproof} |" +
+       " razors: #{wp_map.razors}"
   path = waypoints.map(&:movement).join
   puts "path: " + path
 end

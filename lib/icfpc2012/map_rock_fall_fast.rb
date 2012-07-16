@@ -98,7 +98,8 @@ module Icfpc2012
         horoks_fall[[x, y]] = nil
       end
 
-      if (xfall == @robot_position[0]) &&
+      # see https://twitter.com/icfpcontest2012/status/224575537383870464
+      if (apply_stone) && (xfall == @robot_position[0]) &&
           (yfall == @robot_position[1]+1)
         @robot_dead = true
       end
