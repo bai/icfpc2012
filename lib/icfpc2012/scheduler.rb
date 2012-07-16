@@ -53,7 +53,6 @@ module Icfpc2012
             wp.waypoints.last.map.to_s.each_line { |line| puts line }
             puts [self.best_solution, self.best_score].inspect
           end
-=begin
         else
 
           path_remainder_coords = path_coords.last(path.size - wp.path.size)
@@ -67,9 +66,8 @@ module Icfpc2012
 
           if solution != nil
             #puts "exit solution found"
-            recurse(solution.last_map, path_so_far + path + solution.path, solution.last_map.score, depth + 1)
+            recurse(solution.last_map, path_so_far + wp.path + solution.path, solution.last_map.score, depth + 1)
           end
-=end
         end
 
       end
@@ -115,7 +113,6 @@ module Icfpc2012
 
         if(wp.valid?)
           recurse(wp.waypoints.last.map, path_so_far + path, wp.waypoints.last.map.score, depth + 1)
-=begin
         else
 
           path_remainder_coords = path_coords.last(path.size - wp.path.size)
@@ -129,9 +126,8 @@ module Icfpc2012
 
           if solution != nil
             #puts "died solution found"
-            recurse(solution.last_map, path_so_far + path + solution.path, solution.last_map.score, depth + 1)
+            recurse(solution.last_map, path_so_far + wp.path + solution.path, solution.last_map.score, depth + 1)
           end
-=end
         end
       }
     end
