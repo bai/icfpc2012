@@ -263,7 +263,7 @@ module Icfpc2012
       owner = self
       owner.water = 0
       owner.flooding = 0
-      owner.waterproof = 0
+      owner.waterproof = 10
       owner.map_array = Array.new
       owner.lambda_list = Array.new
       owner.beard_list = Array.new
