@@ -97,7 +97,21 @@ module Icfpc2012
                         "Re",
                         "ee"], "RDLRULU"],
                     ]
-
+      pts[[1, -1]] = [
+                      [ ["R* ",
+                         "*?#"], "RD"],
+                      [ ['eee',
+                         'R*.',
+                         '#??'], 'URRDLD'],
+                      [ ['eee',
+                         'R*.',
+                         '??#'], 'URRDULLDRD'],
+                  ]
+      pts[[2, 0]] = [
+                      [ ["e**?",
+                         "Rp?#",
+                         "e ??"], "RLWRR"]
+      ]
       rpos = map.robot.position
       dir = [desired_pos[0] - rpos[0], desired_pos[1] - rpos[1]]
       match(map.robot.position, dir, pts, map)
