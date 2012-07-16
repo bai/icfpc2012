@@ -4,8 +4,8 @@ module Icfpc2012
   class BacktrackingSolver < LocalSolver
     attr_reader :best_solution # WaypointPath
 
-    def initialize(map, region, target_cells, max_depth=-1)
-      super(map, region, target_cells, max_depth)
+    def initialize(map, region, target, max_depth=-1)
+      super(map, region, target, max_depth)
       @best_solution = nil
       @cur_solution = WaypointPath.new(map)
       @want_lambdas = false
@@ -42,35 +42,23 @@ module Icfpc2012
 
     private
 
-    def heuristic(solution)
-      rob = @cur_solution.last_map.robot.position
-
-      (@want_lambdas ? solution.last_map.collected_lambdas * 100 : 0) +
-        (@want_path ? -solution.waypoints.size * 100 : 0) +
-        (solution.won? ? 10000 : 0) #+
-        (in_target(rob) ? @target_cells.index(rob) * 100 + 200 : 0) +
-        (solution.last_map.razors * 10) +
-        # FIXME: Better expression to express "We're gonna drown"
-        (solution.last_map.waterproof == 0 ? 0 : solution.last_map.robot.underwater_ticks * 100 / solution.last_map.waterproof)
-    end
-
     def backtrack(visited)
       #puts "entering: #{@cur_solution.path}"
       return  unless @cur_solution.valid?
 
       rob = @cur_solution.last_map.robot.position
-      if in_target(rob) || @cur_solution.won?
-        if !@best_solution || (heuristic(@best_solution) < heuristic(@cur_solution))
+      if @target.in_target?(rob) || @cur_solution.won?
+        if !@best_solution || (@target.heuristic(@best_solution) < @target.heuristic(@cur_solution))
           @best_solution = @cur_solution.deep_copy
         end
         return
       end
 
       return  if max_depth > 0 && visited.size > max_depth
-      return  if @best_solution && (heuristic(@cur_solution) < heuristic(@best_solution))
+      return  if @best_solution && (@target.heuristic(@cur_solution) < @target.heuristic(@best_solution))
       # Rough heuristic
-      return  if !@want_lambdas && @best_solution &&
-          (distance_to_target(rob) + @cur_solution.waypoints.size >= @best_solution.waypoints.size)
+
+      return unless @target.can_do_better?(@best_solution, @cur_solution)
 
       if @analyzer.near_beard? && @cur_solution.last_map.razors > 0
         if @cur_solution.add_move('S')
@@ -84,7 +72,7 @@ module Icfpc2012
         visited = Set.new
       end
 
-      next_points = @analyzer.points_around(rob).sort_by { |x| distance_to_target(x) }
+      next_points = @analyzer.points_around(rob).sort_by { |x| @target.distance_to_target(x) }
 
       next_points.each do |next_position|
         move = CoordHelper::coords_to_action(rob, next_position)
@@ -104,11 +92,6 @@ module Icfpc2012
         end
         @cur_solution.pop
       end
-    end
-
-    # Manhattan distance to the best of the target cells
-    def distance_to_target(cell)
-      (cell[0] - @target_cells.last[0]).abs + (cell[1] - @target_cells.last[1]).abs
     end
   end
 end

@@ -1,0 +1,3 @@
+for pkg in $(cat PACKAGES) ; do 
+		apt-get -y install $pkg
+done
