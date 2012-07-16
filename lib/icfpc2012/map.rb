@@ -149,7 +149,7 @@ module Icfpc2012
           new_map.collected_lambdas = collected_lambdas + 1
           new_map.lambda_list = lambda_list.dup
           new_map.lambda_list.delete(new_position)
-          new_map.score+=25
+          new_map.score+=50
 
           if new_map.remaining_lambdas == 0
             new_input[lift_y][lift_x] = OPEN_LIFT
@@ -168,7 +168,7 @@ module Icfpc2012
             end
           end
         elsif target_cell == OPEN_LIFT
-          new_map.score += new_map.collected_lambdas*50
+          new_map.score += new_map.collected_lambdas*25
         elsif target_cell == RAZOR
           new_map.razors += 1
         end
