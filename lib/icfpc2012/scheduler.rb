@@ -14,7 +14,22 @@ module Icfpc2012
     end
 
     def process_wave(pf, map, path_so_far, score_so_far, depth, pfMind = nil)
+=begin
+      if(path_so_far.size != 0)
 
+        wp0 = Icfpc2012::WaypointPath.new(map_origin, path_so_far)
+        if(wp0.valid?)
+          puts "failed process_wave validation at path:"
+          puts wp0.path
+          puts "with intended path:"
+          puts path_so_far
+          puts "last map:"
+          wp0.last_map.to_s.each_line { |line| puts line }
+          puts
+          return
+        end
+      end
+=end
       local_solver_priority = 2
       #pf.print_distmap
 
@@ -38,6 +53,7 @@ module Icfpc2012
             wp.waypoints.last.map.to_s.each_line { |line| puts line }
             puts [self.best_solution, self.best_score].inspect
           end
+=begin
         else
 
           path_remainder_coords = path_coords.last(path.size - wp.path.size)
@@ -53,6 +69,7 @@ module Icfpc2012
             #puts "exit solution found"
             recurse(solution.last_map, path_so_far + path + solution.path, solution.last_map.score, depth + 1)
           end
+=end
         end
 
       end
@@ -113,7 +130,6 @@ module Icfpc2012
             #puts "died solution found"
             recurse(solution.last_map, path_so_far + path + solution.path, solution.last_map.score, depth + 1)
           end
-
         end
       }
     end
