@@ -115,6 +115,7 @@ module Icfpc2012
 
         if(wp.valid?)
           recurse(wp.waypoints.last.map, path_so_far + path, wp.waypoints.last.map.score, depth + 1)
+=begin
         else
 
           path_remainder_coords = path_coords.last(path.size - wp.path.size)
@@ -130,6 +131,7 @@ module Icfpc2012
             #puts "died solution found"
             recurse(solution.last_map, path_so_far + path + solution.path, solution.last_map.score, depth + 1)
           end
+=end
         end
       }
     end
