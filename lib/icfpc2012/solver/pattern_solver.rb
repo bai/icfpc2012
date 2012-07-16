@@ -99,7 +99,7 @@ module Icfpc2012
                     ]
       pts[[1, -1]] = [
                       [ ["R* ",
-                         "*?#"], "RD"],
+                         "??#"], "RD"],
                       [ ['eee',
                          'R*.',
                          '#??'], 'URRDLD'],
@@ -107,15 +107,31 @@ module Icfpc2012
                          'R*.',
                          '??#'], 'URRDULLDRD'],
                   ]
+      pts[[-1, 1]] = [
+                      [ [" *R",
+                         "#??"], "LD"],
+                      [ ['eee',
+                         '.*R',
+                         '??#'], 'ULLDRD'],
+                      [ ['eee',
+                         '.*R',
+                         '#??'], 'ULLDURRDLD'],
+                  ]
       pts[[2, 0]] = [
                       [ ["e**?",
                          "Rp?#",
-                         "e ??"], "RLWRR"]
+                         "e ??"], "RLWRR"],
+                      [ ["??*?",
+                         "R*?#",
+                         "ee??"], "DRLURR"],
                   ]
       pts[[-2, 0]] = [
                       [ ["?**e",
                          '#?pR',
-                         '?? e'], "LRWLL"]
+                         '?? e'], "LRWLL"],
+                      [ ["?*??",
+                         "#?*R",
+                         "??ee"], "DLRULL"],
                   ]
       rpos = map.robot.position
       dir = [desired_pos[0] - rpos[0], desired_pos[1] - rpos[1]]
