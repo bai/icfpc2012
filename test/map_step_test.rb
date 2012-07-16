@@ -122,4 +122,37 @@ EOS
     end
 
   end
+
+  def faq_test
+    map_string = <<-'EOS'.gsub /^.*?-/, ''
+      -#*. #
+      -# ..#
+      -# R #
+      -#####
+    EOS
+    map = Icfpc2012::Map.new(map_string)
+    assert(!map.step('L').robot.alive?)
+
+    map_string = <<-'EOS'.gsub /^.*?-/, ''
+      -#*. #
+      -# R #
+      -#####
+    EOS
+    map = Icfpc2012::Map.new(map_string)
+
+    map = map.step('L')
+    assert(map.robot.alive?)
+    assert_equal('*', map.get_at(1,2))
+
+    map_string = <<-'EOS'.gsub /^.*?-/, ''
+      -#*. #
+      -#R  #
+      -#   #
+      -#####
+    EOS
+    map = Icfpc2012::Map.new(map_string)
+    map = map.step('D')
+    assert(!map.robot.alive?)
+
+  end
 end

@@ -19,16 +19,15 @@ sc = Icfpc2012::Scheduler.new(read_map)
 solution = sc.solve
 puts solution.inspect
 
-if(solution.size == 2 && solution[0].size != 0)
+if solution.size == 2 && solution[0].size != 0
   wp = Icfpc2012::WaypointPath.new(read_map, solution[0])
 
-
-  if(wp.valid?)
+  if wp.valid?
+    puts "solution valid"
+  else
     puts "solution verification failed after: "
     puts wp.path
     puts wp.last_map.to_s
-  else
-    puts "solution valid"
   end
 end
 
